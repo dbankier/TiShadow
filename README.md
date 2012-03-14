@@ -11,21 +11,25 @@ Have look at the following [video](http://www.youtube.com/watch?v=xUggUXQArUM) t
 TiShadow Server
 ---------------
 The server side uses the following and are required:
+
  * [node.js](http://nodejs.org/)
  * [express] (http://expressjs.com/)
  * [socket.io] (http://socket.io)
 
 The server code also uses the following and are included:
+
  * [Twitter Bootstrap](http://twitter.github.com/bootstrap/)
  * [Ace](https://github.com/ajaxorg/ace)
 
 After cloning the server code, make sure you run the following to
 install dependancies:
+
 ```bash
     npm install -d
 ```
 
 The server can then be started like any nodejs app:
+
 ```bash
     node app.js
 ```
