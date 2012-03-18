@@ -10,6 +10,12 @@ TiShadow.init = function (session, guest){
   socket.on('device_disconnect', function(e){
     $("li#" + e.id).remove();
   });
+  socket.on('device_log', function(e) {
+    var now = new Date();
+    var log = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " [" + e.level + "] [" + e.name + "]    " + e.message.replace("\n","<br/>");
+    var style = e.level === "ERROR" ? " error" : e.level === "WARN" ? "" : " success"
+    $(".console").prepend("<div class='alert-message" + style + "'>" + log + "</div>");
+  });
   TiShadow.socket = socket;
 };
 

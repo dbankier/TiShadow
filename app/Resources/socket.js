@@ -40,6 +40,10 @@ $(document).ready(function() {
 		});
 	});
 
+  Ti.App.addEventListener("socket:log", function(e) {
+    socket.emit("log", e);
+  });
+
 	Ti.App.addEventListener('socket:disconnect', function() {
 		io.disconnect();
 	});

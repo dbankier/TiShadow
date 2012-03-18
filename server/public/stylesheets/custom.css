@@ -36,7 +36,16 @@ li {
   font-size: 12px;
 }
 #editor {
-        position: absolute;
+        position: relative;
         width: 520px;
         height: 400px;
+}
+.console {
+  height: 150px;
+  overflow: auto;
+  background-color: #000;
+}
+
+.alert-message {
+  margin-bottom: 0px
 }

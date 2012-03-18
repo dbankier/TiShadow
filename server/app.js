@@ -62,6 +62,13 @@ sio.sockets.on('connection', function(socket) {
       }
     });
   });
+
+  socket.on('log', function(data) {
+    socket.get("name", function(err, name) {
+      data.name = name;
+      sio.sockets.emit("device_log", data);
+    });
+  })
   // Disconnect
   socket.on('disconnect',function(data) {
     socket.get("host",function(err,host) {
