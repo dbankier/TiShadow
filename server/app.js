@@ -5,7 +5,10 @@
 
 var express = require('express'),
 io = require('socket.io'),
-routes = require('./routes');
+routes = require('./routes'),
+fs = require('fs'),
+path = require('path')
+;
 
 
 var app = module.exports = express.createServer();
@@ -26,8 +29,33 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+//Setup socket
+var sio=io.listen(app, {log: false});
+
+
 // Routes
 app.get('/', routes.index);
+var bundle;
+app.post('/', function(req, res) {
+  console.log("New Bundle: " + req.body.bundle);
+  bundle = req.body.bundle;
+  sio.sockets.emit("bundle");
+  res.send("OK", 200);
+});
+app.get('/bundle', function(req,res) {
+  console.log(bundle);
+  res.setHeader('Content-disposition', 'attachment; filename=bundle.zip');
+  res.setHeader('Content-type', "application/zip");
+
+  var filestream = fs.createReadStream(bundle);
+  filestream.on('data', function(chunk) {
+    res.write(chunk);
+  });
+  filestream.on('end', function() {
+    res.end();
+  });
+});
+
 
 //FIRE IT UP
 app.listen(3000);
@@ -36,7 +64,6 @@ console.log("Express server listening on port %d in %s mode", app.address().port
 //WEB SOCKET STUFF
 
 var devices = [];
-var sio=io.listen(app);
 sio.sockets.on('connection', function(socket) {
   console.log('A socket connected!');
   // Join

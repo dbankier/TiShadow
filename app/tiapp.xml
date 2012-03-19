@@ -37,5 +37,7 @@
         </orientations>
     </iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android"/>
-    <modules/>
+    <modules>
+      <module version="0.1.21">zipfile</module>
+    </modules>
 </ti:app>

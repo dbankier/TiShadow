@@ -1,0 +1,49 @@
+#!/bin/bash
+
+
+## Confirm we are in the project root
+if [ ! -f "./tiapp.xml" ]
+then
+   echo "Script must be executed in the Titanium project's root directory"
+   exit 1
+fi
+TI_PATH=`pwd`
+
+
+## Prepare Build directory
+echo "Begining Build Process"
+
+if [ ! -d "./build" ]
+then
+  mkdir build
+fi
+
+if [ -d "./build/tishadow" ]
+then
+  rm -rf ./build/tishadow
+fi
+
+mkdir ./build/tishadow
+mkdir ./build/tishadow/src
+mkdir ./build/tishadow/dist
+cp -rp ./Resources/* ./build/tishadow/src/
+
+
+##Propend the log commonjs library
+
+for FILE in `find ./build/tishadow/src -name "*.js"`
+do
+  sed -i '' 's/"\//Ti.Filesystem.applicationDataDirectory\+"\//g' $FILE
+  sed -i '' "s/'\//Ti.Filesystem.applicationDataDirectory\+'\//g" $FILE
+  sed -i '' "s/Ti.API/log/g" $FILE
+
+  echo "var log = require('/api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
+done
+
+cd build/tishadow/src
+zip -r ../dist/shadowboxer.zip .
+cd ../../..
+
+#wget --post-file=`cat ./build/tishadow/dist/shadowboxer.zip | openssl base64` http://localhost:3000/shadowpost
+wget --post-data="bundle=$TI_PATH/build/tishadow/dist/shadowboxer.zip" http://localhost:3000/
+rm index.html
