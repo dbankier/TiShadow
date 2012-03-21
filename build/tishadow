@@ -43,8 +43,9 @@ do
     sed -i '' 's/require/p.require/g' $FILE
     sed -i '' "s/Ti.API/log/g" $FILE
   fi
+  #echo "var root = Ti.Platform.osname === 'android' ? '/': Ti.Filesystem.resourcesDirectory; var p = require(root + 'api/PlatformRequire'), log = require(root + 'api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
+  echo "var p = require('/api/PlatformRequire'), log = require('/api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
 
-  echo "var root = Ti.Platform.osname === 'android' ? '/': Ti.Filesystem.resourcesDirectory; var p = require(root + 'api/PlatformRequire'), log = require(root + 'api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
 done
 
 cd build/tishadow/src

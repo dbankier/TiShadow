@@ -71,6 +71,7 @@ exports.StartScreen = function() {
         zip_file.write(this.responseData);
         var dataDir = Ti.Platform.osname === "android" ?  Ti.Filesystem.applicationDataDirectory :  Ti.Filesystem.applicationDataDirectory.slice(0,Ti.Filesystem.applicationDataDirectory.length - 1).replace('file://localhost','').replace(/%20/g,' ');
         zipfile.extract(dataDir+'/bundle.zip', dataDir);
+        p.clearCache();
         bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/app");
         log.info("New bundle deployed.");
       } catch (e) {
