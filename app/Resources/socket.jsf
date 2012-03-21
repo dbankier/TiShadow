@@ -1,9 +1,10 @@
 /*
  * Event Listeners
 */
+
 $(document).ready(function() {
   var socket;
-  Ti.App.addEventListener('socket:connect', function(e) {
+  Ti.App.addEventListener('tishadow:socket_connect', function(e) {
     $.ajax({
       url : "http://" + e.address + ":3000/socket.io/socket.io.js",
       dataType : "script",
@@ -18,37 +19,37 @@ $(document).ready(function() {
           socket.emit("join", {
             name : e.name
           });
-          Ti.App.fireEvent("connected");
+          Ti.App.fireEvent("tishadow:connected");
         });
 
         socket.on("connect_failed", function() {
-          Ti.App.fireEvent("connectfailed");
+          Ti.App.fireEvent("tishadow:connectfailed");
         });
 
         socket.on('message', function(data) {
-          Ti.App.fireEvent("message", data);
+          Ti.App.fireEvent("tishadow:message", data);
         });
 
         socket.on('bundle', function() {
-          Ti.App.fireEvent("bundle");
+          Ti.App.fireEvent("tishadow:bundle");
         });
 
         socket.on('disconnect', function() {
           io.disconnect();
-          Ti.App.fireEvent("disconnected");
+          Ti.App.fireEvent("tishadow:disconnected");
         });
       },
       error : function() {
-        Ti.App.fireEvent("connectfailed");
+        Ti.App.fireEvent("tishadow:connectfailed");
       }
     });
   });
 
-  Ti.App.addEventListener("socket:log", function(e) {
+  Ti.App.addEventListener("tishadow:socket_log", function(e) {
     socket.emit("log", e);
   });
 
-  Ti.App.addEventListener('socket:disconnect', function() {
+  Ti.App.addEventListener('tishadow:socket_disconnect', function() {
     io.disconnect();
   });
 });

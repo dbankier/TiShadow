@@ -4,8 +4,8 @@
 ## Confirm we are in the project root
 if [ ! -f "./tiapp.xml" ]
 then
-   echo "Script must be executed in the Titanium project's root directory"
-   exit 1
+  echo "Script must be executed in the Titanium project's root directory"
+  exit 1
 fi
 TI_PATH=`pwd`
 
@@ -33,11 +33,18 @@ cp -rp ./Resources/* ./build/tishadow/src/
 
 for FILE in `find ./build/tishadow/src -name "*.js"`
 do
-  sed -i '' 's/"\//Ti.Filesystem.applicationDataDirectory\+"\//g' $FILE
-  sed -i '' "s/'\//Ti.Filesystem.applicationDataDirectory\+'\//g" $FILE
-  sed -i '' "s/Ti.API/log/g" $FILE
+  #THE EXCLUSION OF UNDERSCORE COMPENSATE FOR LAZY REPLACE
+  #THE REGEX SHOULD BE IMPROVED
+  if [[ ! $FILE == *underscore.js ]]
+  then
+    echo "BUILDING FILE: $FILE"
+    #sed -i '' 's/"\//Ti.Filesystem.applicationDataDirectory\+"/' $FILE
+    sed -i '' "s/\(['\"]\)\//Ti.Filesystem.applicationDataDirectory\+\1/g" $FILE
+    sed -i '' 's/require/p.require/g' $FILE
+    sed -i '' "s/Ti.API/log/g" $FILE
+  fi
 
-  echo "var log = require('/api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
+  echo "var root = Ti.Platform.osname === 'android' ? '/': Ti.Filesystem.resourcesDirectory; var p = require(root + 'api/PlatformRequire'), log = require(root + 'api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
 done
 
 cd build/tishadow/src

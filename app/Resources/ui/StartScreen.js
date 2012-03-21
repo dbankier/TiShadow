@@ -2,7 +2,9 @@
 var LoginView = require('/ui/LoginView').LoginView;
 var Activity = require('/ui/Activity').Activity;
 var log = require('/api/Log');
-var zipfile = require("zipfile");
+var zipfile = Ti.Platform.osname === "android" ? require("com.yydigital.zip"): require("zipfile");
+var p = require('/api/PlatformRequire');
+require("/api/Includes");
 
 exports.StartScreen = function() {
   var win = Ti.UI.createWindow({
@@ -25,7 +27,7 @@ exports.StartScreen = function() {
 
   login.addEventListener("connect", function(o) {
     activity.show();
-    Ti.App.fireEvent('socket:connect', {
+    Ti.App.fireEvent('tishadow:socket_connect', {
       address : Ti.App.Properties.getString("address"),
       name : Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address
     });
@@ -33,7 +35,7 @@ exports.StartScreen = function() {
   win.add(login);
 
   var current;
-  Ti.App.addEventListener("message", function(message) {
+  Ti.App.addEventListener("tishadow:message", function(message) {
     try {
       if(current && current.close !== undefined) {
         current.close();
@@ -45,7 +47,7 @@ exports.StartScreen = function() {
       log.info("Deployed");
     } catch (e) {
       var error_message;
-      if(Ti.Platform.osname === 'android') {
+      if(e.line === undefined) {
         error_message = e.toString();
       } else { //iOS Error
         error_message = "Line " + e.line + ": " + e.message;
@@ -53,22 +55,28 @@ exports.StartScreen = function() {
       log.error(error_message);
     }
   });
-
-  Ti.App.addEventListener("bundle", function(o) {
+  
+  var bundle;
+  Ti.App.addEventListener("tishadow:bundle", function(o) {
     var xhr = Ti.Network.createHTTPClient();
     xhr.setTimeout(1000);
     xhr.onload=function(e) {
       try {
-        Ti.API.info(this.responseData);
+        if (bundle && bundle.close !== undefined) {
+          bundle.close();
+          log.info("Previous bundle closed.");
+        }
+        log.info("Unpacking new bundle.");
         var zip_file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'bundle.zip');
         zip_file.write(this.responseData);
-        var dataDir = Ti.Filesystem.applicationDataDirectory.slice(0,Ti.Filesystem.applicationDataDirectory.length - 1).replace('file://localhost','').replace(/%20/g,' ');
+        var dataDir = Ti.Platform.osname === "android" ?  Ti.Filesystem.applicationDataDirectory :  Ti.Filesystem.applicationDataDirectory.slice(0,Ti.Filesystem.applicationDataDirectory.length - 1).replace('file://localhost','').replace(/%20/g,' ');
         zipfile.extract(dataDir+'/bundle.zip', dataDir);
-        Ti.include(Ti.Filesystem.applicationDataDirectory + "/app.js");
+        bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/app");
+        log.info("New bundle deployed.");
       } catch (e) {
-        Ti.API.error(e);
+        log.error(e.toString());
       }
-    }
+    };
     xhr.onerror = function(e){
       Ti.UI.createAlertDialog({title:'XHR', message:'Error: ' + e.error}).show();
     };
@@ -77,19 +85,19 @@ exports.StartScreen = function() {
     xhr.send();
   });
 
-  Ti.App.addEventListener("connected", function(o) {
+  Ti.App.addEventListener("tishadow:connected", function(o) {
     activity.hide();
     alert("Connected");
     win.remove(login);
   });
 
-  Ti.App.addEventListener("connectfailed", function(o) {
+  Ti.App.addEventListener("tishadow:connectfailed", function(o) {
     activity.hide();
     alert("Connect Failed");
     win.add(login);
   });
 
-  Ti.App.addEventListener("disconnected", function(o) {
+  Ti.App.addEventListener("tishadow:disconnected", function(o) {
     alert("Disconnected");
     win.add(login);
   });

@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>2.0.0.v20120217174634</sdk-version>
+    <sdk-version>tishadow</sdk-version>
     <id>com.yydigital.tishadow</id>
     <name>TiShadow</name>
     <version>1.0</version>
@@ -38,6 +38,7 @@
     </iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android"/>
     <modules>
-      <module version="0.1.21">zipfile</module>
+      <module platform="iphone" version="0.1.21">zipfile</module>
+      <module platform="android" version="0.1">com.yydigital.zip</module>
     </modules>
 </ti:app>
