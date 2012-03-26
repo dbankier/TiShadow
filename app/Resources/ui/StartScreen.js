@@ -55,7 +55,7 @@ exports.StartScreen = function() {
       log.error(error_message);
     }
   });
-  
+
   var bundle;
   Ti.App.addEventListener("tishadow:bundle", function(o) {
     var xhr = Ti.Network.createHTTPClient();
@@ -102,6 +102,13 @@ exports.StartScreen = function() {
     alert("Disconnected");
     win.add(login);
   });
+
+  // To fix undetected connection loss when app backgrounded on iOS
+  if (Ti.Platform.osname!=="android"){
+    Ti.App.addEventListener("resumed", function() {
+      log.info("Resumed"); 
+    });
+  }
 
   return win;
 };
