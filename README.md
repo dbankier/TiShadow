@@ -103,6 +103,9 @@ Simply go the project root of your folder and run the `tishadow` script
 included in the build folder. You may want to include the script in your
 environment path.
 
+If the app has been deployed and you want to push minor updates enter
+`tishadow update` in the command line.
+
 Some notes:
 
  * Only works with applications that use the CommonJS structure. The use
@@ -110,6 +113,7 @@ Some notes:
  * Only files in the Resources directory will will be sent to the device
    using TiShadow. Therefore native modules, localisation
    and custom changes to the Android Manifest are not supported.
+ * Any Ti.API logs will be redirected to the tishadow webpage.
 
 If you want to make sure the previous app deployed is closed prior to
 launching the new one, include the following code snippet in your

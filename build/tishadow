@@ -13,25 +13,39 @@ TI_PATH=`pwd`
 ## Prepare Build directory
 echo "Begining Build Process"
 
-if [ ! -d "./build" ]
+## ARE WE IN A UPDATE MODE
+if [ -d "./build/tishadow/src" -a -f "./build/tishadow/last_updated" -a "$1" = "update" ]
 then
-  mkdir build
+  FLAG=" -newer $TI_PATH/build/tishadow/last_updated"
+  FILES=`find ./Resources/* -newer ./build/tishadow/last_updated`
+  [ -f ./build/tishadow/dist/bundle.zip ] && ( rm ./build/tishadow/dist/bundle.zip ) 
+  if [ -z $FILES ] 
+  then 
+    echo "NOTHING TO UPDATE"
+    exit 1
+  fi
+  cp $FILES ./build/tishadow/src/
+else
+  echo "Performing full build."
+  FLAG=""
+  if [ ! -d "./build" ]
+  then
+    mkdir build
+  fi
+
+  if [ -d "./build/tishadow" ]
+  then
+    rm -rf ./build/tishadow
+  fi
+
+  mkdir ./build/tishadow
+  mkdir ./build/tishadow/src
+  mkdir ./build/tishadow/dist
+  cp -rp ./Resources/* ./build/tishadow/src/
 fi
-
-if [ -d "./build/tishadow" ]
-then
-  rm -rf ./build/tishadow
-fi
-
-mkdir ./build/tishadow
-mkdir ./build/tishadow/src
-mkdir ./build/tishadow/dist
-cp -rp ./Resources/* ./build/tishadow/src/
-
 
 ##Propend the log commonjs library
-
-for FILE in `find ./build/tishadow/src -name "*.js"`
+for FILE in `find ./build/tishadow/src -name "*.js"$FLAG`
 do
   #THE EXCLUSION OF UNDERSCORE COMPENSATE FOR LAZY REPLACE
   #THE REGEX SHOULD BE IMPROVED
@@ -43,15 +57,14 @@ do
     sed -i '' 's/require/p.require/g' $FILE
     sed -i '' "s/Ti.API/log/g" $FILE
   fi
-  #echo "var root = Ti.Platform.osname === 'android' ? '/': Ti.Filesystem.resourcesDirectory; var p = require(root + 'api/PlatformRequire'), log = require(root + 'api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
   echo "var p = require('/api/PlatformRequire'), log = require('/api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
-
 done
 
 cd build/tishadow/src
-zip -r ../dist/shadowboxer.zip .
+zip ../dist/bundle.zip `find .$FLAG`
 cd ../../..
+touch ./build/tishadow/last_updated
 
-#wget --post-file=`cat ./build/tishadow/dist/shadowboxer.zip | openssl base64` http://localhost:3000/shadowpost
-wget --post-data="bundle=$TI_PATH/build/tishadow/dist/shadowboxer.zip" http://localhost:3000/
+#wget --post-file=`cat ./build/tishadow/dist/bundle.zip | openssl base64` http://localhost:3000/shadowpost
+wget --post-data="bundle=$TI_PATH/build/tishadow/dist/bundle.zip" http://localhost:3000/
 rm index.html
