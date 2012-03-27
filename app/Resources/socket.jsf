@@ -50,6 +50,6 @@ $(document).ready(function() {
   });
 
   Ti.App.addEventListener('tishadow:socket_disconnect', function() {
-    io.disconnect();
+    socket.disconnect();
   });
 });

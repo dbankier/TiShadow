@@ -24,13 +24,15 @@ exports.StartScreen = function() {
   win.add(webview);
 
   var login = new LoginView();
-
-  login.addEventListener("connect", function(o) {
-    activity.show();
+  function connect() {
     Ti.App.fireEvent('tishadow:socket_connect', {
       address : Ti.App.Properties.getString("address"),
       name : Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address
     });
+  }
+  login.addEventListener("connect", function(o) {
+    activity.show();
+    connect();
   });
   win.add(login);
 
@@ -74,8 +76,8 @@ exports.StartScreen = function() {
         p.clearCache();
         bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/app");
         log.info("New bundle deployed.");
-      } catch (e) {
-        log.error(e.toString());
+      } catch (err) {
+        log.error(err.toString());
       }
     };
     xhr.onerror = function(e){
@@ -102,11 +104,11 @@ exports.StartScreen = function() {
     alert("Disconnected");
     win.add(login);
   });
-
   // To fix undetected connection loss when app backgrounded on iOS
   if (Ti.Platform.osname!=="android"){
     Ti.App.addEventListener("resumed", function() {
-      log.info("Resumed"); 
+      Ti.App.fireEvent('tishadow:socket_disconnect');
+      connect();
     });
   }
 
