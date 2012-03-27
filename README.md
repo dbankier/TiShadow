@@ -127,6 +127,20 @@ launching the new one, include the following code snippet in your
     }
 ```
 
+VIM Shortcuts
+-------------
+Those using vim/gvim/mvim for development might what to add these
+shortcuts (or similar) to the .vimrc/.gvimrc files. It adds the shortcuts, F6
+to save and do a tishadow update, and Shift+F6 to save and perform a full
+tishadow deploy:
+
+```
+    :map <F6> <Esc>:w<CR>:!tishadow update<CR>a
+    :imap <F6> <Esc>:w<CR>:!tishadow update<CR>a
+    :map <S-F6> <Esc>:w<CR>:!tishadow<CR>a
+    :imap <S-F6> <Esc>:w<CR>:!tishadow<CR>a 
+```
+
 
 Feedback appreciated.
 
