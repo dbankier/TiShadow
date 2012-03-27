@@ -17,14 +17,13 @@ echo "Begining Build Process"
 if [ -d "./build/tishadow/src" -a -f "./build/tishadow/last_updated" -a "$1" = "update" ]
 then
   FLAG=" -newer $TI_PATH/build/tishadow/last_updated"
-  FILES=`find ./Resources/* -newer ./build/tishadow/last_updated`
+  FILES=`find ./Resources/* -type f -newer ./build/tishadow/last_updated`
   [ -f ./build/tishadow/dist/bundle.zip ] && ( rm ./build/tishadow/dist/bundle.zip ) 
   if [ -z $FILES ] 
   then 
     echo "NOTHING TO UPDATE"
     exit 1
   fi
-  cp $FILES ./build/tishadow/src/
 else
   echo "Performing full build."
   FLAG=""
@@ -41,8 +40,12 @@ else
   mkdir ./build/tishadow
   mkdir ./build/tishadow/src
   mkdir ./build/tishadow/dist
-  cp -rp ./Resources/* ./build/tishadow/src/
 fi
+
+## Move the required files
+cd Resources
+find -x . -type f$FLAG -print0| tar --null --no-recursion -cf - --files-from - | ( cd ../build/tishadow/src; tar xf - )
+cd ..
 
 ##Propend the log commonjs library
 for FILE in `find ./build/tishadow/src -name "*.js"$FLAG`
