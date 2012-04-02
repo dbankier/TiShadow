@@ -41,7 +41,7 @@ li {
         height: 400px;
 }
 .console {
-  height: 150px;
+  height: 300px;
   overflow: auto;
   background-color: #000;
 }
