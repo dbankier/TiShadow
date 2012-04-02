@@ -111,8 +111,13 @@ Some notes:
  * Only works with applications that use the CommonJS structure. The use
    of `Ti.include` will not work.
  * Only files in the Resources directory will will be sent to the device
-   using TiShadow. Therefore native modules, localisation
+   using TiShadow. Localisation
    and custom changes to the Android Manifest are not supported.
+ * Native modules _can_ be supported if built into the TiShadow app
+   first. (I.e., add them to the tiapp.xml of the TiShadow app.)
+ * If there any errors about a Titanium SDK command not being found, add
+   them to the Includes.js files and clean and build the TiShadow app. I
+   will gradually be adding commands.)
  * Any Ti.API logs will be redirected to the tishadow webpage.
 
 If you want to make sure the previous app deployed is closed prior to
@@ -120,10 +125,13 @@ launching the new one, include the following code snippet in your
 `app.js` file:
 
 ```javascript
-    if (exports) {
+    try {
       exports.close = function() {
         // Your code to close, e.g, main_window.close();
       };
+      Ti.API.info("Running in TiShadow");
+    } catch (e) {
+      Ti.API.info("Running stand-alone");
     }
 ```
 
