@@ -4,7 +4,9 @@ var Activity = require('/ui/Activity').Activity;
 var log = require('/api/Log');
 var zipfile = Ti.Platform.osname === "android" ? require("com.yydigital.zip"): require("zipfile");
 var p = require('/api/PlatformRequire');
-require("/api/Includes");
+//Includes do not need to be included at runtime, just needed to trick
+//Ti build process.
+//require("/api/Includes");
 
 exports.StartScreen = function() {
   var win = Ti.UI.createWindow({

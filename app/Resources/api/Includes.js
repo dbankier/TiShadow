@@ -33,7 +33,17 @@ var includes = [
   Ti.UI.createToolbar,
   Ti.UI.createView,
   Ti.UI.createWebView,
-  Ti.UI.createWindow
+  Ti.UI.createWindow,
+  Ti.Media.createAudioPlayer,
+  Ti.Media.createAudioRecorder,
+  Ti.Media.createItem,
+  Ti.Media.createMusicPlayer,
+  Ti.Media.createSound,
+  Ti.Media.createVideoPlayer,
+  Ti.Contacts.createGroup,
+  Ti.Contacts.createPerson,
+  Ti.Database.open,
+  Ti.Database.execute
 ];
 if (Ti.Platform.osname !== "android"){
   var ios_includes = [Titanium.UI.iPhone.ActivityIndicatorStyle,
