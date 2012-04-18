@@ -9,7 +9,6 @@ then
 fi
 TI_PATH=`pwd`
 
-
 ## Prepare Build directory
 echo "Begining Build Process"
 
@@ -44,7 +43,7 @@ fi
 
 ## Move the required files
 cd Resources
-find -x . -type f$FLAG -print0| tar --null --no-recursion -cf - --files-from - | ( cd ../build/tishadow/src; tar xf - )
+find . -type f$FLAG -print0| tar --null --no-recursion -cf - --files-from - | ( cd ../build/tishadow/src; tar xf - )
 cd ..
 
 ##Propend the log commonjs library
@@ -55,10 +54,9 @@ do
   if [[ ! $FILE == *underscore.js ]]
   then
     echo "BUILDING FILE: $FILE"
-    #sed -i '' 's/"\//Ti.Filesystem.applicationDataDirectory\+"/' $FILE
-    sed -i '' "s/\(['\"]\)\//Ti.Filesystem.applicationDataDirectory\+\1/g" $FILE
-    sed -i '' 's/require/p.require/g' $FILE
-    sed -i '' "s/Ti.API/log/g" $FILE
+    perl -pi -e "s/(['\"])\//Ti.Filesystem.applicationDataDirectory\+\1/g" $FILE
+    perl -pi -e 's/require/p.require/g' $FILE
+    perl -pi -e "s/Ti.API/log/g" $FILE
   fi
   echo "var p = require('/api/PlatformRequire'), log = require('/api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
 done
@@ -68,6 +66,5 @@ zip ../dist/bundle.zip `find .$FLAG`
 cd ../../..
 touch ./build/tishadow/last_updated
 
-#wget --post-file=`cat ./build/tishadow/dist/bundle.zip | openssl base64` http://localhost:3000/shadowpost
 wget --post-data="bundle=$TI_PATH/build/tishadow/dist/bundle.zip" http://localhost:3000/
 rm index.html
