@@ -4,24 +4,40 @@ TiShadow
 TiShadow provides Titanium developers the ability to write code snippets in a browser
 and render the code across all iOS and Android devices. **NEW** TiShadow now
 also allows the deployment of apps to devices. There are three
-parts to TiShadow, the TiShadow server, TiShadow app and build scripts
+parts to TiShadow: the TiShadow server, TiShadow app and build scripts
 for deploying full applications.
 
-Have look at the following [video](http://www.youtube.com/watch?v=xUggUXQArUM) to get any idea of how to use TiShadow and what it can do.
+Have a look at the following [video](http://www.youtube.com/watch?v=xUggUXQArUM) to get any idea of how to use TiShadow and what it can do.
 
 
-TiShadow Server
----------------
-The server side uses the following and are required:
+TiShadow Server Install
+-----------------------
+
+TiShadow can be installed via npm using the following command:
+
+```bash
+  sudo npm install -g tishadow
+```
+
+Once installed, the server can be started by typing the following
+command:
+
+```bash
+  tishadow server
+```
+
+The server code uses the following and are included:
 
  * [node.js](http://nodejs.org/)
  * [express] (http://expressjs.com/)
  * [socket.io] (http://socket.io)
-
-The server code also uses the following and are included:
-
  * [Twitter Bootstrap](http://twitter.github.com/bootstrap/)
  * [Ace](https://github.com/ajaxorg/ace)
+
+
+
+TiShadow Server Install From Source
+-----------------------------------
 
 After cloning the server code, make sure you run the following to
 install dependancies:
@@ -52,7 +68,8 @@ TiShadow App now requires the following:
  * A custom build of the Titanium SDK. These can be retrieved from the
    `tishadow` branch of my fork of the titanium mobile sdk.
 
-Clone the code and run/install as you would any Titanium project.
+Since the TiShadow app is not _yet_ in the App Store or Google Play, clone the 
+code and run/install as you would any Titanium project.
 
 
 How To
@@ -97,14 +114,23 @@ Full Application Deployment
 ---------------------------
 
 Recently added to TiShadow is the ability to deploy full application. It
-is still in beta, but can be used for simple application.
+is still in beta, but can be used for simple applications.
 
-Simply go the project root of your folder and run the `tishadow` script
-included in the build folder. You may want to include the script in your
-environment path.
+If you installed TiShadow using npm, go to the root folder of your
+project and enter the following command to deploy an app:
 
-If the app has been deployed and you want to push minor updates enter
-`tishadow update` in the command line.
+```bash
+  tishadow
+```
+
+(For manual installs, the `tishadow` script is included in the build folder. You may want to include the script in your
+environment path.)
+
+If the app has been deployed and you want to push minor updates, use the following command:
+
+```bash
+  tishadow update
+```
 
 Some notes:
 
