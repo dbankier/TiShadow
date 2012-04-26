@@ -37,13 +37,13 @@ var sio=io.listen(app, {log: false});
 app.get('/', routes.index);
 var bundle;
 app.post('/', function(req, res) {
-  console.log("New Bundle: " + req.body.bundle);
+  console.log("[INFO] New Bundle: " + req.body.bundle);
   bundle = req.body.bundle;
   sio.sockets.emit("bundle");
   res.send("OK", 200);
 });
 app.get('/bundle', function(req,res) {
-  console.log(bundle);
+  console.log("[DEBUG] Bundle requested." );
   res.setHeader('Content-disposition', 'attachment; filename=bundle.zip');
   res.setHeader('Content-type', "application/zip");
 
@@ -59,23 +59,23 @@ app.get('/bundle', function(req,res) {
 
 //FIRE IT UP
 app.listen(3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+console.log("[DEBUG] TiShadow server started. Go to http://localhost:3000");
 
 //WEB SOCKET STUFF
 
 var devices = [];
 sio.sockets.on('connection', function(socket) {
-  console.log('A socket connected!');
+  console.log('[DEBUG] A socket connected');
   // Join
   socket.on('join', function(e) {
     if (e.name === "controller") {
-      socket.set('host', true, function() {console.log("CONTROLLER IS HERE")});
+      socket.set('host', true, function() {console.log("[INFO] [CONTROLLER] Connected")});
       devices.forEach(function(d) {
         sio.sockets.emit("device_connect", {name: d, id: new Buffer(d).toString('base64')});
       });
     } else{
       socket.set('name', e.name);
-      socket.set('host', false, function() {console.log(e.name + " ARRIVED")});
+      socket.set('host', false, function() {console.log("[INFO] [" +e.name + "] Connected")});
       e.id = new Buffer(e.name).toString('base64');
       sio.sockets.emit("device_connect", e);
       devices.push(e.name);
@@ -93,6 +93,7 @@ sio.sockets.on('connection', function(socket) {
   socket.on('log', function(data) {
     socket.get("name", function(err, name) {
       data.name = name;
+      console.log( "[" + data.level + "] [" + data.name + "] " + data.message);
       sio.sockets.emit("device_log", data);
     });
   })
@@ -103,7 +104,7 @@ sio.sockets.on('connection', function(socket) {
         sio.sockets.emit('disconnect');
       } else {
         socket.get("name", function(err, name) {
-          console.log(name + " Disconnected");
+          console.log("[WARN] [" + name + "] Disconnected");
           sio.sockets.emit("device_disconnect", {name: name, id: new Buffer(name).toString('base64')});
           devices.splice(devices.indexOf(name),1);
         });
