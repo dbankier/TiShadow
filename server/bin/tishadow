@@ -54,22 +54,22 @@ find . -type f$FLAG -print0| tar --null --no-recursion -cf - --files-from - | ( 
 cd ..
 
 ##Propend the log commonjs library
-for FILE in `find ./build/tishadow/src -name "*.js"$FLAG`
+find ./build/tishadow/src -name "*.js"$FLAG | while read FILE
 do
   #THE EXCLUSION OF UNDERSCORE COMPENSATE FOR LAZY REPLACE
   #THE REGEX SHOULD BE IMPROVED
   if [[ ! $FILE == *underscore.js ]]
   then
     echo "BUILDING FILE: $FILE"
-    perl -pi -e "s/(['\"])\//Ti.Filesystem.applicationDataDirectory\+\1/g" $FILE
-    perl -pi -e 's/require/p.require/g' $FILE
-    perl -pi -e "s/Ti.API/log/g" $FILE
+    perl -pi -e "s/(['\"])\//Ti.Filesystem.applicationDataDirectory\+\1/g" "$FILE"
+    perl -pi -e 's/require/p.require/g' "$FILE"
+    perl -pi -e "s/Ti.API/log/g" "$FILE"
   fi
-  echo "var p = require('/api/PlatformRequire'), log = require('/api/Log');" | cat - $FILE > /tmp/mytmpfile && mv /tmp/mytmpfile $FILE
+  echo "var p = require('/api/PlatformRequire'), log = require('/api/Log');" | cat - "$FILE" > /tmp/mytmpfile && mv /tmp/mytmpfile "$FILE"
 done
 
 cd build/tishadow/src
-zip ../dist/bundle.zip `find .$FLAG`
+find .$FLAG -print | zip ../dist/bundle.zip -@
 cd ../../..
 touch ./build/tishadow/last_updated
 
