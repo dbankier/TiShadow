@@ -4,7 +4,7 @@
  */
 
 var activity_indicator;
-exports.Activity = function(message) {
+function Activity(message) {
 	activity_indicator = Titanium.UI.createActivityIndicator({
 		bottom : 10,
 		height : 50,
@@ -14,12 +14,14 @@ exports.Activity = function(message) {
 	});
 };
 
-exports.Activity.prototype.show = function() {
+Activity.prototype.show = function() {
 	activity_indicator.show();
 };
-exports.Activity.prototype.hide = function() {
+Activity.prototype.hide = function() {
 	activity_indicator.hide();
 };
-exports.Activity.prototype.setMessage = function(text) {
+Activity.prototype.setMessage = function(text) {
 	activity_indicator.message = text;
 };
+
+module.exports = Activity;

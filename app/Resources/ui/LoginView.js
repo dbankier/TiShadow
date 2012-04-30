@@ -1,7 +1,7 @@
 /*globals, exports, require, mixin*/
 var Styles = require('/ui/Styles');
 
-exports.LoginView = function() {
+function LoginView() {
   var container = Ti.UI.createView(Styles.text.container);
 
   //Left View
@@ -29,3 +29,5 @@ exports.LoginView = function() {
 
   return container;
 };
+
+module.exports = LoginView;

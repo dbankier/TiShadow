@@ -8,7 +8,7 @@
         <target device="blackberry">false</target>
     </deployment-targets>
     <sdk-version>tishadow</sdk-version>
-    <id>com.yydigital.tishadow</id>
+    <id>com.yydigital.tishadowapp</id>
     <name>TiShadow</name>
     <version>1.0</version>
     <publisher>YY Digital Pty Ltd</publisher>
@@ -37,7 +37,7 @@
         </orientations>
     </iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
-    	<manifest>
+    	<manifest android:versionCode="1" android:versionName="1.0.0">
     		<!-- http://stackoverflow.com/questions/7523075/xml-android-permissions-list-full-->
     		<uses-permission android:name="android.permission.ACCESS_CHECKIN_PROPERTIES" />
 			<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

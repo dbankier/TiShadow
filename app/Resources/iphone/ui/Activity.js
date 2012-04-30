@@ -8,7 +8,7 @@ var osname = Ti.Platform.osname;
 var screenHeight = Ti.Platform.displayCaps.platformHeight;
 var screenWidth = Ti.Platform.displayCaps.platformWidth;
 
-exports.Activity = function(message) {
+function Activity(message) {
 	activity_win = Titanium.UI.createWindow({
 		backgroundColor : '#000',
 		top : 0,
@@ -51,7 +51,7 @@ exports.Activity = function(message) {
 	activity_win.add(activity_view);
 };
 
-exports.Activity.prototype.show = function(win) {
+Activity.prototype.show = function(win) {
 	activity_view.show();
 	if(win == null) {
 		activity_win.height = screenHeight;
@@ -65,7 +65,7 @@ exports.Activity.prototype.show = function(win) {
 		win.add(activity_view);
 	}
 };
-exports.Activity.prototype.hide = function(win) {
+Activity.prototype.hide = function(win) {
 	activity_view.hide();
 	if(win == null) {
 		activity_win.height = 0;
@@ -76,6 +76,8 @@ exports.Activity.prototype.hide = function(win) {
 		win.remove(activity_view);
 	}
 };
-exports.Activity.prototype.setMessage = function(text) {
+Activity.prototype.setMessage = function(text) {
 	activity_label.text = text;
 };
+
+module.exports = Activity;

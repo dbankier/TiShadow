@@ -1,12 +1,9 @@
 /*globals, exports, require*/
-var LoginView = require('/ui/LoginView').LoginView;
-var Activity = require('/ui/Activity').Activity;
-var log = require('/api/Log');
-var zipfile = Ti.Platform.osname === "android" ? require("com.yydigital.zip"): require("zipfile");
-var p = require('/api/PlatformRequire');
+var LoginView = require('/ui/LoginView');
+var Activity = require('/ui/Activity');
 //Includes do not need to be included at runtime, just needed to trick
-//Ti build process.
 //require("/api/Includes");
+var TiShadow = require('/api/TiShadow');
 
 exports.StartScreen = function() {
   var win = Ti.UI.createWindow({
@@ -25,7 +22,23 @@ exports.StartScreen = function() {
   });
   win.add(webview);
 
+  var label = Ti.UI.createLabel({
+    text: "Connected",
+    font: {
+      fontSize: "20dp",
+      fontWeight: "bold"
+    },
+    color: "#adbedd"
+  });
+  
+  label.addEventListener('click', function() {
+  	Ti.App.fireEvent('tishadow:socket_disconnect');
+    connect();
+  });
+  win.add(label);
+
   var login = new LoginView();
+  login.zIndex = 10;
   function connect() {
     Ti.App.fireEvent('tishadow:socket_connect', {
       address : Ti.App.Properties.getString("address"),
@@ -38,81 +51,53 @@ exports.StartScreen = function() {
   });
   win.add(login);
 
-  var current;
-  Ti.App.addEventListener("tishadow:message", function(message) {
-    try {
-      if(current && current.close !== undefined) {
-        current.close();
-      }
-      current = eval(message.code);
-      if(current && current.open !== undefined) {
-        current.open();
-      }
-      log.info("Deployed");
-    } catch (e) {
-      var error_message;
-      if(e.line === undefined) {
-        error_message = e.toString();
-      } else { //iOS Error
-        error_message = "Line " + e.line + ": " + e.message;
-      }
-      log.error(error_message);
-    }
+  var button = Ti.UI.createButton({
+    height : '40dp',
+    width : '280dp',
+    color : '#adbedd',
+    backgroundColor : "white",
+    borderColor: "#adbedd",
+    borderWidth: 1,
+    font : {
+      fontSize : '16dp',
+      fontWeight : 'bold'
+    },
+    borderRadius : '10',
+    bottom : '20dp',
+    title : "Load from Cache"
   });
 
-  var bundle;
-  Ti.App.addEventListener("tishadow:bundle", function(o) {
-    var xhr = Ti.Network.createHTTPClient();
-    xhr.setTimeout(1000);
-    xhr.onload=function(e) {
-      try {
-        if (bundle && bundle.close !== undefined) {
-          bundle.close();
-          log.info("Previous bundle closed.");
-        }
-        log.info("Unpacking new bundle.");
-        var zip_file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'bundle.zip');
-        zip_file.write(this.responseData);
-        var dataDir = Ti.Platform.osname === "android" ?  Ti.Filesystem.applicationDataDirectory :  Ti.Filesystem.applicationDataDirectory.slice(0,Ti.Filesystem.applicationDataDirectory.length - 1).replace('file://localhost','').replace(/%20/g,' ');
-        zipfile.extract(dataDir+'/bundle.zip', dataDir);
-        p.clearCache();
-        bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/app");
-        log.info("New bundle deployed.");
-      } catch (err) {
-        log.error(err.toString());
-      }
-    };
-    xhr.onerror = function(e){
-      Ti.UI.createAlertDialog({title:'XHR', message:'Error: ' + e.error}).show();
-    };
-
-    xhr.open('GET', "http://" + Ti.App.Properties.getString("address") + ":3000/bundle");
-    xhr.send();
+  button.addEventListener('click', function() {
+    TiShadow.loadFromCache();
   });
 
-  Ti.App.addEventListener("tishadow:connected", function(o) {
-    activity.hide();
-    alert("Connected");
-    win.remove(login);
-  });
+  win.add(button);
 
-  Ti.App.addEventListener("tishadow:connectfailed", function(o) {
-    activity.hide();
-    alert("Connect Failed");
-    win.add(login);
-  });
 
-  Ti.App.addEventListener("tishadow:disconnected", function(o) {
-    alert("Disconnected");
-    win.add(login);
-  });
-  // To fix undetected connection loss when app backgrounded on iOS
-  if (Ti.Platform.osname!=="android"){
-    Ti.App.addEventListener("resumed", function() {
-      Ti.App.fireEvent('tishadow:socket_disconnect');
-      connect();
-    });
-  }
+  // Listeners
+Ti.App.addEventListener("tishadow:connected", function(o) {
+  activity.hide();
+  alert("Connected");
+  win.remove(login);
+});
 
-  return win;
+Ti.App.addEventListener("tishadow:connectfailed", function(o) {
+  activity.hide();
+  alert("Connect Failed");
+  win.add(login);
+});
+
+Ti.App.addEventListener("tishadow:disconnected", function(o) {
+  alert("Disconnected");
+  win.add(login);
+});
+// To fix undetected connection loss when app backgrounded on iOS
+if (Ti.Platform.osname!=="android"){
+  Ti.App.addEventListener("resumed", function() {
+    Ti.App.fireEvent('tishadow:socket_disconnect');
+    connect();
+  });
+}
+
+return win;
 };
