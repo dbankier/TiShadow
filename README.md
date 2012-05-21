@@ -132,10 +132,14 @@ If the app has been deployed and you want to push minor updates, use the followi
   tishadow update
 ```
 
-Some notes:
+__Some notes and limitations__
 
  * Only works with applications that use the CommonJS structure. The use
    of `Ti.include` will not work.
+ * CommonJS modules should be required with their full path, ie /
+   leading. (This is a better practice anyway given the difference
+   between iOS and Android.)
+ * Don't use `require` as an object property name.
  * Only files in the Resources directory will will be sent to the device
    using TiShadow. Localisation
    and custom changes to the Android Manifest are not supported.
