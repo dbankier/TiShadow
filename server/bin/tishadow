@@ -73,5 +73,4 @@ find .$FLAG -print | zip ../dist/bundle.zip -@
 cd ../../..
 touch ./build/tishadow/last_updated
 
-wget --post-data="bundle=$TI_PATH/build/tishadow/dist/bundle.zip" http://localhost:3000/
-rm index.html
+wget -qO - --post-data="bundle=$TI_PATH/build/tishadow/dist/bundle.zip" http://localhost:3000/
