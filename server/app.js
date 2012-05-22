@@ -54,6 +54,9 @@ app.get('/bundle', function(req,res) {
   filestream.on('end', function() {
     res.end();
   });
+  filestream.on('error', function(exception) {
+      console.log("[ERROR] " + exception);
+  });
 });
 
 
