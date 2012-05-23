@@ -14,15 +14,14 @@ then
   echo "Script must be executed in the Titanium project's root directory"
   exit 1
 fi
-TI_PATH=`pwd`
-
 ## Prepare Build directory
 echo "Begining Build Process"
 
 ## ARE WE IN A UPDATE MODE
 if [ -d "./build/tishadow/src" -a -f "./build/tishadow/last_updated" -a "$1" = "update" ]
 then
-  FLAG=" -newer $TI_PATH/build/tishadow/last_updated"
+  FLAG=" -newer "
+  UPFILE="`pwd`/build/tishadow/last_updated"
   FILES=`find ./Resources/* -type f -newer ./build/tishadow/last_updated`
   [ -f ./build/tishadow/dist/bundle.zip ] && ( rm ./build/tishadow/dist/bundle.zip ) 
   if [ -z $FILES ] 
@@ -32,7 +31,6 @@ then
   fi
 else
   echo "Performing full build."
-  FLAG=""
   if [ ! -d "./build" ]
   then
     mkdir build
@@ -50,11 +48,11 @@ fi
 
 ## Move the required files
 cd Resources
-find . -type f$FLAG -print0| tar --null --no-recursion -cf - --files-from - | ( cd ../build/tishadow/src; tar xf - )
+find . -type f$FLAG"$UPFILE" -print0| tar --null --no-recursion -cf - --files-from - | ( cd ../build/tishadow/src; tar xf - )
 cd ..
 
 ##Propend the log commonjs library
-find ./build/tishadow/src -name "*.js"$FLAG | while read FILE
+find ./build/tishadow/src -name "*.js"$FLAG"$UPFILE" | while read FILE
 do
   #THE EXCLUSION OF UNDERSCORE COMPENSATE FOR LAZY REPLACE
   #THE REGEX SHOULD BE IMPROVED
@@ -69,8 +67,8 @@ do
 done
 
 cd build/tishadow/src
-find .$FLAG -print | zip ../dist/bundle.zip -@
+find .$FLAG"$UPFILE" -print | zip ../dist/bundle.zip -@
 cd ../../..
 touch ./build/tishadow/last_updated
 
-wget -qO - --post-data="bundle=$TI_PATH/build/tishadow/dist/bundle.zip" http://localhost:3000/
+wget -qO - --post-data="bundle=$(echo `pwd`)/build/tishadow/dist/bundle.zip" http://localhost:3000/
