@@ -24,9 +24,9 @@ Ti.App.addEventListener("tishadow:message", function(message) {
   }
 });
 
-var bundle;
-Ti.App.addEventListener("tishadow:bundle", function(o) {
-  var xhr = Ti.Network.createHTTPClient();
+
+function loadRemoteZip(url) {
+var xhr = Ti.Network.createHTTPClient();
   xhr.setTimeout(1000);
   xhr.onload=function(e) {
     try {
@@ -49,9 +49,13 @@ Ti.App.addEventListener("tishadow:bundle", function(o) {
   xhr.onerror = function(e){
     Ti.UI.createAlertDialog({title:'XHR', message:'Error: ' + e.error}).show();
   };
-
-  xhr.open('GET', "http://" + Ti.App.Properties.getString("address") + ":3000/bundle");
+  xhr.open('GET', url);
   xhr.send();
+}
+
+var bundle;
+Ti.App.addEventListener("tishadow:bundle", function(o) {
+  loadRemoteZip("http://" + Ti.App.Properties.getString("address") + ":3000/bundle");
 });
 
 
@@ -68,4 +72,35 @@ exports.loadFromCache = function() {
   } catch (err) {
     log.error(err.toString());
   }
+};
+
+
+// FOR URL SCHEME - tishadow://
+function loadRemoteBundle(url) {
+  if (url.indexOf(".zip") === -1) {
+    alert("Invalid Bundle");
+  } else {
+    loadRemoteZip(url);
+  }
 }
+
+var url = '';
+if (Ti.Platform.osname !== "android") {
+  var cmd = Ti.App.getArguments();
+  if ( (typeof cmd == 'object') && cmd.hasOwnProperty('url') ) {
+    url = cmd.url;
+    loadRemoteBundle(url.replace("tishadow", "http"));
+  }
+
+  Ti.App.addEventListener( 'resumed', function(e) {
+    cmd = Ti.App.getArguments();
+    if ( (typeof cmd == 'object') && cmd.hasOwnProperty('url') ) {
+      if ( cmd.url !== url ) {
+        url = cmd.url;
+        loadRemoteBundle(url.replace("tishadow", "http"));
+      }
+    }
+  });
+}
+
+

@@ -69,6 +69,10 @@ done
 cd build/tishadow/src
 find .$FLAG"$UPFILE" -print | zip ../dist/bundle.zip -@
 cd ../../..
-touch ./build/tishadow/last_updated
 
-wget -qO - --post-data="bundle=$(echo `pwd`)/build/tishadow/dist/bundle.zip" http://localhost:3000/
+if [ "$1" = "bundle" ]
+  echo "Bundle Ready: $(echo `pwd`)/build/tishadow/dist/bundle.zip"
+then
+  touch ./build/tishadow/last_updated
+  wget -qO - --post-data="bundle=$(echo `pwd`)/build/tishadow/dist/bundle.zip" http://localhost:3000/
+fi

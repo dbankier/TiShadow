@@ -165,6 +165,19 @@ launching the new one, include the following code snippet in your
     }
 ```
 
+
+Launch From Web
+---------------
+
+_Currently only working on iOS_
+
+You can also use TiShadow to bundle an app and launch it from a web
+page. You the command `tishadow bundle` to bundle the app for a
+TiShadow distribution. Then include a link to the bundle in your webpage
+using the following format, e.g. : `tishadow://mydomain.com/bundle.zip`.
+Tapping on the link from your browser should launch the app in TiShadow.
+
+
 VIM Shortcuts
 -------------
 Those using vim/gvim/mvim for development might what to add these
