@@ -7,6 +7,14 @@ then
   exit 0
 fi
 
+## Clear Option
+if [ "$1" = "clear" ]
+then
+  echo "Clearing cache on devices."
+  wget -qO - --post-data="" http://localhost:3000/clear_cache
+  exit 0
+fi
+
 ## Otherwise regular app build
 ## Confirm we are in the project root
 if [ ! -f "./tiapp.xml" ]

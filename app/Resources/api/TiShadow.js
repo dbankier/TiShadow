@@ -26,7 +26,7 @@ Ti.App.addEventListener("tishadow:message", function(message) {
 
 
 function loadRemoteZip(url) {
-var xhr = Ti.Network.createHTTPClient();
+  var xhr = Ti.Network.createHTTPClient();
   xhr.setTimeout(1000);
   xhr.onload=function(e) {
     try {
@@ -58,6 +58,27 @@ Ti.App.addEventListener("tishadow:bundle", function(o) {
   loadRemoteZip("http://" + Ti.App.Properties.getString("address") + ":3000/bundle");
 });
 
+Ti.App.addEventListener("tishadow:clear", function(o) {
+  try {
+    var files = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory).getDirectoryListing();
+    files.forEach(function(file_name) {
+      var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,file_name);
+      if (Ti.Platform.osname === "android") {
+        if (file.isFile()) {
+          file.deleteFile();
+        } else if (file.isDirectory()) {
+          file.deleteDirectory(true);
+        }
+      } else {
+        file.deleteFile();
+        file.deleteDirectory(true);
+      }
+    });
+  } catch (e) {
+    log.error(JSON.stringify(e));
+  }
+  log.info("Cache cleared");
+});
 
 exports.loadFromCache = function() {
   try {

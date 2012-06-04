@@ -132,6 +132,13 @@ If the app has been deployed and you want to push minor updates, use the followi
   tishadow update
 ```
 
+The app is then cached on the device. If need to clear the cache, use
+the following command:
+
+```bash
+  tishadow clear
+```
+
 __Some notes and limitations__
 
  * Only works with applications that use the CommonJS structure. The use

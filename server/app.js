@@ -42,6 +42,11 @@ app.post('/', function(req, res) {
   sio.sockets.emit("bundle");
   res.send("OK", 200);
 });
+app.post('/clear_cache', function(req,res) {
+  console.log("[INFO] Clear Cache Requested");
+  sio.sockets.emit("clear");
+  res.send("OK", 200);
+});
 app.get('/bundle', function(req,res) {
   console.log("[DEBUG] Bundle requested." );
   res.setHeader('Content-disposition', 'attachment; filename=bundle.zip');

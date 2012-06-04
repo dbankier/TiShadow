@@ -34,6 +34,10 @@ $(document).ready(function() {
           Ti.App.fireEvent("tishadow:bundle");
         });
 
+        socket.on('clear', function() {
+          Ti.App.fireEvent("tishadow:clear");
+        });
+
         socket.on('disconnect', function() {
           io.disconnect();
           Ti.App.fireEvent("tishadow:disconnected");
