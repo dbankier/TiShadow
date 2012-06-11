@@ -169,12 +169,16 @@ if (cmd === "server") {
 
   // Process  Files
   buildDirs(path.join(base,'build','tishadow','src'), file_list.dirs);
-  file_list.files.forEach(function(file) {
+  var end;
+  file_list.files.forEach(function(file, idx) {
+    setTimeout(function(){
     prepare(path.join(base,'Resources',file), path.join(base,'build','tishadow','src', file));
-
+    }, idx * 1);
+    end = idx;
   });
 
   // Bundle up to go
+  setTimeout(function() {
   var total = file_list.files.length;
   zipbundle(file_list.files,function(written) { 
     console.log(total+ " file(s) bundled."); 
@@ -184,6 +188,6 @@ if (cmd === "server") {
     } else {
      postToServer("/", {bundle:path.join(base,"build","tishadow","dist","bundle.zip")});
     } 
-  });
+  });}, (end + 1)* 1);
 
 }
