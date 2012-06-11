@@ -1,86 +1,185 @@
-#!/bin/bash
+#!/usr/bin/env node
+var path = require("path"),
+    fs = require("fs"),
+    http = require("http"),
+    util = require("util"),
+    zipstream = require("zipstream"),
+    base = process.cwd(),
+    last_update,
+    file_list;
 
-## If Start Server Option
-if [ "$1" = "server" ]
-then
-  tishadow-server
-  exit 0
-fi
+function postToServer(path, data) {
+  var jdata = JSON.stringify(data||{});
+  var post_options = {
+    host: 'localhost',
+    port: '3000',
+    path: path,
+    method: 'POST',
+    headers: {
+      "Content-Type" : "application/json",
+      "Content-Length":jdata.length
+    } 
+  };
+  var req = http.request(post_options, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+      console.log('Response: ' + chunk);
+    });
+  }); 
+  req.write(jdata);
+  req.end(); 
+}
 
-## Clear Option
-if [ "$1" = "clear" ]
-then
-  echo "Clearing cache on devices."
-  wget -qO - --post-data="" http://localhost:3000/clear_cache
-  exit 0
-fi
+// Get Filelist with optional "update" filter
+function getFileList(start, _path) {
+  var files = [], dirs=[];
+  var stat = fs.statSync(start);
+  if (stat.isDirectory()) {
+    var filenames = fs.readdirSync(start);
+    var coll = filenames.reduce(function (acc, name) {
+      var abspath = path.join(start, name);
+      var file_stat = fs.statSync(abspath);
+      if (file_stat.isDirectory()) {
+        acc.dirs.push(name);
+      } else {
+        if (last_update === undefined || last_update < file_stat.mtime) {
+          acc.names.push(path.join(_path || "." , name));
+        }
+      }
+      return acc;
+    }, {"names": [], "dirs": []});
+    files = coll.names;
+    coll.dirs.forEach(function (d) {
+      var abspath = path.join(start, d);
+      var relpath = path.join(_path|| ".", d);
+      dirs.push(relpath);
+      var recurs = getFileList(abspath, relpath);
+      files = files.concat(recurs.files);
+      dirs = dirs.concat(recurs.dirs);
+    });
+  }
+  return {files: files, dirs: dirs};
+};
 
-## Otherwise regular app build
-## Confirm we are in the project root
-if [ ! -f "./tiapp.xml" ]
-then
-  echo "Script must be executed in the Titanium project's root directory"
-  exit 1
-fi
-## Prepare Build directory
-echo "Begining Build Process"
+// Recursively Remove Directories
+var rmdir = function(dir) {
+  var list = fs.readdirSync(dir);
+  for(var i = 0; i < list.length; i++) {
+    var filename = path.join(dir, list[i]);
+    var stat = fs.statSync(filename);
+    if(filename == "." || filename == "..") {
+    } else if(stat.isDirectory()) {
+      rmdir(filename);
+    } else {
+      fs.unlinkSync(filename);
+    }
+  }
+  fs.rmdirSync(dir);
+};
+// Builds directory structure
+function buildDirs(rel_root, dirs) {
+  dirs.forEach(function(dir) {
+    if (!path.existsSync(path.join(rel_root,dir)) ){
+      fs.mkdirSync(path.join(rel_root,dir));
+    }
+  });
+}
+// Copies all Resource files and prepares JS files
+function prepare(src, dst) {
+  if (src.match("js$") && !src.match("underscore.js$")) {
+    var src_text = "var p = require('/api/PlatformRequire'), log = require('/api/Log');\n" 
+      + fs.readFileSync(src).toString()
+        .replace(/(['"])\//g, "Ti.Filesystem.applicationDataDirectory+$1")
+        .replace(/require/g, "p.require")
+        .replace(/Ti.API/g, "log");
+    fs.writeFileSync(dst,src_text);
+  } else { // Non-JS file - just pump it
+    var  is = fs.createReadStream(src);
+    var  os = fs.createWriteStream(dst);
+    util.pump(is, os);
+  }
+};
 
-## ARE WE IN A UPDATE MODE
-if [ -d "./build/tishadow/src" -a -f "./build/tishadow/last_updated" -a "$1" = "update" ]
-then
-  FLAG=" -newer "
-  UPFILE="`pwd`/build/tishadow/last_updated"
-  FILES=`find ./Resources/* -type f -newer ./build/tishadow/last_updated`
-  [ -f ./build/tishadow/dist/bundle.zip ] && ( rm ./build/tishadow/dist/bundle.zip ) 
-  if [ -z $FILES ] 
-  then 
-    echo "NOTHING TO UPDATE"
-    exit 1
-  fi
-else
-  echo "Performing full build."
-  if [ ! -d "./build" ]
-  then
-    mkdir build
-  fi
+function zipbundle(files, callback, zip) {
+  var out;
+  if (zip === undefined) {
+    out = fs.createWriteStream(path.join(base, "build", "tishadow", "dist", "bundle.zip"));
+    zip = zipstream.createZip({level:1});
+  }
+  if (files.length === 0) {
+    zip.finalize(callback);
+  } else {
+    var tail = files.splice(1);
+    zip.addFile(fs.createReadStream(path.join(base,"build","tishadow","src",files[0])), {name: files[0]}, function() {
+      zipbundle(tail,callback,zip);
+    });
+  }
+  if (out) {
+    zip.pipe(out);
+  }
+}
 
-  if [ -d "./build/tishadow" ]
-  then
-    rm -rf ./build/tishadow
-  fi
+function touch() {
+  var last_update_file = path.join(base, "build", "tishadow", "last_updated");
+  if (path.existsSync(last_update_file)) {
+    var now = new Date();
+    fs.utimesSync(last_update_file,now,now);
+  } else {
+    fs.writeFileSync(last_update_file,"");
+  }
+}
 
-  mkdir ./build/tishadow
-  mkdir ./build/tishadow/src
-  mkdir ./build/tishadow/dist
-fi
+var cmd = process.argv[2];
+if (cmd === "server") {
+  require("../app.js");
+} else if (cmd === "clear") {
+  postToServer("/clear_cache");
+} else {
+  if (!path.existsSync(path.join(base,'tiapp.xml'))) {
+    console.log("Script must be executed in the Titanium project's root directory");
+    process.exit();
+  }
 
-## Move the required files
-cd Resources
-find . -type f$FLAG"$UPFILE" -print0| tar --null --no-recursion -cf - --files-from - | ( cd ../build/tishadow/src; tar xf - )
-cd ..
+  console.log("Beginning Build Process");
 
-##Propend the log commonjs library
-find ./build/tishadow/src -name "*.js"$FLAG"$UPFILE" | while read FILE
-do
-  #THE EXCLUSION OF UNDERSCORE COMPENSATE FOR LAZY REPLACE
-  #THE REGEX SHOULD BE IMPROVED
-  if [[ ! $FILE == *underscore.js ]]
-  then
-    echo "BUILDING FILE: $FILE"
-    perl -pi -e "s/(['\"])\//Ti.Filesystem.applicationDataDirectory\+\1/g" "$FILE"
-    perl -pi -e 's/require/p.require/g' "$FILE"
-    perl -pi -e "s/Ti.API/log/g" "$FILE"
-  fi
-  echo "var p = require('/api/PlatformRequire'), log = require('/api/Log');" | cat - "$FILE" > /tmp/mytmpfile && mv /tmp/mytmpfile "$FILE"
-done
+  if(path.existsSync(path.join(base, 'build', 'tishadow', 'src')) 
+    && path.existsSync(path.join(base, 'build', 'tishadow', 'last_updated'))
+    && cmd == "update") {
+    var last_stat = fs.statSync(path.join(base, 'build', 'tishadow', 'last_updated'));
+    last_update = last_stat.mtime;
+    file_list = getFileList(path.join(base, 'Resources'));
+    if (file_list.files.length === 0) {
+      console.log("Nothing to update.");
+      process.exit();
+    }
+  } else {
+    if (!path.existsSync(path.join(base,'build'))){
+      fs.mkdirSync(path.join(base,'build'), 0755);
+    }
+    //Clean Build
+    if (path.existsSync(path.join(base,'build','tishadow'))) {
+      rmdir(path.join(base,'build','tishadow'));
+    }
+    // Create the tishadow build paths
+    fs.mkdirSync(path.join(base,'build','tishadow'), 0755);
+    fs.mkdirSync(path.join(base,'build','tishadow','src'), 0755);
+    fs.mkdirSync(path.join(base,'build','tishadow','dist'), 0755);
+    file_list = getFileList(path.join(base, 'Resources'));
+  }
 
-cd build/tishadow/src
-find .$FLAG"$UPFILE" -print | zip ../dist/bundle.zip -@
-cd ../../..
+  // Process  Files
+  buildDirs(path.join(base,'build','tishadow','src'), file_list.dirs);
+  file_list.files.forEach(function(file) {
+    prepare(path.join(base,'Resources',file), path.join(base,'build','tishadow','src', file));
 
-if [ "$1" = "bundle" ]
-  echo "Bundle Ready: $(echo `pwd`)/build/tishadow/dist/bundle.zip"
-then
-  touch ./build/tishadow/last_updated
-  wget -qO - --post-data="bundle=$(echo `pwd`)/build/tishadow/dist/bundle.zip" http://localhost:3000/
-fi
+  });
+
+  // Bundle up to go
+  var total = file_list.files.length;
+  zipbundle(file_list.files,function(written) { 
+    console.log(total+ " file(s) bundled."); 
+    touch();
+    postToServer("/", {bundle:path.join(base,"build","tishadow","dist","bundle.zip")}); 
+  });
+
+}
