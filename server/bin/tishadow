@@ -179,7 +179,11 @@ if (cmd === "server") {
   zipbundle(file_list.files,function(written) { 
     console.log(total+ " file(s) bundled."); 
     touch();
-    postToServer("/", {bundle:path.join(base,"build","tishadow","dist","bundle.zip")}); 
+    if (cmd === "bundle") {
+     console.log("Bundle Ready: " +  path.join(base,"build","tishadow","dist","bundle.zip"));
+    } else {
+     postToServer("/", {bundle:path.join(base,"build","tishadow","dist","bundle.zip")});
+    } 
   });
 
 }
