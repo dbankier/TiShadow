@@ -10,6 +10,7 @@ var includes = [
   Ti.UI.createDashboardItem,
   Ti.UI.createDashboardView,
   Ti.UI.createEmailDialog,
+  Ti.UI.createImageView,
   Ti.UI.createLabel,
   Ti.UI.createMaskedImage,
   Ti.UI.createNotification,
