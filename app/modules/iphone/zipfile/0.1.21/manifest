@@ -1,0 +1,17 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 0.1.21
+description: Create and extract zip files in Titanium apps
+author: Gennadiy Potapov - with updates and deprecation (minizip) fixes by Kosso
+license: MIT License
+copyright: Copyright (c) 2011 Gennadiy Potapov - with updates and deprecation (minizip) fixes by Kosso
+
+
+# these should not be edited
+name: zipfile
+moduleid: zipfile
+guid: 12bdae7d-5d4b-43b7-bd59-cacecd19756b
+platform: iphone
+minsdk: 1.6.3
