@@ -10,10 +10,11 @@ var os = Ti.Platform.osname;
 // modules here in the code.
 var cache={};
 
-exports.require = function(path) {
+exports.require = function(base,extension) {
   try {
+    var path = base + extension;
     //Try platform specific path first
-    var platform_path =  path.replace(Ti.Filesystem.applicationDataDirectory, Ti.Filesystem.applicationDataDirectory + (os === "android" ? "android" : "iphone") + "/");
+    var platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
     var file = Ti.Filesystem.getFile(platform_path + ".js");
     if (file.exists()) {
       path = platform_path;   

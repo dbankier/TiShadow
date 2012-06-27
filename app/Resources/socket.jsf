@@ -30,8 +30,8 @@ $(document).ready(function() {
           Ti.App.fireEvent("tishadow:message", data);
         });
 
-        socket.on('bundle', function() {
-          Ti.App.fireEvent("tishadow:bundle");
+        socket.on('bundle', function(data) {
+          Ti.App.fireEvent("tishadow:bundle",data);
         });
 
         socket.on('clear', function() {

@@ -37,9 +37,10 @@ var sio=io.listen(app, {log: false});
 app.get('/', routes.index);
 var bundle;
 app.post('/', function(req, res) {
-  console.log("[INFO] New Bundle: " + req.body.bundle);
+  var name = path.basename(req.body.bundle).replace(".zip","");
+  console.log("[INFO] New Bundle: " + req.body.bundle + " | " + name);
   bundle = req.body.bundle;
-  sio.sockets.emit("bundle");
+  sio.sockets.emit("bundle", {name: name});
   res.send("OK", 200);
 });
 app.post('/clear_cache', function(req,res) {

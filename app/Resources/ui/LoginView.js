@@ -2,6 +2,16 @@
 var Styles = require('/ui/Styles');
 
 function LoginView() {
+  var window = Ti.UI.createWindow();
+  var black = Ti.UI.createView({
+     backgroundColor: 'black',
+     opacity: 0.4
+  });
+  black.addEventListener('click', function() {
+    window.hide();
+  });
+  window.add(black);
+     
   var container = Ti.UI.createView(Styles.text.container);
 
   //Left View
@@ -19,7 +29,7 @@ function LoginView() {
     if (Ti.App.Properties.getString("address","").length === 0) {
       alert("IP Address Required");
     } else {
-      container.fireEvent("connect");
+      window.fireEvent("connect");
     }
   });
 
@@ -27,7 +37,9 @@ function LoginView() {
   container.add(host);
   container.add(button);
 
-  return container;
+  window.add(container);
+
+  return window;
 };
 
 module.exports = LoginView;

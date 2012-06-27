@@ -24,24 +24,43 @@ Ti.App.addEventListener("tishadow:message", function(message) {
   }
 });
 
+var bundle;
+exports.launchApp = function(name) {
+  try {
+    if (bundle && bundle.close !== undefined) {
+        bundle.close();
+        log.info("Previous bundle closed.");
+    }
+    p.clearCache();
+    Ti.App.fireEvent("tishadow:refresh_list");
+    bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/" + name , "/app");
+    log.info(name.replace(/_/g," ") + " launched.");
+  } catch(e) {
+    log.error(JSON.stringify(e));
+  }
+};
 
-function loadRemoteZip(url) {
+function loadRemoteZip(name, url) {
   var xhr = Ti.Network.createHTTPClient();
   xhr.setTimeout(1000);
   xhr.onload=function(e) {
     try {
-      if (bundle && bundle.close !== undefined) {
-        bundle.close();
-        log.info("Previous bundle closed.");
-      }
-      log.info("Unpacking new bundle.");
-      var zip_file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'bundle.zip');
+      log.info("Unpacking new bundle: " + name);
+
+      var path_name = name.replace(/ /g,"_");
+      // SAVE ZIP
+      var zip_file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, name + '.zip');
       zip_file.write(this.responseData);
+      // Prepare path
+      var target = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, path_name);
+      if (!target.exists()) {
+        target.createDirectory();
+      }
+      // Extract
       var dataDir = Ti.Platform.osname === "android" ?  Ti.Filesystem.applicationDataDirectory :  Ti.Filesystem.applicationDataDirectory.slice(0,Ti.Filesystem.applicationDataDirectory.length - 1).replace('file://localhost','').replace(/%20/g,' ');
-      zipfile.extract(dataDir+'/bundle.zip', dataDir);
-      p.clearCache();
-      bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/app");
-      log.info("New bundle deployed.");
+      zipfile.extract(dataDir+'/' + name + '.zip', dataDir + "/" + path_name);
+      // Launch
+      exports.launchApp(path_name);
     } catch (err) {
       log.error(err.toString());
     }
@@ -53,11 +72,11 @@ function loadRemoteZip(url) {
   xhr.send();
 }
 
-var bundle;
 Ti.App.addEventListener("tishadow:bundle", function(o) {
-  loadRemoteZip("http://" + Ti.App.Properties.getString("address") + ":3000/bundle");
+  loadRemoteZip(o.name, "http://" + Ti.App.Properties.getString("address") + ":3000/bundle");
 });
 
+// Clears all apps from cache
 Ti.App.addEventListener("tishadow:clear", function(o) {
   try {
     var files = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory).getDirectoryListing();
@@ -74,26 +93,12 @@ Ti.App.addEventListener("tishadow:clear", function(o) {
         file.deleteDirectory(true);
       }
     });
+    Ti.App.fireEvent("tishadow:refresh_list");
   } catch (e) {
     log.error(JSON.stringify(e));
   }
   log.info("Cache cleared");
 });
-
-exports.loadFromCache = function() {
-  try {
-    p.clearCache();
-    var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + "/app.js");
-    if (file.exists()) {
-      bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/app");
-      log.info("New bundle deployed.");
-    } else {
-      alert("No app found in cache.");
-    }
-  } catch (err) {
-    log.error(err.toString());
-  }
-};
 
 
 // FOR URL SCHEME - tishadow://
@@ -101,7 +106,9 @@ function loadRemoteBundle(url) {
   if (url.indexOf(".zip") === -1) {
     alert("Invalid Bundle");
   } else {
-    loadRemoteZip(url);
+    var name_parts = url.split("/");
+    var name = name_parts[name_parts.length -1].replace(".zip","");
+    loadRemoteZip(name, url);
   }
 }
 

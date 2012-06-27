@@ -17,9 +17,6 @@ function Activity(message) {
 		right : 0,
 		opacity : 0.70
 	});
-	if(osname == "ipad") {
-		activity_win.orientationModes = [Titanium.UI.LANDSCAPE_LEFT, Titanium.UI.LANDSCAPE_RIGHT];
-	}
 	activity_view = Titanium.UI.createView({
 		width : 280,
 		height : 90,

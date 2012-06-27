@@ -8,9 +8,22 @@ var TiShadow = require('/api/TiShadow');
 exports.StartScreen = function() {
   var win = Ti.UI.createWindow({
     backgroundColor : 'white',
-    exitOnClose : true
+    exitOnClose : true,
+    title: "TiShadow",
+  });
+  var app_list= new (require("/ui/AppList"))();
+  app_list.addEventListener("launch", function(e) {
+    activity.show();
+    TiShadow.launchApp(e.app);
+    activity.hide();
   });
 
+  (require("/ui/NavBar")).add({
+    win:win,
+    connect: function() {
+      login.show();
+    }
+  });
   var activity = new Activity("Connecting...");
 
   var webview = Ti.UI.createWebView({
@@ -23,20 +36,21 @@ exports.StartScreen = function() {
   win.add(webview);
 
   var label = Ti.UI.createLabel({
-    text: "Connected",
+    text: "Not Connected",
     font: {
-      fontSize: "20dp",
+      fontSize: "10dp",
       fontWeight: "bold"
     },
-    color: "#adbedd"
+    bottom:  "0dp",
+    height: "20dp",
+    textAlign: 'center',
+    width: Ti.UI.FILL,
+    color: "black",
+    backgroundColor: "#adbedd"
   });
-  
-  label.addEventListener('click', function() {
-  	Ti.App.fireEvent('tishadow:socket_disconnect');
-    connect();
-  });
-  win.add(label);
 
+  win.add(label);
+  win.add(app_list);
   var login = new LoginView();
   login.zIndex = 10;
   function connect() {
@@ -49,55 +63,43 @@ exports.StartScreen = function() {
     activity.show();
     connect();
   });
-  win.add(login);
 
-  var button = Ti.UI.createButton({
-    height : '40dp',
-    width : '280dp',
-    color : '#adbedd',
-    backgroundColor : "white",
-    borderColor: "#adbedd",
-    borderWidth: 1,
-    font : {
-      fontSize : '16dp',
-      fontWeight : 'bold'
-    },
-    borderRadius : '10',
-    bottom : '20dp',
-    title : "Load from Cache"
+  win.addEventListener('open', function() { 
+    login.open();
   });
-
-  button.addEventListener('click', function() {
-    TiShadow.loadFromCache();
-  });
-
-  win.add(button);
 
 
   // Listeners
-Ti.App.addEventListener("tishadow:connected", function(o) {
-  activity.hide();
-  alert("Connected");
-  win.remove(login);
-});
-
-Ti.App.addEventListener("tishadow:connectfailed", function(o) {
-  activity.hide();
-  alert("Connect Failed");
-  win.add(login);
-});
-
-Ti.App.addEventListener("tishadow:disconnected", function(o) {
-  alert("Disconnected");
-  win.add(login);
-});
-// To fix undetected connection loss when app backgrounded on iOS
-if (Ti.Platform.osname!=="android"){
-  Ti.App.addEventListener("resumed", function() {
-    Ti.App.fireEvent('tishadow:socket_disconnect');
-    connect();
+  Ti.App.addEventListener("tishadow:connected", function(o) {
+    activity.hide();
+    alert("Connected");
+    label.text = "Connected";
+    login.hide();
   });
-}
 
-return win;
+  Ti.App.addEventListener("tishadow:connectfailed", function(o) {
+    activity.hide();
+    alert("Connect Failed");
+    label.text = "Not Connected";
+    login.show();
+  });
+
+  Ti.App.addEventListener("tishadow:disconnected", function(o) {
+    alert("Disconnected");
+    label.text = "Not Connected";
+    login.show();
+  });
+
+  Ti.App.addEventListener("tishadow:refresh_list", function(o) {
+    app_list.refreshList();
+  });
+  // To fix undetected connection loss when app backgrounded on iOS
+  if (Ti.Platform.osname!=="android"){
+    Ti.App.addEventListener("resumed", function() {
+      Ti.App.fireEvent('tishadow:socket_disconnect');
+      connect();
+    });
+  }
+
+  return win;
 };
