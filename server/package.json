@@ -1,6 +1,6 @@
 {
   "name": "tishadow",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "dependencies": {
     "express": "2.5.2",
     "jade": ">= 0.0.1",
@@ -21,6 +21,6 @@
     "url": "git://github.com/dbankier/TiShadow.git"
   },
   "bin" : { 
-    "tishadow" : "./bin/tishadow",
+    "tishadow" : "./bin/tishadow"
   }
 }
