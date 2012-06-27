@@ -22,6 +22,5 @@
   },
   "bin" : { 
     "tishadow" : "./bin/tishadow",
-    "tishadow-server" : "./bin/tishadow-server"
   }
 }
