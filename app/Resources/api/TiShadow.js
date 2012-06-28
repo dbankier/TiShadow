@@ -1,6 +1,7 @@
 var log = require('/api/Log');
 var zipfile = Ti.Platform.osname === "android" ? require("com.yydigital.zip"): require("zipfile");
 var p = require('/api/PlatformRequire');
+var assert = require('/api/Assert');
 
 var current;
 Ti.App.addEventListener("tishadow:message", function(message) {
