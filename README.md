@@ -179,20 +179,13 @@ Testing / Assertions
 **RECENTLY ADDED**
 
 TiShadow now supports the use of assertions and the results are
-returned either to the browser or server logs. If testing from the
-webpage use the `assert` object. When sending an app to tishadow just use
-the assert command commented out (follow the example below strictly, ie,
-`//assert`). 
-
-The TiShadow build script will uncomment the lines. This approach is
-taken so that when build your app for a device the assertion lines will
-be ignored.
-
+returned either to the browser or server logs.
+ 
 For example:
 
 ```javascript
-    //assert.isNumber(6, "Testing if 6 is a number");
-    //assert.isArray([1,2,3,4], "Testing if it is an array");
+    assert.isNumber(6, "Testing if 6 is a number");
+    assert.isArray([1,2,3,4], "Testing if it is an array");
 ```
 
 The following assertion are supported:
@@ -203,6 +196,8 @@ The following assertion are supported:
 
 Also the equivalent not assertions are available as well, e.g.
 'notEqual', 'isNotString', 'isNotNumber', etc.
+
+Better testing tools are on their way.
  
 
 Launch From Web

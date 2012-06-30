@@ -92,8 +92,7 @@ function prepare(app_name, src, dst) {
     + fs.readFileSync(src).toString()
       .replace(/require\((['"])\//g, "p.require(Ti.Filesystem.applicationDataDirectory+'"+app_name.replace(/ /g,"_")+"/',$1")
       .replace(/(['"])\//g, "Ti.Filesystem.applicationDataDirectory+'"+app_name.replace(/ /g,"_")+"/'+$1")
-      .replace(/Ti.API/g, "log")
-      .replace(/\/\/assert/g,"assert");
+      .replace(/Ti.API/g, "log");
     fs.writeFileSync(dst,src_text);
   } else { // Non-JS file - just pump it
     var  is = fs.createReadStream(src);
