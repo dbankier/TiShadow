@@ -4,11 +4,11 @@
 */
 
 var express = require('express'),
-io = require('socket.io'),
-routes = require('./routes'),
-fs = require('fs'),
-path = require('path')
-;
+    io = require('socket.io'),
+    routes = require('./routes'),
+    fs = require('fs'),
+    path = require('path'),
+    Logger = require('./logger');
 
 
 var app = module.exports = express.createServer();
@@ -38,18 +38,18 @@ app.get('/', routes.index);
 var bundle;
 app.post('/', function(req, res) {
   var name = path.basename(req.body.bundle).replace(".zip","");
-  console.log("[INFO] New Bundle: " + req.body.bundle + " | " + name);
+  Logger.log("INFO", null, "New Bundle: " + req.body.bundle + " | " + name);
   bundle = req.body.bundle;
-  sio.sockets.emit("bundle", {name: name});
+  sio.sockets.emit("bundle", {name: name, spec: req.body.spec});
   res.send("OK", 200);
 });
 app.post('/clear_cache', function(req,res) {
-  console.log("[INFO] Clear Cache Requested");
+  Logger.info("Clear Cache Requested");
   sio.sockets.emit("clear");
   res.send("OK", 200);
 });
 app.get('/bundle', function(req,res) {
-  console.log("[DEBUG] Bundle requested." );
+  Logger.debug("Bundle requested." );
   res.setHeader('Content-disposition', 'attachment; filename=bundle.zip');
   res.setHeader('Content-type', "application/zip");
 
@@ -61,30 +61,30 @@ app.get('/bundle', function(req,res) {
     res.end();
   });
   filestream.on('error', function(exception) {
-      console.log("[ERROR] " + exception);
+      Logger.error(exception);
   });
 });
 
 
 //FIRE IT UP
 app.listen(3000);
-console.log("[DEBUG] TiShadow server started. Go to http://localhost:3000");
+Logger.debug("TiShadow server started. Go to http://localhost:3000");
 
 //WEB SOCKET STUFF
 
 var devices = [];
 sio.sockets.on('connection', function(socket) {
-  console.log('[DEBUG] A socket connected');
+  Logger.debug('A socket connected');
   // Join
   socket.on('join', function(e) {
     if (e.name === "controller") {
-      socket.set('host', true, function() {console.log("[INFO] [CONTROLLER] Connected")});
+      socket.set('host', true, function() {Logger.log("INFO", "CONTROLLER", "Connected")});
       devices.forEach(function(d) {
         sio.sockets.emit("device_connect", {name: d, id: new Buffer(d).toString('base64')});
       });
     } else{
       socket.set('name', e.name);
-      socket.set('host', false, function() {console.log("[INFO] [" +e.name + "] Connected")});
+      socket.set('host', false, function() {Logger.log("INFO", e.name, "Connected")});
       e.id = new Buffer(e.name).toString('base64');
       sio.sockets.emit("device_connect", e);
       devices.push(e.name);
@@ -102,7 +102,7 @@ sio.sockets.on('connection', function(socket) {
   socket.on('log', function(data) {
     socket.get("name", function(err, name) {
       data.name = name;
-      console.log( "[" + data.level + "] [" + data.name + "] " + data.message);
+      Logger.log(data.level, data.name, data.message);
       sio.sockets.emit("device_log", data);
     });
   })
@@ -113,7 +113,7 @@ sio.sockets.on('connection', function(socket) {
         sio.sockets.emit('disconnect');
       } else {
         socket.get("name", function(err, name) {
-          console.log("[WARN] [" + name + "] Disconnected");
+          Logger.log("WARN", name,"Disconnected");
           sio.sockets.emit("device_disconnect", {name: name, id: new Buffer(name).toString('base64')});
           devices.splice(devices.indexOf(name),1);
         });

@@ -178,7 +178,34 @@ Testing / Assertions
 
 **RECENTLY ADDED**
 
-TiShadow now supports the use of assertions and the results are
+TiShadow now support [Jasmine](http://pivotal.github.com/jasmine/) BDD tests. 
+Insipration taken from these two projects: [titanium-jasmine](https://github.com/guilhermechapiewski/titanium-jasmine/) and [jasmine-titanium](https://github.com/akahigeg/jasmine-titanium)
+
+Include your specs in the `Resources/specs` path of your project. Ensure
+the files are ending in `_spec.js`. (Note: simply write the spec without any including/requiring the jasmine library.)
+
+To execute the tests enter the following command:
+
+```bash
+  tishadow spec
+```
+
+Alternatively the following command is also supported if there are only
+minor changes: 
+
+```bash
+  tishadow spec update
+```
+
+The test results will be returned to the server output:
+![Spec Output](http://github.com/dbankier/TiShadow/raw/master/example/spec.png)
+
+See the included example project.
+
+
+_Alternatively (yet not preferred)_
+
+TiShadow also supports the use of assertions and the results are
 returned either to the browser or server logs.
  
 For example:
@@ -196,8 +223,6 @@ The following assertion are supported:
 
 Also the equivalent not assertions are available as well, e.g.
 'notEqual', 'isNotString', 'isNotNumber', etc.
-
-Better testing tools are on their way.
  
 
 Launch From Web

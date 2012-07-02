@@ -2,6 +2,7 @@ var log = require('/api/Log');
 var zipfile = Ti.Platform.osname === "android" ? require("com.yydigital.zip"): require("zipfile");
 var p = require('/api/PlatformRequire');
 var assert = require('/api/Assert');
+var Spec = require("/api/Spec");
 
 var current;
 Ti.App.addEventListener("tishadow:message", function(message) {
@@ -41,7 +42,7 @@ exports.launchApp = function(name) {
   }
 };
 
-function loadRemoteZip(name, url) {
+function loadRemoteZip(name, url, spec) {
   var xhr = Ti.Network.createHTTPClient();
   xhr.setTimeout(1000);
   xhr.onload=function(e) {
@@ -61,7 +62,11 @@ function loadRemoteZip(name, url) {
       var dataDir = Ti.Platform.osname === "android" ?  Ti.Filesystem.applicationDataDirectory :  Ti.Filesystem.applicationDataDirectory.slice(0,Ti.Filesystem.applicationDataDirectory.length - 1).replace('file://localhost','').replace(/%20/g,' ');
       zipfile.extract(dataDir+'/' + name + '.zip', dataDir + "/" + path_name);
       // Launch
-      exports.launchApp(path_name);
+      if (spec) {
+        Spec.run(path_name);
+      } else {
+        exports.launchApp(path_name);
+      }
     } catch (err) {
       log.error(err.toString());
     }
@@ -74,7 +79,7 @@ function loadRemoteZip(name, url) {
 }
 
 Ti.App.addEventListener("tishadow:bundle", function(o) {
-  loadRemoteZip(o.name, "http://" + Ti.App.Properties.getString("address") + ":3000/bundle");
+  loadRemoteZip(o.name, "http://" + Ti.App.Properties.getString("address") + ":3000/bundle", o.spec);
 });
 
 // Clears all apps from cache
