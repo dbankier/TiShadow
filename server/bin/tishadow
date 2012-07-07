@@ -80,7 +80,7 @@ var rmdir = function(dir) {
 // Builds directory structure
 function buildDirs(rel_root, dirs) {
   dirs.forEach(function(dir) {
-    if (!path.existsSync(path.join(rel_root,dir)) ){
+    if (!fs.existsSync(path.join(rel_root,dir)) ){
       fs.mkdirSync(path.join(rel_root,dir));
     }
   });
@@ -127,7 +127,7 @@ function zipbundle(name, files, callback, zip) {
 
 function touch() {
   var last_update_file = path.join(base, "build", "tishadow", "last_updated");
-  if (path.existsSync(last_update_file)) {
+  if (fs.existsSync(last_update_file)) {
     var now = new Date();
     fs.utimesSync(last_update_file,now,now);
   } else {
@@ -152,7 +152,7 @@ if (cmd === "server") {
 } else if (cmd === "clear") {
   postToServer("/clear_cache");
 } else {
-  if (!path.existsSync(path.join(base,'tiapp.xml'))) {
+  if (!fs.existsSync(path.join(base,'tiapp.xml'))) {
     console.log("Script must be executed in the Titanium project's root directory");
     process.exit();
   }
@@ -162,8 +162,8 @@ if (cmd === "server") {
   getAppName(function(result) {
     var app_name = result.name || "bundle";
 
-    if(path.existsSync(path.join(base, 'build', 'tishadow', 'src')) 
-       && path.existsSync(path.join(base, 'build', 'tishadow', 'last_updated'))
+    if(fs.existsSync(path.join(base, 'build', 'tishadow', 'src')) 
+       && fs.existsSync(path.join(base, 'build', 'tishadow', 'last_updated'))
      && (cmd == "update" || cmd2 == "update")) {
        var last_stat = fs.statSync(path.join(base, 'build', 'tishadow', 'last_updated'));
        last_update = last_stat.mtime;
@@ -173,11 +173,11 @@ if (cmd === "server") {
          process.exit();
        }
      } else {
-       if (!path.existsSync(path.join(base,'build'))){
+       if (!fs.existsSync(path.join(base,'build'))){
          fs.mkdirSync(path.join(base,'build'), 0755);
        }
        //Clean Build
-       if (path.existsSync(path.join(base,'build','tishadow'))) {
+       if (fs.existsSync(path.join(base,'build','tishadow'))) {
          rmdir(path.join(base,'build','tishadow'));
        }
        // Create the tishadow build paths
