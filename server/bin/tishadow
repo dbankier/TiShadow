@@ -91,6 +91,7 @@ function prepare(app_name, src, dst) {
     var src_text = "var p = require('/api/PlatformRequire'), log = require('/api/Log'), assert = require('/api/Assert');\n" 
       + fs.readFileSync(src).toString()
       .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+app_name.replace(/ /g,"_")+"/'")
+      .replace(/require\((?!(['"]))/g, "p.require(Ti.Filesystem.applicationDataDirectory+'"+app_name.replace(/ /g,"_")+"/',$1")
       .replace(/require\((['"])\//g, "p.require(Ti.Filesystem.applicationDataDirectory+'"+app_name.replace(/ /g,"_")+"/',$1")
       .replace(/(['"])\//g, "Ti.Filesystem.applicationDataDirectory+'"+app_name.replace(/ /g,"_")+"/'+$1")
       .replace(/Ti(tanium)?.API/g, "log");

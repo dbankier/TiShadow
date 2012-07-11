@@ -12,6 +12,11 @@ var cache={};
 
 exports.require = function(base,extension) {
   try {
+    // In case of double mapping (if required from variable)
+    if (extension.indexOf(base) !== -1) {
+      extension = extension.replace(base, "");
+    }
+    // Full Path
     var path = base + extension;
     //Try platform specific path first
     var platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
