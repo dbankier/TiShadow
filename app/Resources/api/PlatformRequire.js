@@ -12,9 +12,10 @@ var cache={};
 
 exports.require = function(base,extension) {
   try {
-    // In case of double mapping (if required from variable)
+    // In case of double mapping (if required from variable/s)
     if (extension.indexOf(base) !== -1) {
-      extension = extension.replace(base, "");
+      var regex = new RegExp(base, 'g');
+      extension = extension.replace(regex, "/").substring(1);
     }
     // Full Path
     var path = base + extension;
