@@ -1,92 +1,16 @@
 #!/usr/bin/env node
 var path = require("path"),
     fs = require("fs"),
-    http = require("http"),
     util = require("util"),
-    zipstream = require("zipstream"),
-    xml2js = require("xml2js"),
-    base = process.cwd(),
-    last_update,
-    file_list;
+    api = require("./support/api"),
+    bundle = require("./support/bundle"),
+    config = require("./support/config");
 
-function postToServer(path, data) {
-  var jdata = JSON.stringify(data||{});
-  var post_options = {
-    host: 'localhost',
-    port: '3000',
-    path: path,
-    method: 'POST',
-    headers: {
-      "Content-Type" : "application/json",
-      "Content-Length":jdata.length
-    } 
-  };
-  var req = http.request(post_options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      console.log('Response: ' + chunk);
-    });
-  }); 
-  req.write(jdata);
-  req.end(); 
-}
+    require("./support/fs_extension");
 
-// Get Filelist with optional "update" filter
-function getFileList(start, _path) {
-  var files = [], dirs=[];
-  var stat = fs.statSync(start);
-  if (stat.isDirectory()) {
-    var filenames = fs.readdirSync(start);
-    var coll = filenames.reduce(function (acc, name) {
-      var abspath = path.join(start, name);
-      var file_stat = fs.statSync(abspath);
-      if (file_stat.isDirectory()) {
-        acc.dirs.push(name);
-      } else {
-        if (last_update === undefined || last_update < file_stat.mtime) {
-          acc.names.push(path.join(_path || "." , name));
-        }
-      }
-      return acc;
-    }, {"names": [], "dirs": []});
-    files = coll.names;
-    coll.dirs.forEach(function (d) {
-      var abspath = path.join(start, d);
-      var relpath = path.join(_path|| ".", d);
-      dirs.push(relpath);
-      var recurs = getFileList(abspath, relpath);
-      files = files.concat(recurs.files);
-      dirs = dirs.concat(recurs.dirs);
-    });
-  }
-  return {files: files, dirs: dirs};
-};
-
-// Recursively Remove Directories
-var rmdir = function(dir) {
-  var list = fs.readdirSync(dir);
-  for(var i = 0; i < list.length; i++) {
-    var filename = path.join(dir, list[i]);
-    var stat = fs.statSync(filename);
-    if(filename == "." || filename == "..") {
-    } else if(stat.isDirectory()) {
-      rmdir(filename);
-    } else {
-      fs.unlinkSync(filename);
-    }
-  }
-  fs.rmdirSync(dir);
-};
-// Builds directory structure
-function buildDirs(rel_root, dirs) {
-  dirs.forEach(function(dir) {
-    if (!path.existsSync(path.join(rel_root,dir)) ){
-      fs.mkdirSync(path.join(rel_root,dir));
-    }
-  });
-}
 // Copies all Resource files and prepares JS files
-function prepare(app_name, src, dst) {
+function prepare(src, dst) {
+  var app_name = config.app_name;
   if (src.match("js$") && !src.match("underscore.js$")) {
     var src_text = "var p = require('/api/PlatformRequire'), log = require('/api/Log'), assert = require('/api/Assert');\n" 
       + fs.readFileSync(src).toString()
@@ -107,93 +31,56 @@ function prepare(app_name, src, dst) {
   }
 }
 
-function zipbundle(name, files, callback, zip) {
-  var out;
-  if (zip === undefined) {
-    out = fs.createWriteStream(path.join(base, "build", "tishadow", "dist", name + ".zip"));
-    zip = zipstream.createZip({level:1});
-  }
-  if (files.length === 0) {
-    zip.finalize(callback);
-  } else {
-    var tail = files.splice(1);
-    zip.addFile(fs.createReadStream(path.join(base,"build","tishadow","src",files[0])), {name: files[0]}, function() {
-      zipbundle(name, tail,callback,zip);
-    });
-  }
-  if (out) {
-    zip.pipe(out);
-  }
-}
 
-function touch() {
-  var last_update_file = path.join(base, "build", "tishadow", "last_updated");
-  if (path.existsSync(last_update_file)) {
-    var now = new Date();
-    fs.utimesSync(last_update_file,now,now);
-  } else {
-    fs.writeFileSync(last_update_file,"");
-  }
-}
 
-//get app name
-function getAppName(callback) {
-  var parser = new xml2js.Parser();
-  fs.readFile(path.join(base,'tiapp.xml'), function(err, data) {
-    parser.parseString(data, function (err, result) {
-      callback(result);
-    });
-  });
-}
-
+/*
+ *
+ * SCRIPT START
+ *
+ */
 var cmd = process.argv[2];
 var cmd2 = process.argv[3];
 if (cmd === "server") {
   require("../app.js");
 } else if (cmd === "clear") {
-  postToServer("/clear_cache");
+  api.clearCache();
 } else {
-  if (!path.existsSync(path.join(base,'tiapp.xml'))) {
+  if (!path.existsSync(path.join(config.base,'tiapp.xml'))) {
     console.log("Script must be executed in the Titanium project's root directory");
     process.exit();
   }
 
   console.log("Beginning Build Process");
-
-  getAppName(function(result) {
-    var app_name = result.name || "bundle";
-
-    if(path.existsSync(path.join(base, 'build', 'tishadow', 'src')) 
-       && path.existsSync(path.join(base, 'build', 'tishadow', 'last_updated'))
+  config.init(function() {
+    var file_list;
+    if(path.existsSync(config.tishadow_src) 
+       && path.existsSync(config.last_updated_file)
      && (cmd == "update" || cmd2 == "update")) {
-       var last_stat = fs.statSync(path.join(base, 'build', 'tishadow', 'last_updated'));
-       last_update = last_stat.mtime;
-       file_list = getFileList(path.join(base, 'Resources'));
+       var last_stat = fs.statSync(config.last_updated_file);
+       file_list = fs.getList(config.resources_path,last_stat.mtime);
        if (file_list.files.length === 0) {
          console.log("Nothing to update.");
          process.exit();
        }
      } else {
-       if (!path.existsSync(path.join(base,'build'))){
-         fs.mkdirSync(path.join(base,'build'), 0755);
+       if (!path.existsSync(config.build_path)){
+         fs.mkdirSync(config.build_path, 0755);
        }
        //Clean Build
-       if (path.existsSync(path.join(base,'build','tishadow'))) {
-         rmdir(path.join(base,'build','tishadow'));
+       if (path.existsSync(config.tishadow_build)) {
+         fs.rm_rf(config.tishadow_build);
        }
        // Create the tishadow build paths
-       fs.mkdirSync(path.join(base,'build','tishadow'), 0755);
-       fs.mkdirSync(path.join(base,'build','tishadow','src'), 0755);
-       fs.mkdirSync(path.join(base,'build','tishadow','dist'), 0755);
-       file_list = getFileList(path.join(base, 'Resources'));
+       fs.mkdirs([config.tishadow_build, config.tishadow_src, config.tishadow_dist]);
+       file_list = fs.getList(config.resources_path);
      }
 
      // Process  Files
-     buildDirs(path.join(base,'build','tishadow','src'), file_list.dirs);
+     fs.mkdirs(file_list.dirs, config.tishadow_src);
      var end;
      file_list.files.forEach(function(file, idx) {
        setTimeout(function(){
-         prepare(app_name, path.join(base,'Resources',file), path.join(base,'build','tishadow','src', file));
+         prepare(path.join(config.resources_path,file), path.join(config.tishadow_src, file));
        }, idx * 1);
        end = idx;
      });
@@ -201,13 +88,13 @@ if (cmd === "server") {
      // Bundle up to go
      setTimeout(function() {
        var total = file_list.files.length;
-       zipbundle(app_name, file_list.files,function(written) { 
+       bundle.pack(file_list.files,function(written) { 
          console.log(total+ " file(s) bundled."); 
-         touch();
+         fs.touch(config.last_updated_file);
          if (cmd === "bundle") {
-           console.log("Bundle Ready: " +  path.join(base,"build","tishadow","dist",app_name + ".zip"));
+           console.log("Bundle Ready: " + config.bundle_file);
          } else {
-           postToServer("/", {bundle:path.join(base,"build","tishadow","dist",app_name + ".zip"), spec: cmd === "spec"});
+           api.newBundle();
          } 
        });
      }, (end + 1)* 1);
