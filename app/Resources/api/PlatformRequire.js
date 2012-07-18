@@ -15,7 +15,10 @@ exports.require = function(base,extension) {
     // In case of double mapping (if required from variable/s)
     if (extension.indexOf(base) !== -1) {
       var regex = new RegExp(base, 'g');
-      extension = extension.replace(regex, "/").substring(1);
+      extension = extension.replace(regex, "/");
+      if (extension.indexOf("/") === 0) {
+        extension = extension.substring(1);
+      }
     }
     // Full Path
     var path = base + extension;
