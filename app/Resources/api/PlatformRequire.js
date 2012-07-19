@@ -33,7 +33,11 @@ exports.require = function(base,extension) {
       return cache[path];
     }
     var mod;
-    if (os === "android") {
+    // From TiShadow SDK 2.1.0 we longer need to translate for Android
+    // Set version in tiapp.xml to 1.0 if using SDK < 2.1.0
+    // You can set version to, e.g. 2.0 if using SDK >= 2.1.0 but it won't break
+    // anything if you don't.
+    if (os === "android" && Ti.App.version === "1.0") {
       mod = require(require("com.yydigital.zip").absolute(path + ".js"));
     } else {
       mod = require(path);
