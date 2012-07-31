@@ -45,7 +45,7 @@ exports.require = function(base,extension) {
     cache[path] = mod;
     return mod;
   } catch(e) {
-    log.error(e.toString());
+    log.error(e);
   }
 };
 

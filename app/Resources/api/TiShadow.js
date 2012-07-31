@@ -16,14 +16,9 @@ Ti.App.addEventListener("tishadow:message", function(message) {
     }
     log.info("Deployed");
   } catch (e) {
-    var error_message;
-    if(e.line === undefined) {
-      error_message = e.toString();
-    } else { //iOS Error
-      error_message = "Line " + e.line + ": " + e.message;
-    }
-    log.error(error_message);
+    log.error(e);
   }
+  
 });
 
 var bundle;
@@ -38,7 +33,7 @@ exports.launchApp = function(name) {
     bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/" + name , "/app");
     log.info(name.replace(/_/g," ") + " launched.");
   } catch(e) {
-    log.error(JSON.stringify(e));
+    log.error(e);
   }
 };
 
@@ -68,7 +63,7 @@ function loadRemoteZip(name, url, spec) {
         exports.launchApp(path_name);
       }
     } catch (err) {
-      log.error(err.toString());
+      log.error(err);
     }
   };
   xhr.onerror = function(e){
@@ -101,7 +96,7 @@ Ti.App.addEventListener("tishadow:clear", function(o) {
     });
     Ti.App.fireEvent("tishadow:refresh_list");
   } catch (e) {
-    log.error(JSON.stringify(e));
+    log.error(e);
   }
   log.info("Cache cleared");
 });
