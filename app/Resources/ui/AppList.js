@@ -1,13 +1,15 @@
 var log = require("/api/Log");
 
 var width = Ti.Platform.displayCaps.platformWidth / 4;
+var icon_width = width - 20;
+icon_width = icon_width > 72 ? 72 : icon_width;
 
 function createIcon(o, idx) {
   var view = Ti.UI.createView({
     width: width,
-    height: width * 1.2,
+    height: width + 30,
     left: width * (idx % 4),
-    top: (width * 1.2) * (Math.floor(idx / 4)) + 20,
+    top: (width + 30) * (Math.floor(idx / 4)) + 20,
     app: o.app
   });
 
@@ -15,14 +17,13 @@ function createIcon(o, idx) {
     touchEnabled: false,
     backgroundImage: o.image,
     borderRadius: 10,
-    left: 10,
-    right: 10,
     top: 10,
-    height: width - 20
+    width: icon_width,
+    height: icon_width
   }));
 
   view.add(Ti.UI.createLabel({
-    top: width - 10,
+    top: icon_width + 10,
     font: {
       fontSize: '10dp',
       fontWeight: 'bold'
