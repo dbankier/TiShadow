@@ -12,14 +12,36 @@ if (Ti.UI.Android) {
 		}
 		myerror.type = exceptionTypeAndMessage[0];
 		myerror.message = exceptionTypeAndMessage[1].substr(1);
-		myerror.file = temp[1][0].substr(7);
+		
+		var parts = temp[1][0].split('/');
+
+		var appIndexOf = parts.indexOf('app_appdata');
+		
+		if (appIndexOf > -1) {
+			myerror.file = '/' + parts.slice(appIndexOf + 2).join('/');
+		}
+		else {
+			myerror.file = temp[1][0];
+		}
+		
 		myerror.line = temp[1][1];
 
-		return "\nType: " + myerror.type + "\nLine: " + myerror.line + "\n" + "File: " + myerror.file + "\n" + "Message: " + myerror.message;
+		return "\nType: " + myerror.type + "\nLine: " + myerror.line + "\nFile: " + myerror.file + "\n" + "Message: " + myerror.message;
 	}
 } else if (Ti.UI.iOS) {
 	extractExceptionData = function(e) {
-		return "\nType: " + e.name + "\nLine: " + e.line + "\nMessage: " + e.message;
+		
+		var parts = e.file.split('/');
+		var file;
+		var resIndexOf = parts.indexOf('Resources');
+		
+		if (resIndexOf > -1) {
+			file = '/' + parts.slice(resIndexOf + 1).join('/');
+		}
+		else {
+			file = e.file;
+		}
+		return "\nType: " + e.name + "\nLine: " + e.line + "\nFile: " + file + "\nMessage: " + e.message;
 	}
 } else {
 	extractExceptionData = function(e) {

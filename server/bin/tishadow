@@ -99,7 +99,7 @@ function prepare(app_name, src, dst) {
       src_text =  "var jasmine = require('/lib/jasmine-1.2.0');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe'];methods.forEach(function(method) {this[method] = jasmine[method];});"
         +src_text;
     }
-    src_text += '} catch(e) { var utils = require("/api/Utils"); log.error(utils.extractExceptionData(e)); }';
+    src_text += '} catch(e) { var utils = require("/api/Utils"); e.file="' + src + '"; log.error(utils.extractExceptionData(e)); }';
     fs.writeFileSync(dst,src_text);
   } else { // Non-JS file - just pump it
     var  is = fs.createReadStream(src);
