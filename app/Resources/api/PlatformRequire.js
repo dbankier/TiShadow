@@ -1,4 +1,5 @@
 var log = require("/api/Log");
+var utils = require("/api/Utils");
 var os = Ti.Platform.osname;
 
 
@@ -45,7 +46,7 @@ exports.require = function(base,extension) {
     cache[path] = mod;
     return mod;
   } catch(e) {
-    log.error(e.toString());
+    log.error(utils.extractExceptionData(e));
   }
 };
 
