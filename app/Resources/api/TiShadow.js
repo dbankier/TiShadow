@@ -131,5 +131,3 @@ if (Ti.Platform.osname !== "android") {
     }
   });
 }
-
-
