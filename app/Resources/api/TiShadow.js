@@ -1,4 +1,5 @@
 var log = require('/api/Log');
+var utils = require('/api/Utils');
 var zipfile = Ti.Platform.osname === "android" ? require("com.yydigital.zip"): require("zipfile");
 var p = require('/api/PlatformRequire');
 var assert = require('/api/Assert');
@@ -16,13 +17,7 @@ Ti.App.addEventListener("tishadow:message", function(message) {
     }
     log.info("Deployed");
   } catch (e) {
-    var error_message;
-    if(e.line === undefined) {
-      error_message = e.toString();
-    } else { //iOS Error
-      error_message = "Line " + e.line + ": " + e.message;
-    }
-    log.error(error_message);
+    log.error(utils.extractExceptionData(e));
   }
 });
 
@@ -38,7 +33,7 @@ exports.launchApp = function(name) {
     bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/" + name , "/app");
     log.info(name.replace(/_/g," ") + " launched.");
   } catch(e) {
-    log.error(JSON.stringify(e));
+    log.error(utils.extractExceptionData(e));
   }
 };
 
@@ -67,8 +62,8 @@ function loadRemoteZip(name, url, spec) {
       } else {
         exports.launchApp(path_name);
       }
-    } catch (err) {
-      log.error(err.toString());
+    } catch (e) {
+      log.error(utils.extractExceptionData(e));
     }
   };
   xhr.onerror = function(e){
@@ -101,7 +96,7 @@ Ti.App.addEventListener("tishadow:clear", function(o) {
     });
     Ti.App.fireEvent("tishadow:refresh_list");
   } catch (e) {
-    log.error(JSON.stringify(e));
+    log.error(utils.extractExceptionData(e));
   }
   log.info("Cache cleared");
 });
@@ -136,5 +131,3 @@ if (Ti.Platform.osname !== "android") {
     }
   });
 }
-
-
