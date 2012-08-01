@@ -47,7 +47,6 @@ exports.require = function(base,extension) {
     return mod;
   } catch(e) {
     log.error(utils.extractExceptionData(e));
-
   }
 };
 
