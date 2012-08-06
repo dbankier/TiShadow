@@ -5,6 +5,9 @@ var path = require("path"),
 // Get Filelist with optional "update" filter
 function getList(start, last_update, _path) {
   var files = [], dirs=[];
+  if (!path.existsSync(start)) {
+    return {files: files, dirs: dirs};
+  }
   var stat = fs.statSync(start);
   if (stat.isDirectory()) {
     var filenames = fs.readdirSync(start);
