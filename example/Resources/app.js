@@ -4,8 +4,8 @@ var win = Ti.UI.createWindow({
 	exitOnClose: true
 });
 var label = Ti.UI.createLabel({
-	text: 'Hello, World!',
-	color: '#000',
+	text: L("hello.world") + "!",
+	color: 'red',
 	font: {
 		fontSize: 32,
 		fontWeight: 'bold'

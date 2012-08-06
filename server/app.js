@@ -40,7 +40,7 @@ app.post('/', function(req, res) {
   var name = path.basename(req.body.bundle).replace(".zip","");
   Logger.log("INFO", null, "New Bundle: " + req.body.bundle + " | " + name);
   bundle = req.body.bundle;
-  sio.sockets.emit("bundle", {name: name, spec: req.body.spec});
+  sio.sockets.emit("bundle", {name: name, spec: req.body.spec, locale: req.body.locale});
   res.send("OK", 200);
 });
 app.post('/clear_cache', function(req,res) {

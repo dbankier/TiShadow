@@ -26,9 +26,8 @@ function postToServer(path, data) {
 
 exports.clearCache = function() {
   postToServer("/clear_cache");
-}
+};
 
 exports.newBundle = function(data) {
-  postToServer("/", {bundle:config.bundle_file, spec: config.isSpec});
-
-}
+  postToServer("/", {bundle:config.bundle_file, spec: config.isSpec, locale: config.locale});
+};

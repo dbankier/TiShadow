@@ -79,6 +79,9 @@ function loadRemoteZip(name, url, spec) {
 }
 
 Ti.App.addEventListener("tishadow:bundle", function(o) {
+  if(o.locale) {
+    require("/api/Localisation").locale = o.locale;
+  }
   loadRemoteZip(o.name, "http://" + Ti.App.Properties.getString("address") + ":3000/bundle", o.spec);
 });
 

@@ -62,7 +62,7 @@ if (cmd === "server") {
        file_list = fs.getList(config.resources_path,last_stat.mtime);
        i18n_list = fs.getList(config.i18n_path,last_stat.mtime);
 
-       if (file_list.files.length === 0 || i18n_list.files.length === 0) {
+       if (file_list.files.length === 0 && i18n_list.files.length === 0) {
          console.log("Nothing to update.");
          process.exit();
        }
@@ -92,7 +92,6 @@ if (cmd === "server") {
      });
 
      i18n_list.files.forEach(function(file, idx) {
-       console.log(path.join(config.i18n_path,file) + " ==> " + path.join(config.tishadow_src, file));
        util.pump(fs.createReadStream(path.join(config.i18n_path,file)),fs.createWriteStream(path.join(config.tishadow_src, file)));
      });
 

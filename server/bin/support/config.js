@@ -32,6 +32,14 @@ config.init = function(callback) {
     config.isUpdate = process.argv[2] === "update" || process.argv[3] === "update";
     config.isSpec   = process.argv[2] === "spec";
 
+    if (!config.isUpdate && !config.isSpec) {
+      config.locale = process.argv[2];
+    } else if (config.isSpec && config.isUpdate) {
+      config.locale = process.argv[4];
+    } else {
+      config.locale = process.argv[3];
+    }
+
     callback();
   });
 }
