@@ -30,7 +30,9 @@ if (Ti.UI.Android) {
 	}
 } else if (Ti.UI.iOS) {
 	extractExceptionData = function(e) {
-		
+	  if (e.file === undefined) {
+      return e.toString();
+    }
 		var parts = e.file.split('/');
 		var file;
 		var resIndexOf = parts.indexOf('Resources');
