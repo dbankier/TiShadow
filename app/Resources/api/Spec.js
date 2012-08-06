@@ -6,7 +6,7 @@ var TiShadowReporter = require('/api/TiShadowReporter');
 jasmine.getEnv().addReporter(new TiShadowReporter());
 
 
-function loadSpecs(name, base, filter) {
+function loadSpecs(base, filter) {
   var dir = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + name + "/spec/" + base);
   var files = dir.getDirectoryListing();
   if (!files) {
@@ -14,7 +14,7 @@ function loadSpecs(name, base, filter) {
   };
   files.forEach(function(file) {
     if (file.match(/_spec.js$/)) {
-      p.require(Ti.Filesystem.applicationDataDirectory + name,  "/spec/" + base + "/" + (file.replace(".js", "")));
+      p.require("/spec/" + base + "/" + (file.replace(".js", "")));
     } else if (filter === {} || filter[file]) {
       loadSpecs(name, base + "/" + file, filter);
     }
@@ -30,6 +30,7 @@ exports.run = function (name) {
     });
   }
   p.clearCache();
+  require("/api/Localisation").clear();
   loadSpecs(name, "", filter);
   jasmine.getEnv().execute();
 }

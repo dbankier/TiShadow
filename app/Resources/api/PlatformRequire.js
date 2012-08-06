@@ -11,7 +11,8 @@ var os = Ti.Platform.osname;
 // modules here in the code.
 var cache={};
 
-exports.require = function(base,extension) {
+exports.require = function(extension) {
+  var base = Ti.Filesystem.applicationDataDirectory + require("/api/TiShadow").currentApp + "/";
   try {
     // In case of double mapping (if required from variable/s)
     if (extension.indexOf(base) !== -1) {

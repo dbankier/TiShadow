@@ -5,6 +5,8 @@ var p = require('/api/PlatformRequire');
 var assert = require('/api/Assert');
 var Spec = require("/api/Spec");
 
+exports.currentApp;
+
 var current;
 Ti.App.addEventListener("tishadow:message", function(message) {
   try {
@@ -29,9 +31,11 @@ exports.launchApp = function(name) {
         log.info("Previous bundle closed.");
     }
     p.clearCache();
+    require("/api/Localisation").clear();
     Ti.App.fireEvent("tishadow:refresh_list");
-    bundle = p.require(Ti.Filesystem.applicationDataDirectory + "/" + name , "/app");
-    log.info(name.replace(/_/g," ") + " launched.");
+    exports.currentApp = name;
+    bundle = p.require("/app");
+    log.info(exports.currentApp.replace(/_/g," ") + " launched.");
   } catch(e) {
     log.error(utils.extractExceptionData(e));
   }
@@ -58,6 +62,7 @@ function loadRemoteZip(name, url, spec) {
       zipfile.extract(dataDir+'/' + name + '.zip', dataDir + "/" + path_name);
       // Launch
       if (spec) {
+        exports.currentApp = path_name;
         Spec.run(path_name);
       } else {
         exports.launchApp(path_name);

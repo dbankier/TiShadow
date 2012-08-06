@@ -148,10 +148,8 @@ __Some notes and limitations__
  * CommonJS modules should be required with their full path, ie /
    leading. (This is a better practice anyway given the difference
    between iOS and Android.)
- * Don't use `require` as an object property name.
  * Only files in the Resources directory will will be sent to the device
-   using TiShadow. Localisation
-   and custom changes to the Android Manifest are not supported.
+   using TiShadow. That said, localisation files **are** supported. 
  * Native modules _can_ be supported if built into the TiShadow app
    first. (I.e., add them to the tiapp.xml of the TiShadow app.)
  * If there any errors about a Titanium SDK command not being found, add

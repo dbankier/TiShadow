@@ -21,6 +21,7 @@ config.init = function(callback) {
     var app_name = config.app_name = result.name || "bundle";
 
     config.resources_path    = path.join(base, 'Resources');
+    config.i18n_path    = path.join(base, 'i18n');
     config.build_path        = path.join(base, 'build');
     config.tishadow_build    = path.join(config.build_path, 'tishadow');
     config.last_updated_file = path.join(config.tishadow_build, 'last_updated'); 
