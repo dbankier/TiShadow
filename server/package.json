@@ -1,6 +1,6 @@
 {
   "name": "tishadow",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "dependencies": {
     "express": "2.5.2",
     "jade": ">= 0.0.1",

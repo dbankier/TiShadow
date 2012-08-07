@@ -19,6 +19,11 @@ TiShadow can be installed via npm using the following command:
   sudo npm install -g tishadow
 ```
 
+**NOTE**: I will endevour to update the npm package on significant changes but
+might lag, so if the app doesn't seem to be playing nicely install the
+server side from source. In general upgrade the server side and app at
+the same time.
+
 Once installed, the server can be started by typing the following
 command:
 
