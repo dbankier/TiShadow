@@ -6,7 +6,7 @@ var TiShadowReporter = require('/api/TiShadowReporter');
 jasmine.getEnv().addReporter(new TiShadowReporter());
 
 
-function loadSpecs(base, filter) {
+function loadSpecs(name, base, filter) {
   var dir = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + name + "/spec/" + base);
   var files = dir.getDirectoryListing();
   if (!files) {
