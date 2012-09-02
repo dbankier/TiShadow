@@ -7,7 +7,9 @@ also allows the deployment of apps to devices. There are three
 parts to TiShadow: the TiShadow server, TiShadow app and build scripts
 for deploying full applications.
 
-Have a look at the following [video](http://www.youtube.com/watch?v=xUggUXQArUM) to get any idea of how to use TiShadow and what it can do.
+~~Have a look at the following [video](http://www.youtube.com/watch?v=xUggUXQArUM) to get any idea of how to use TiShadow and what it can do.~~ (A little outdated.)
+
+Have a look at this [presentation](http://www.slideshare.net/londontitanium/titanium-london-tishadow-july-2012) (July 2012) recently given at the TiLondon meetup for a look at most of what you can do with TiShadow.
 
 
 TiShadow Server Install
@@ -272,6 +274,8 @@ tishadow deploy:
 
 
 Feedback appreciated.
+
+@davidbankier
 
 
 
