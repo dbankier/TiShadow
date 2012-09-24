@@ -14,7 +14,8 @@ TiShadow.init = function (session, guest){
     var now = new Date();
     var log = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " [" + e.level + "] [" + e.name + "]    " + e.message.replace("\n","<br/>");
     var style = e.level === "ERROR"  || e.level === "FAIL" ? " error" : e.level === "WARN" ? "" : " success"
-    $(".console").prepend("<div class='alert-message" + style + "'>" + log + "</div>");
+    $(".console").append("<div class='alert-message" + style + "'>" + log + "</div>");
+    $(".console").scrollTop($(".console")[0].scrollHeight);
   });
   TiShadow.socket = socket;
 };
