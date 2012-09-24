@@ -11,14 +11,14 @@ var path = require("path"),
 // Copies all Resource files and prepares JS files
 function prepare(src, dst) {
   var app_name = config.app_name;
-  if (src.match("js$") && !src.match("underscore.js$")) {
+  if (src.match("js$")){ // && !src.match("underscore.js$")) {
     var src_text = "try { var __p = require('/api/PlatformRequire'), __log = require('/api/Log'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString;\n" 
       + fs.readFileSync(src).toString()
       .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+app_name.replace(/ /g,"_")+"/'")
       .replace(/require\((?!(['"]))/g, "__p.require($1")
       .replace(/require\((['"])\//g, "__p.require($1")
       .replace(/Ti.Locale.getString/g, "L")
-      .replace(/(['"])\//g, "Ti.Filesystem.applicationDataDirectory+'"+app_name.replace(/ /g,"_")+"/'+$1")
+      .replace(/([ :=\(])(['"])\/(.*?)(['"])/g, "$1__p.file($2$3$4)")
       .replace(/Ti(tanium)?.API/g, "__log");
     if (src.match("_spec.js$")) {
       src_text =  "var jasmine = require('/lib/jasmine-1.2.0');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe'];methods.forEach(function(method) {this[method] = jasmine[method];});"
