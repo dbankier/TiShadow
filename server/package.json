@@ -1,14 +1,14 @@
 {
   "name": "tishadow",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "dependencies": {
     "express": "2.5.2",
     "jade": ">= 0.0.1",
     "socket.io": ">= 0.9.2",
-    "path": "",
-    "xml2js": "",
-    "zipstream" :"",
-    "colors": ""
+    "path": ">=0.4.9",
+    "xml2js": "0.1.x",
+    "zipstream" :">=0.2.1",
+    "colors": ">=0.6.0-1"
   },
   "devDependencies": {},
   "optionalDependencies": {},
