@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>tishadow_2.1.0</sdk-version>
+    <sdk-version>tishadow_2.1.2</sdk-version>
     <id>com.yydigital.tishadowapp</id>
     <name>TiShadow</name>
     <version>1.0</version>
@@ -36,8 +36,9 @@
             <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
         </orientations>
     </iphone>
+    <property name="ti.android.bug2373.finishfalseroot" type="bool">true</property>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
-      <manifest android:versionCode="3" android:versionName="1.0.2">
+      <manifest android:versionCode="5" android:versionName="1.1.1">
     		<!-- http://stackoverflow.com/questions/7523075/xml-android-permissions-list-full-->
     		<uses-permission android:name="android.permission.ACCESS_CHECKIN_PROPERTIES" />
         <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
