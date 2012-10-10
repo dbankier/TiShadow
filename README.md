@@ -75,7 +75,7 @@ TiShadow App now requires the following:
  * A custom build of the Titanium SDK is needed. OSX builds can be download from the
    "Downloads" section and are in line with the Titanium SDK Releases 2.0.2
    and newer. The source can be found in the my titanium_mobile fork with each release
-   tagged, e.g., tishadow_2_X_X. The following [commit](https://github.com/dbankier/titanium_mobile/commit/d332a846701df512003fdcb1fe791a6497348515) contains all the changes.
+   tagged, e.g., tishadow_2_X_X. The following [commit](https://github.com/dbankier/titanium_mobile/commit/d332a846701df512003fdcb1fe791a6497348515) (and [this one](https://github.com/dbankier/titanium_mobile/commit/0b9b8abdf566ebc088edc93e0efd70e46904ebc7)) contains all the changes.
 
 ~~Since the TiShadow app is not _yet_ in the App Store or Google Play~~, clone the 
 code and run/install as you would any Titanium project.
