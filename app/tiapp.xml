@@ -170,7 +170,9 @@
     	</manifest>
     </android>
     <modules>
-      <module platform="iphone" version="0.1.21">zipfile</module>
-      <module platform="android" version="0.2">com.yydigital.zip</module>
+        <module platform="iphone" version="0.1.21">zipfile</module>
+        <module platform="android" version="0.2">com.yydigital.zip</module>
+        <module platform="android" version="1.0">ti.physicalSizeCategory</module>
+        <module platform="commonjs" version="2.3.0">ti.cloud</module>
     </modules>
 </ti:app>

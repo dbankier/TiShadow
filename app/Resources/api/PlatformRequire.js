@@ -15,7 +15,10 @@ var cache={};
 exports.require = function(extension) {
   try {
     // Full Path
-    var path = exports.file(extension);
+    var path = extension;
+    if (extension.indexOf(".") === -1) {
+      path = exports.file(extension);
+    }
     // Is the CommonJS module in the cache
     if (cache[path]) {
       return cache[path];
@@ -37,6 +40,9 @@ exports.require = function(extension) {
 };
 
 exports.file = function(extension) {
+  if (extension === "/" || extension === "//" ) { // Avoid conflicts with Backbone.js
+    return extension;
+  }
   var base = Ti.Filesystem.applicationDataDirectory + "/" + require("/api/TiShadow").currentApp + "/";
   // In case of double mapping (if required from variable/s)
   if (extension.indexOf(base) !== -1) {

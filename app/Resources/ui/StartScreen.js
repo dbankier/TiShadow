@@ -4,11 +4,13 @@ var Activity = require('/ui/Activity');
 //Includes do not need to be included at runtime, just needed to trick
 //require("/api/Includes");
 var TiShadow = require('/api/TiShadow');
+Titanium.App.idleTimerDisabled = true;
 
 exports.StartScreen = function() {
   var win = Ti.UI.createWindow({
     backgroundColor : 'white',
     exitOnClose : true,
+    keepScreenOn: true,
     title: "TiShadow",
   });
   var app_list= new (require("/ui/AppList"))();
