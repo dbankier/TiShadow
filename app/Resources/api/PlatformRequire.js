@@ -16,7 +16,7 @@ exports.require = function(extension) {
   try {
     // Full Path
     var path = extension;
-    if (extension.indexOf(".") === -1) {
+    if (extension.indexOf(".") === -1 || extension.indexOf("/") > -1) {
       path = exports.file(extension);
     }
     // Is the CommonJS module in the cache
