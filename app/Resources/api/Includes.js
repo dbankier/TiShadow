@@ -49,7 +49,8 @@ var includes = [
   Ti.Contacts.createPerson,
   Ti.Database.open,
   Ti.Database.execute,
-  Ti.Facebook
+  Ti.Facebook,
+  Ti.Gesture
 ];
 if (Ti.Platform.osname !== "android"){
   var ios_includes = [Titanium.UI.iPhone.ActivityIndicatorStyle,
