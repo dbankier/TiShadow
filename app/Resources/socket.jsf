@@ -34,6 +34,10 @@ $(document).ready(function() {
           Ti.App.fireEvent("tishadow:bundle",data);
         });
 
+        socket.on('fireEvent', function(data) {
+          Ti.App.fireEvent("tishadow:fireEvent",data);
+        });
+
         socket.on('clear', function() {
           Ti.App.fireEvent("tishadow:clear");
         });
@@ -51,6 +55,10 @@ $(document).ready(function() {
 
   Ti.App.addEventListener("tishadow:socket_log", function(e) {
     socket.emit("log", e);
+  });
+
+  Ti.App.addEventListener("tishadow:event", function(e) {
+    socket.emit("event", e);
   });
 
   Ti.App.addEventListener('tishadow:socket_disconnect', function() {

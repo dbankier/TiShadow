@@ -105,7 +105,12 @@ sio.sockets.on('connection', function(socket) {
       Logger.log(data.level, data.name, data.message);
       sio.sockets.emit("device_log", data);
     });
-  })
+  });
+
+  socket.on('event', function(data) {
+    console.log(JSON.stringify(data));
+    socket.broadcast.emit("fireEvent",data);
+  });
   // Disconnect
   socket.on('disconnect',function(data) {
     socket.get("host",function(err,host) {
