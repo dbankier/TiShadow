@@ -11,6 +11,10 @@ function shareEvent(e) {
   }
 }
 
+exports.reset = function() {
+  sources = {};
+  object_count = 0;
+};
 
 exports.addEventListener=function(source,event,fn) {
   if (source.event_id === undefined) {

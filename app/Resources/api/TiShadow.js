@@ -32,6 +32,7 @@ exports.launchApp = function(name) {
     }
     p.clearCache();
     require("/api/Localisation").clear();
+    require("/api/Events").reset();
     Ti.App.fireEvent("tishadow:refresh_list");
     exports.currentApp = name;
     bundle = p.require("/app");

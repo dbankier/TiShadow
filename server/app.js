@@ -108,7 +108,6 @@ sio.sockets.on('connection', function(socket) {
   });
 
   socket.on('event', function(data) {
-    console.log(JSON.stringify(data));
     socket.broadcast.emit("fireEvent",data);
   });
   // Disconnect
