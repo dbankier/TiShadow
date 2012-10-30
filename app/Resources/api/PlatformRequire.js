@@ -12,26 +12,26 @@ var tishadow_version = Ti.version.replace(/tishadow_?/,"").replace(/\./g,"");
 // modules here in the code.
 var cache={};
 
+function custom_require(file) {
+  var rfile = Ti.Filesystem.getFile(file + ".js");
+  var contents = rfile.read().text;
+  return eval("(function(exports){var __OXP=exports;var module={'exports':exports};" + contents + ";if(module.exports !== __OXP){return module.exports;}return exports;})({})");
+}
+
 exports.require = function(extension) {
   try {
     // Full Path
     var path = extension;
     if (extension.indexOf(".") === -1 || extension.indexOf("/") > -1) {
       path = exports.file(extension);
+    } else { // NATIVE MODULE
+      return require(extension);
     }
     // Is the CommonJS module in the cache
     if (cache[path]) {
       return cache[path];
     }
-    var mod;
-    // From TiShadow SDK 2.1.3+ we longer need to translate for Android.
-    // The `if` statement is to support legacy tishadow sdks...
-    // Was meant to be fixed in 2.1.0 but there is an off-by-one error that is planned to be fixed next release
-    if (os === "android" && tishadow_version < 213) {
-      mod = require(require("com.yydigital.zip").absolute(path + ".js"));
-    } else {
-      mod = require(path);
-    }
+    var mod = custom_require(path);
     cache[path] = mod;
     return mod;
   } catch(e) {

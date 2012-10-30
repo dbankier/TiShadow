@@ -9,7 +9,6 @@ function Activity(message) {
 		bottom : 10,
 		height : 50,
 		width : 10,
-		style : Titanium.UI.iPhone.ActivityIndicatorStyle.PLAIN,
 		message : message
 	});
 };
