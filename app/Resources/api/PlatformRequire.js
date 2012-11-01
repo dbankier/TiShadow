@@ -13,9 +13,15 @@ var tishadow_version = Ti.version.replace(/tishadow_?/,"").replace(/\./g,"");
 var cache={};
 
 function custom_require(file) {
-  var rfile = Ti.Filesystem.getFile(file + ".js");
-  var contents = rfile.read().text;
-  return eval("(function(exports){var __OXP=exports;var module={'exports':exports};" + contents + ";if(module.exports !== __OXP){return module.exports;}return exports;})({})");
+  try {
+    log.info("Requiring: " + file);
+    var rfile = Ti.Filesystem.getFile(file + ".js");
+    var contents = rfile.read().text;
+    return eval("(function(exports){var __OXP=exports;var module={'exports':exports};" + contents + ";if(module.exports !== __OXP){return module.exports;}return exports;})({})");
+  } catch(e) { 
+    e.file=file; 
+    log.error(utils.extractExceptionData(e)); 
+  }
 }
 
 exports.require = function(extension) {

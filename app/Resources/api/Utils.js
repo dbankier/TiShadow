@@ -13,38 +13,47 @@ if (Ti.UI.Android) {
 		myerror.type = exceptionTypeAndMessage[0];
 		myerror.message = exceptionTypeAndMessage[1].substr(1);
 		
-		var parts = temp[1][0].split('/');
+    var file = e.file || "";
+		var parts = file.replace(/\/+/g, "/").split('/');
 
-		var appIndexOf = parts.indexOf('app_appdata');
-		
+		var appIndexOf = parts.indexOf('appdata-private:');
 		if (appIndexOf > -1) {
-			myerror.file = '/' + parts.slice(appIndexOf + 2).join('/');
+			myerror.file = '/' + parts.slice(appIndexOf + 2).join('/') + ".js";
 		}
 		else {
-			myerror.file = temp[1][0];
+			myerror.file = temp[1][0].split("(").slice(1).join(": ");
 		}
 		
 		myerror.line = temp[1][1];
 
-		return "\nType: " + myerror.type + "\nLine: " + myerror.line + "\nFile: " + myerror.file + "\n" + "Message: " + myerror.message;
-	}
+    myerror.at = temp[1][0].split("(")[0].replace("at ","");
+
+		return "\nType: " + myerror.type +
+           "\nMessage: " + myerror.message +
+           "\nFile: " + myerror.file +
+           "\nLine: " + myerror.line +
+           "\nAt:   " + myerror.at.trim();
+	};
 } else if (Ti.UI.iOS) {
 	extractExceptionData = function(e) {
 	  if (e.file === undefined) {
       return e.toString();
     }
-		var parts = e.file.split('/');
+		var parts = e.file.replace(/\/\//g,'/').split('/');
 		var file;
-		var resIndexOf = parts.indexOf('Resources');
+		var resIndexOf = parts.indexOf('Documents');
 		
 		if (resIndexOf > -1) {
-			file = '/' + parts.slice(resIndexOf + 1).join('/');
+			file = '/' + parts.slice(resIndexOf + 2).join('/') + ".js";
 		}
 		else {
 			file = e.file;
 		}
-		return "\nType: " + e.name + "\nLine: " + e.line + "\nFile: " + file + "\nMessage: " + e.message;
-	}
+		return "\nType: " + e.name + 
+      "\nMessage: " + e.message +
+      "\nFile: " + file + 
+      "\nLine: " + e.line;
+	};
 } else {
 	extractExceptionData = function(e) {
 		//TODO: See how to get better info on MW and BB platforms
