@@ -28,15 +28,6 @@ exports.StartScreen = function() {
   });
   var activity = new Activity("Connecting...");
 
-  var webview = Ti.UI.createWebView({
-    url : '/webview.html',
-    top : 0,
-    left : 0,
-    width : 1,
-    height : 1
-  });
-  win.add(webview);
-
   var label = Ti.UI.createLabel({
     text: "Not Connected",
     font: {
@@ -56,9 +47,26 @@ exports.StartScreen = function() {
   var login = new LoginView();
   login.zIndex = 10;
   function connect() {
-    Ti.App.fireEvent('tishadow:socket_connect', {
-      address : Ti.App.Properties.getString("address"),
-      name : Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address
+    TiShadow.connect({
+      host: Ti.App.Properties.getString("address"),
+      name: Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address,
+      callback: function(o) {
+        activity.hide();
+        alert("Connected");
+        label.text = "Connected";
+        login.hide();
+      },
+      onerror: function(o) {
+        activity.hide();
+        alert("Connect Failed");
+        label.text = "Not Connected";
+        login.show();
+      },
+      disconnected:  function(o) {
+        alert("Disconnected");
+        label.text = "Not Connected";
+        login.show();
+      }
     });
   }
   login.addEventListener("connect", function(o) {
@@ -70,38 +78,9 @@ exports.StartScreen = function() {
     login.open();
   });
 
-
-  // Listeners
-  Ti.App.addEventListener("tishadow:connected", function(o) {
-    activity.hide();
-    alert("Connected");
-    label.text = "Connected";
-    login.hide();
-  });
-
-  Ti.App.addEventListener("tishadow:connectfailed", function(o) {
-    activity.hide();
-    alert("Connect Failed");
-    label.text = "Not Connected";
-    login.show();
-  });
-
-  Ti.App.addEventListener("tishadow:disconnected", function(o) {
-    alert("Disconnected");
-    label.text = "Not Connected";
-    login.show();
-  });
-
   Ti.App.addEventListener("tishadow:refresh_list", function(o) {
     app_list.refreshList();
   });
-  // To fix undetected connection loss when app backgrounded on iOS
-  if (Ti.Platform.osname!=="android"){
-    Ti.App.addEventListener("resumed", function() {
-      Ti.App.fireEvent('tishadow:socket_disconnect');
-      connect();
-    });
-  }
 
   return win;
 };

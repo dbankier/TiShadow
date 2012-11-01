@@ -170,6 +170,8 @@
     	</manifest>
     </android>
     <modules>
+        <module platform="iphone" version="0.3">net.iamyellow.tiws</module>
+        <module platform="android" version="0.1">net.iamyellow.tiws</module>
         <module platform="iphone" version="0.1.21">zipfile</module>
         <module platform="android" version="0.2">com.yydigital.zip</module>
         <module platform="android" version="1.0">ti.physicalSizeCategory</module>

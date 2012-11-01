@@ -1,0 +1,67 @@
+<h1>tiws Module</h1>
+<h2>Description</h2>
+<p>tiws is a very simple Titanium module (iOS / Android) for creating native websockets. 
+it is also possible use tiws with Socket.IO and Now.js, check it out here!
+https://gist.github.com/3071689</p>
+<p>tiws is open source (https://github.com/iamyellow/tiws) and uses third parties websocket implementations:</p>
+<ul>
+<li>
+<p>for iOS, SocketRocket:
+https://github.com/square/SocketRocket/</p>
+</li>
+<li>
+<p>for Android
+https://github.com/codebutler/android-websockets</p>
+</li>
+</ul>
+<h2>Accessing the tiws Module</h2>
+<p>To access this module from JavaScript, you would do the following:</p>
+<pre><code>var tiws = require("net.iamyellow.tiws");
+</code></pre>
+<p>The tiws variable is a reference to the Module object.<br />
+</p>
+<h2>Module functions</h2>
+<h3>createWS</h3>
+<p>Creates a websocket object.</p>
+<h2>Websocket object functions</h2>
+<h3>open (string uri)</h3>
+<p>Given an URI, opens the connection.</p>
+<h3>send (string message)</h3>
+<p>Sends a string message.</p>
+<h3>close ()</h3>
+<p>Closes a previously opened connection.</p>
+<h2>Websocket events</h2>
+<p>You can add listeners for events: 'open', 'close', 'error' and 'message'.</p>
+<h2>Usage</h2>
+<p>https://gist.github.com/3071689</p>
+<h2>Author</h2>
+<p>jordi domenech
+jordi@iamyellow.net
+http://iamyellow.net
+@iamyellow2</p>
+<h2>Feedback and Support</h2>
+<p>jordi@iamyellow.net</p>
+<h2>License</h2>
+<h3>tiws</h3>
+<p>Copyright 2012 jordi domenech <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#106;&#111;&#114;&#100;&#105;&#64;&#105;&#97;&#109;&#121;&#101;&#108;&#108;&#111;&#119;&#46;&#110;&#101;&#116;">&#106;&#111;&#114;&#100;&#105;&#64;&#105;&#97;&#109;&#121;&#101;&#108;&#108;&#111;&#119;&#46;&#110;&#101;&#116;</a>
+Apache License, Version 2.0</p>
+<h3>Socket.IO</h3>
+<p>Copyright(c) 2011 LearnBoost <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#100;&#101;&#118;&#64;&#108;&#101;&#97;&#114;&#110;&#98;&#111;&#111;&#115;&#116;&#46;&#99;&#111;&#109;">&#100;&#101;&#118;&#64;&#108;&#101;&#97;&#114;&#110;&#98;&#111;&#111;&#115;&#116;&#46;&#99;&#111;&#109;</a>
+MIT Licensed</p>
+<h3>Now.js</h3>
+<p>Copyright (C) 2011 by Flotype Inc. <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#116;&#101;&#97;&#109;&#64;&#110;&#111;&#119;&#106;&#115;&#46;&#99;&#111;&#109;">&#116;&#101;&#97;&#109;&#64;&#110;&#111;&#119;&#106;&#115;&#46;&#99;&#111;&#109;</a></p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE</p>

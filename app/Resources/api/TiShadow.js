@@ -4,31 +4,108 @@ var zipfile = Ti.Platform.osname === "android" ? require("com.yydigital.zip"): r
 var p = require('/api/PlatformRequire');
 var assert = require('/api/Assert');
 var Spec = require("/api/Spec");
+var io = require('/lib/socket.io');
 
 exports.currentApp;
-
-var current;
-Ti.App.addEventListener("tishadow:message", function(message) {
-  try {
-    if(current && current.close !== undefined) {
-      current.close();
-    }
-    current = eval(message.code);
-    if(current && current.open !== undefined) {
-      current.open();
-    }
-    log.info("Deployed");
-  } catch (e) {
-    log.error(utils.extractExceptionData(e));
+var socket;
+exports.connect = function(o) {
+  if (socket) {
+    exports.disconnect();
   }
-});
+  socket = io.connect("http://" + o.host + ":3000");
+
+  socket.on("connect", function() {
+    socket.emit("join", {
+      name : o.name
+    });
+    if(o.callback) {
+      o.callback();
+    }
+  });
+
+  socket.on("connect_failed", function() {
+    if(o.onerror) {
+      o.onerror();
+    }
+  });
+
+  var current;
+  socket.on('message', function(message) {
+    try {
+      if(current && current.close !== undefined) {
+        current.close();
+      }
+      current = eval(message.code);
+      if(current && current.open !== undefined) {
+        current.open();
+      }
+      log.info("Deployed");
+    } catch (e) {
+      log.error(utils.extractExceptionData(e));
+    }
+
+  });
+
+  socket.on('bundle', function(o) {
+    if(o.locale) {
+      require("/api/Localisation").locale = o.locale;
+    }
+    loadRemoteZip(o.name, "http://" + Ti.App.Properties.getString("address") + ":3000/bundle", o.spec);
+  });
+
+  socket.on('clear', function() {
+    try {
+      var files = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory).getDirectoryListing();
+      files.forEach(function(file_name) {
+        var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,file_name);
+        if (Ti.Platform.osname === "android") {
+          if (file.isFile()) {
+            file.deleteFile();
+          } else if (file.isDirectory()) {
+            file.deleteDirectory(true);
+          }
+        } else {
+          file.deleteFile();
+          file.deleteDirectory(true);
+        }
+      });
+      Ti.App.fireEvent("tishadow:refresh_list");
+    } catch (e) {
+      log.error(utils.extractExceptionData(e));
+    }
+    log.info("Cache cleared");
+  });
+
+  socket.on('disconnect', function() {
+    if(o.disconnected) {
+      o.disconnected();
+    }
+  });
+
+};
+
+exports.emitLog = function(e) {
+  if (socket) {
+    socket.emit("log", e);
+  }
+};
+
+exports.disconnect = function() {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+};
+
+
+
 
 var bundle;
 exports.launchApp = function(name) {
   try {
     if (bundle && bundle.close !== undefined) {
-        bundle.close();
-        log.info("Previous bundle closed.");
+      bundle.close();
+      log.info("Previous bundle closed.");
     }
     p.clearCache();
     require("/api/Localisation").clear();
@@ -78,36 +155,6 @@ function loadRemoteZip(name, url, spec) {
   xhr.send();
 }
 
-Ti.App.addEventListener("tishadow:bundle", function(o) {
-  if(o.locale) {
-    require("/api/Localisation").locale = o.locale;
-  }
-  loadRemoteZip(o.name, "http://" + Ti.App.Properties.getString("address") + ":3000/bundle", o.spec);
-});
-
-// Clears all apps from cache
-Ti.App.addEventListener("tishadow:clear", function(o) {
-  try {
-    var files = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory).getDirectoryListing();
-    files.forEach(function(file_name) {
-      var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,file_name);
-      if (Ti.Platform.osname === "android") {
-        if (file.isFile()) {
-          file.deleteFile();
-        } else if (file.isDirectory()) {
-          file.deleteDirectory(true);
-        }
-      } else {
-        file.deleteFile();
-        file.deleteDirectory(true);
-      }
-    });
-    Ti.App.fireEvent("tishadow:refresh_list");
-  } catch (e) {
-    log.error(utils.extractExceptionData(e));
-  }
-  log.info("Cache cleared");
-});
 
 
 // FOR URL SCHEME - tishadow://

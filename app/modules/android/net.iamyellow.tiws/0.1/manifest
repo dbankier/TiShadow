@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 0.1
+apiversion: 2
+description: TiWS
+author: jordi domenech
+license: Apache License, Version 2.0
+copyright: Copyright (c) 2012 by jordi domenech <jordi@iamyellow.net>
+
+
+# these should not be edited
+name: tiws
+moduleid: net.iamyellow.tiws
+guid: bdcab75e-de6f-44b6-8b01-00a1c80d04e7
+platform: android
+minsdk: 2.0.2

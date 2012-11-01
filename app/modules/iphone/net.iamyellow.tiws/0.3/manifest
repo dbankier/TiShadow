@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 0.3
+apiversion: 2
+description: TiWS
+author: jordi domenech
+license: Apache License, Version 2.0
+copyright: Copyright (c) 2012 by jordi domenech <jordi@iamyellow.net>
+
+
+# these should not be edited
+name: tiws
+moduleid: net.iamyellow.tiws
+guid: 1a88f1c1-43de-45da-b57d-04551924f734
+platform: iphone
+minsdk: 2.0.2
