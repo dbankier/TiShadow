@@ -148,11 +148,10 @@ the following command:
 
 __Some notes and limitations__
 
- * Only works with applications that use the CommonJS structure. The use
-   of `Ti.include` will not work.
- * ~~CommonJS modules should be required with their full path, ie /
-   leading. (This is a better practice anyway given the difference
-   between iOS and Android.)~~
+ * ~~Only works with applications that use the CommonJS structure.~~ 
+   `Ti.include` is partially supported and will work if included with the full path 
+    i.e. slash leading.
+ * CommonJS modules should be required with their full path.
  * Only files in the Resources directory will will be sent to the device
    using TiShadow. That said, localisation files **are** supported. 
  * Native modules _can_ be supported if built into the TiShadow app
@@ -269,6 +268,35 @@ tishadow deploy:
     :map <S-F6> <Esc>:w<CR>:!tishadow<CR>a
     :imap <S-F6> <Esc>:w<CR>:!tishadow<CR>a 
 ```
+
+
+Third Party Modules
+-------------------
+
+### Websockets/Socket.IO
+####iPhone/Android
+Copyright 2012 jordi domenech jordi@iamyellow.net Apache License, Version 2.0
+
+[Github Repo](https://github.com/iamyellow/tiws)
+
+
+### ZIP Modules
+
+The Zip Modules have been taken from other open source projects.
+
+####iPhone Module
+This module was  developed by Gennadiy Potatov with updates
+from Kosso. It is MIT Licensed and has been included with no changes to
+the original code. 
+
+[Github Repo](https://github.com/TermiT/ZipFile)
+
+####Android Module
+
+This module's source was originally developed by Henri Bourcereau. It was
+released under an MIT License. It has been modified slightly and built for 1.8+. 
+
+[Henri's Github Repo](https://github.com/websiteburo/androzip)
 
 
 Feedback appreciated.

@@ -45,6 +45,21 @@ exports.require = function(extension) {
   }
 };
 
+exports.include = function(context) {
+  try {
+    // Full Path
+    for (var i = 1, length = arguments.length; i< length; i++) {
+      var path = exports.file(arguments[i]);
+      var ifile = Ti.Filesystem.getFile(path);
+      var contents = ifile.read().text;
+      eval.call(context, contents);
+    }
+  } catch(e) {
+    log.error(utils.extractExceptionData(e));
+  }
+};
+
+
 exports.file = function(extension) {
   if (extension === "/" || extension === "//" ) { // Avoid conflicts with Backbone.js
     return extension;
