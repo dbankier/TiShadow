@@ -132,9 +132,9 @@ function loadRemoteZip(name, url, spec) {
       var dataDir = Ti.Platform.osname === "android" ?  Ti.Filesystem.applicationDataDirectory :  Ti.Filesystem.applicationDataDirectory.slice(0,Ti.Filesystem.applicationDataDirectory.length - 1).replace('file://localhost','').replace(/%20/g,' ');
       zipfile.extract(dataDir+'/' + name + '.zip', dataDir + "/" + path_name);
       // Launch
-      if (spec) {
+      if (spec.run) {
         exports.currentApp = path_name;
-        Spec.run(path_name);
+        Spec.run(path_name, spec.junitxml);
       } else {
         exports.launchApp(path_name);
       }

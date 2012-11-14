@@ -785,6 +785,10 @@ jasmine.Env.prototype.addReporter = function(reporter) {
   this.reporter.addReporter(reporter);
 };
 
+jasmine.Env.prototype.resetReporters = function(resetReporters) {
+  this.reporter.resetReporters();
+};
+
 jasmine.Env.prototype.execute = function() {
   this.currentRunner_.execute();
 };
@@ -1722,6 +1726,10 @@ jasmine.util.inherit(jasmine.MultiReporter, jasmine.Reporter);
 
 jasmine.MultiReporter.prototype.addReporter = function(reporter) {
   this.subReporters_.push(reporter);
+};
+
+jasmine.MultiReporter.prototype.resetReporters = function() {
+  this.subReporters_ = []
 };
 
 (function() {

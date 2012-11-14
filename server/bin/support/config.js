@@ -37,6 +37,7 @@ config.init = function(env, callback) {
     config.isSpec   = env._name === "spec";
     config.isTailing = env.tailLogs || config.isSpec;
     config.locale   = env.locale;
+    config.isJUnit  = env.junitXml;
 
     callback();
   });

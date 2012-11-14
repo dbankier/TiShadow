@@ -19,7 +19,7 @@ exports.clearCache = function() {
 };
 
 exports.newBundle = function(data) {
-  postToServer("bundle", {bundle:config.bundle_file, spec: config.isSpec, locale: config.locale});
+  postToServer("bundle", {bundle:config.bundle_file, spec: {run: config.isSpec, junitxml: config.isJUnit}, locale: config.locale});
 };
 
 exports.sendSnippet = function(code) {

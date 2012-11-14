@@ -44,12 +44,12 @@ program.command('spec')
   .option('-u, --update', 'Only send recently changed files')
   .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
   .option('-j, --jshint', 'Analyse code with JSHint')
+  .option('-x, --junit-xml','Output report as JUnit XML')
   .action(compiler);
 
 program.command('snip [code]')
   .description('send code snippet to all connected device.\n'.grey +
-               'This is an alternative to the .\n'.grey + 
-               'If code is not provided then a prompt will be made available'.grey)
+               'If code is not provided then a REPL will be made available'.grey)
   .action(api.sendSnippet);
   
 program.command('log')

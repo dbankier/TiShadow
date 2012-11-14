@@ -1,6 +1,8 @@
 var logger = require("../../logger"),
     io     = require("socket.io-client"),
-    config = require("./config");
+    config = require("./config"),
+    fs     = require("fs"),
+    path   = require("path");
 
 
 exports.connect = function(onconnect) {
@@ -20,8 +22,14 @@ exports.connect = function(onconnect) {
   socket.on('device_log', function(data) {
     if (config.isSpec && data.message.match("Runner Finished$")) {
       socket.disconnect();
+    } else if (config.isJUnit && data.level === "TEST") {
+      var target_file = path.join(config.tishadow_build, data.name.replace(/(, |\.)/g, "_") + "_result.xml");
+      fs.writeFileSync(target_file,data.message);
+      socket.disconnect();
+      logger.info("Report Generated: " + target_file);
+    } else if (!config.isJUnit) {
+      logger.log(data.level, data.name, data.message);
     }
-    logger.log(data.level, data.name, data.message);
   });
   socket.on('connect_failed', function(data) {
     logger.error("connect_failed: " + data);
