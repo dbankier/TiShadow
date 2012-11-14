@@ -5,7 +5,7 @@ var path = require("path"),
 // Get Filelist with optional "update" filter
 function getList(start, last_update, _path) {
   var files = [], dirs=[];
-  if (!path.existsSync(start)) {
+  if (!fs.existsSync(start)) {
     return {files: files, dirs: dirs};
   }
   var stat = fs.statSync(start);
@@ -57,7 +57,7 @@ fs.rm_rf = function(dir) {
 // Builds directory structure
 fs.mkdirs = function(dirs, rel_root) {
   dirs.forEach(function(dir) {
-    if (!path.existsSync(path.join(rel_root,dir)) ){
+    if (!fs.existsSync(path.join(rel_root,dir)) ){
       fs.mkdirSync(path.join(rel_root,dir));
     }
   });
@@ -65,7 +65,7 @@ fs.mkdirs = function(dirs, rel_root) {
 
 // Like a normal bash touch
 fs.touch = function(file) {
-  if (path.existsSync(file)) {
+  if (fs.existsSync(file)) {
     var now = new Date();
     fs.utimesSync(file,now,now);
   } else {

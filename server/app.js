@@ -36,18 +36,6 @@ var sio=io.listen(app, {log: false});
 // Routes
 app.get('/', routes.index);
 var bundle;
-app.post('/', function(req, res) {
-  var name = path.basename(req.body.bundle).replace(".zip","");
-  Logger.log("INFO", null, "New Bundle: " + req.body.bundle + " | " + name);
-  bundle = req.body.bundle;
-  sio.sockets.emit("bundle", {name: name, spec: req.body.spec, locale: req.body.locale});
-  res.send("OK", 200);
-});
-app.post('/clear_cache', function(req,res) {
-  Logger.info("Clear Cache Requested");
-  sio.sockets.emit("clear");
-  res.send("OK", 200);
-});
 app.get('/bundle', function(req,res) {
   Logger.debug("Bundle requested." );
   res.setHeader('Content-disposition', 'attachment; filename=bundle.zip');
@@ -90,12 +78,27 @@ sio.sockets.on('connection', function(socket) {
       devices.push(e.name);
     }
   });
-  // generate event
-  socket.on('generate', function(data) {
-    socket.get("host", function (err,host){
-      if (host){
-        sio.sockets.emit("message", data);
-      }
+
+  // Host only commands
+  // message event - for code snippets
+  ['snippet','clear','bundle'].forEach(function(command) {
+    socket.on(command, function(data,fn) {
+      socket.get("host", function (err,host){
+        if (host){
+          if(command === 'bundle') {
+            data.name = path.basename(data.bundle).replace(".zip","");
+            Logger.log("INFO", null, "New Bundle: " + data.bundle + " | " + data.name);
+            bundle = data.bundle;
+            data.bundle = null;
+          } else  {
+            Logger.info(command.toUpperCase() + " requested");
+          }
+          sio.sockets.emit(command === "snippet" ? "message" : command, data);
+          if (fn) {
+            fn();
+          }
+        }
+      });
     });
   });
 
@@ -110,7 +113,7 @@ sio.sockets.on('connection', function(socket) {
   socket.on('disconnect',function(data) {
     socket.get("host",function(err,host) {
       if (host) {
-        sio.sockets.emit('disconnect');
+        //sio.sockets.emit('disconnect');
       } else {
         socket.get("name", function(err, name) {
           Logger.log("WARN", name,"Disconnected");

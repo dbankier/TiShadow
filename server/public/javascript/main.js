@@ -29,7 +29,7 @@ $(document).ready(function() {
   editor.getSession().setMode(new JavaScriptMode());
 
   $("input#tisubmit").click(function() {
-    TiShadow.socket.emit("generate", {code: editor.getSession().getValue()});
+    TiShadow.socket.emit("snippet", {code: editor.getSession().getValue()});
   });
 
   $("#editor").keypress(function (event) {

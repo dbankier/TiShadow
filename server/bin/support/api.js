@@ -1,33 +1,40 @@
-var http = require("http"),
-    config = require("./config");
+var config = require("./config"),
+    logger = require("../../logger"),
+    colors = require('colors'),
+    repl = require('repl');
 
+// Used to be an http request - now over sockets.
 function postToServer(path, data) {
-  var jdata = JSON.stringify(data||{});
-  var post_options = {
-    host: 'localhost',
-    port: '3000',
-    path: path,
-    method: 'POST',
-    headers: {
-      "Content-Type" : "application/json",
-      "Content-Length":jdata.length
-    } 
-  };
-  var req = http.request(post_options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      console.log('Response: ' + chunk);
-    });
-  }); 
-  req.write(jdata);
-  req.end(); 
+  require("./socket").connect(function(socket) {
+    socket.emit(path,data);
+    if (!config.isTailing) {
+      socket.disconnect();
+    }
+    logger.info(path.toUpperCase() + " sent.");
+  });
 }
 
-
 exports.clearCache = function() {
-  postToServer("/clear_cache");
+  postToServer("clear");
 };
 
 exports.newBundle = function(data) {
-  postToServer("/", {bundle:config.bundle_file, spec: config.isSpec, locale: config.locale});
+  postToServer("bundle", {bundle:config.bundle_file, spec: config.isSpec, locale: config.locale});
+};
+
+exports.sendSnippet = function(code) {
+  if (code) {
+    postToServer("snippet", { code: code});
+  } else {
+    var socket = require("./socket").connect();
+    repl.start({
+      eval: function(command, context, filename, callback) {
+        if (command.trim() != "(\n)") {
+          socket.emit('snippet',{code: command.substring(1,command.length -2)}, function(e) {
+            callback("".blue);
+          });
+        }
+      }
+    });
+  }
 };

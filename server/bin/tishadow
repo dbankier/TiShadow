@@ -1,112 +1,67 @@
 #!/usr/bin/env node
-var path = require("path"),
-    fs = require("fs"),
-    util = require("util"),
-    api = require("./support/api"),
-    bundle = require("./support/bundle"),
-    config = require("./support/config");
-
-    require("./support/fs_extension");
-
-// Copies all Resource files and prepares JS files
-function prepare(src, dst) {
-  var app_name = config.app_name;
-  if (src.match("js$")){ 
-    var src_text = "var __p = require('/api/PlatformRequire'), __log = require('/api/Log'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString;\n" 
-      + fs.readFileSync(src).toString()
-      .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+app_name.replace(/ /g,"_")+"/'")
-      .replace(/require\(/g, "__p.require(")
-      .replace(/Ti(tanium)?.include\(/g, "__p.include(this,")
-      .replace(/Ti.Locale.getString/g, "L")
-      .replace(/([ :=\(])(['"])(\/.*?)(['"])/g, "$1__p.file($2$3$4)")
-      .replace(/Ti(tanium)?.API/g, "__log");
-    if (src.match("_spec.js$")) {
-      src_text =  "var jasmine = require('/lib/jasmine-1.2.0');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe'];methods.forEach(function(method) {this[method] = jasmine[method];});"
-        +src_text;
-    }
-    fs.writeFileSync(dst,src_text);
-  } else { // Non-JS file - just pump it
-    var  is = fs.createReadStream(src);
-    var  os = fs.createWriteStream(dst);
-    util.pump(is, os);
-  }
-}
+var
+    api      = require('./support/api'),
+    compiler = require('./support/compiler'),
+    colors   = require('colors'),
+    pkginfo  = require('pkginfo'),
+    program  = require('commander')
+    ;
 
 
+pkginfo(module, 'name', 'version');
 
-/*
- *
- * SCRIPT START
- *
- */
-var cmd = process.argv[2];
-var cmd2 = process.argv[3];
-if (cmd === "server") {
-  require("../app.js");
-} else if (cmd === "clear") {
-  api.clearCache();
-} else {
-  if (!path.existsSync(path.join(config.base,'tiapp.xml'))) {
-    console.log("Script must be executed in the Titanium project's root directory");
-    process.exit();
-  }
+program
+  .version(module.exports.version, '-v, --version')
+  .description('TiShadow CLI')
+  .usage('COMMAND [OPTIONS]')
 
-  console.log("Beginning Build Process");
-  config.init(function() {
-    var file_list,i18n_list;
-    if(path.existsSync(config.tishadow_src) 
-       && path.existsSync(config.last_updated_file)
-     && (cmd == "update" || cmd2 == "update")) {
-       var last_stat = fs.statSync(config.last_updated_file);
-       file_list = fs.getList(config.resources_path,last_stat.mtime);
-       i18n_list = fs.getList(config.i18n_path,last_stat.mtime);
-
-       if (file_list.files.length === 0 && i18n_list.files.length === 0) {
-         console.log("Nothing to update.");
-         process.exit();
-       }
-     } else {
-       if (!path.existsSync(config.build_path)){
-         fs.mkdirSync(config.build_path, 0755);
-       }
-       //Clean Build
-       if (path.existsSync(config.tishadow_build)) {
-         fs.rm_rf(config.tishadow_build);
-       }
-       // Create the tishadow build paths
-       fs.mkdirs([config.tishadow_build, config.tishadow_src, config.tishadow_dist]);
-       file_list = fs.getList(config.resources_path);
-       i18n_list = fs.getList(config.i18n_path);
-     }
-
-     // Process  Files
-     fs.mkdirs(file_list.dirs, config.tishadow_src);
-     fs.mkdirs(i18n_list.dirs, config.tishadow_src);
-     var end;
-     file_list.files.forEach(function(file, idx) {
-       end = idx;
-       setTimeout(function(){
-         prepare(path.join(config.resources_path,file), path.join(config.tishadow_src, file));
-       }, end * 1);
-     });
-
-     i18n_list.files.forEach(function(file, idx) {
-       util.pump(fs.createReadStream(path.join(config.i18n_path,file)),fs.createWriteStream(path.join(config.tishadow_src, file)));
-     });
-
-     // Bundle up to go
-     setTimeout(function() {
-       file_list.files = file_list.files.concat(i18n_list.files);
-       var total = file_list.files.length;
-       bundle.pack(file_list.files,function(written) { 
-         console.log(total+ " file(s) bundled."); 
-         fs.touch(config.last_updated_file);
-         if (cmd === "bundle") {
-           console.log("Bundle Ready: " + config.bundle_file);
-         } else {
-           api.newBundle();
-         } 
-       });
-     }, (end + 1)* 1);
+program.command('server')
+  .description('start the TiShadow server'.grey)
+  .action(function() {
+    require("../app.js");
   });
+
+program.command('clear')
+  .description('clear the application cache on all connected devices'.grey)
+  .action(api.clearCache);
+
+program.command('deploy')
+  .description('deploy full application to all connected devices'.grey)
+  .option('-u, --update', 'Only send recently changed files')
+  .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
+  .option('-t, --tail-logs', 'Tail server logs on deploy')
+  .action(compiler);
+
+program.command('bundle')
+  .description('prepare a TiShadow bundle without deploying it'.grey)
+  .option('-u, --update', 'Only send recently changed files')
+  .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
+  .option('-j, --jshint', 'Analyse code with JSHint')
+  .action(compiler);
+
+program.command('spec')
+  .description('run jasmin spec tests on all connected devices'.grey)
+  .option('-u, --update', 'Only send recently changed files')
+  .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
+  .option('-j, --jshint', 'Analyse code with JSHint')
+  .action(compiler);
+
+program.command('snip [code]')
+  .description('send code snippet to all connected device.\n'.grey +
+               'This is an alternative to the .\n'.grey + 
+               'If code is not provided then a prompt will be made available'.grey)
+  .action(api.sendSnippet);
+  
+program.command('log')
+  .description('tail server logs'.grey)
+  .action(require('./support/socket').connect);
+
+
+program.parse(process.argv);
+
+// Display help on an invalid command
+if (program.args.length === 0 || typeof program.args[program.args.length -1] === 'string'){
+  program.help();
 }
+
+

@@ -16,29 +16,27 @@ function getAppName(callback) {
   });
 }
 
-config.init = function(callback) {
+config.init = function(env, callback) {
   getAppName(function(result) {
     var app_name = config.app_name = result.name || "bundle";
 
     config.resources_path    = path.join(base, 'Resources');
-    config.i18n_path    = path.join(base, 'i18n');
+    config.i18n_path         = path.join(base, 'i18n');
     config.build_path        = path.join(base, 'build');
     config.tishadow_build    = path.join(config.build_path, 'tishadow');
     config.last_updated_file = path.join(config.tishadow_build, 'last_updated'); 
     config.tishadow_src      = path.join(config.tishadow_build, 'src');
     config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
+    config.alloy_path        = path.join(config.resources_path, 'app');
+    config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
 
-    config.isUpdate = process.argv[2] === "update" || process.argv[3] === "update";
-    config.isSpec   = process.argv[2] === "spec";
-
-    if (!config.isUpdate && !config.isSpec) {
-      config.locale = process.argv[2];
-    } else if (config.isSpec && config.isUpdate) {
-      config.locale = process.argv[4];
-    } else {
-      config.locale = process.argv[3];
-    }
+    config.isUpdate = env.update 
+                      && fs.existsSync(config.tishadow_src)
+                      && fs.existsSync(config.last_updated_file);
+    config.isSpec   = env._name === "spec";
+    config.isTailing = env.tailLogs || config.isSpec;
+    config.locale   = env.locale;
 
     callback();
   });

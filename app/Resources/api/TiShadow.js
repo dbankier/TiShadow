@@ -5,6 +5,7 @@ var p = require('/api/PlatformRequire');
 var assert = require('/api/Assert');
 var Spec = require("/api/Spec");
 var io = require('/lib/socket.io');
+var Beach = require('/api/Beach');
 
 exports.currentApp;
 var socket;
@@ -29,21 +30,14 @@ exports.connect = function(o) {
     }
   });
 
-  var current;
   socket.on('message', function(message) {
     try {
-      if(current && current.close !== undefined) {
-        current.close();
-      }
-      current = eval(message.code);
-      if(current && current.open !== undefined) {
-        current.open();
-      }
-      log.info("Deployed");
+      var ret = eval.call(Beach, message.code);
+      log.repl(ret);
     } catch (e) {
-      log.error(utils.extractExceptionData(e));
+      var ret = utils.extractExceptionData(e)
+      log.error(ret);
     }
-
   });
 
   socket.on('bundle', function(o) {

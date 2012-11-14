@@ -1,19 +1,22 @@
 {
   "name": "tishadow",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "dependencies": {
     "express": "2.5.2",
     "jade": ">= 0.0.1",
-    "socket.io": ">= 0.9.2",
+    "socket.io": ">= 0.9.6",
     "path": ">=0.4.9",
     "xml2js": "0.1.x",
     "zipstream" :">=0.2.1",
-    "colors": ">=0.6.0-1"
+    "colors": ">=0.6.0-1",
+    "commander": "1.0.x",
+    "pkginfo": "0.2.3",
+    "jshint" : "0.9.1"
   },
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {
-    "node": ">=0.6.8"
+    "node": "0.8.x"
   },
   "author": "David Bankier <david@yydigital.com> (http://www.yydigital.com)",
   "description": "Quick Titanium previews across devices",

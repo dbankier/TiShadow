@@ -52,7 +52,6 @@ exports.StartScreen = function() {
       name: Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address,
       callback: function(o) {
         activity.hide();
-        alert("Connected");
         label.text = "Connected";
         login.hide();
       },
@@ -63,7 +62,6 @@ exports.StartScreen = function() {
         login.show();
       },
       disconnected:  function(o) {
-        alert("Disconnected");
         label.text = "Not Connected";
         login.show();
       }

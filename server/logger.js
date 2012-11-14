@@ -3,6 +3,8 @@ require('colors');
 color = {
   DEBUG: 'blue',
   WARN: 'yellow',
+  REPL: 'grey',
+  TRACE: 'grey',
   ERROR: 'red',
   FAIL: 'red',
   PASS: 'green'
