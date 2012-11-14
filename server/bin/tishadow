@@ -25,7 +25,7 @@ program.command('clear')
   .description('clear the application cache on all connected devices'.grey)
   .action(api.clearCache);
 
-program.command('deploy')
+program.command('run')
   .description('deploy full application to all connected devices'.grey)
   .option('-u, --update', 'Only send recently changed files')
   .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
