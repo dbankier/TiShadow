@@ -1,15 +1,17 @@
 TiShadow
 ========
 
-TiShadow provides Titanium developers the ability to write code snippets in a browser
-and render the code across all iOS and Android devices. **NEW** TiShadow now
-also allows the deployment of apps to devices. There are three
-parts to TiShadow: the TiShadow server, TiShadow app and build scripts
+TiShadow provides Titanium developers the ability to deploy apps or code snippets live across all iOS and Android devices.
+
+There are three parts to TiShadow: the TiShadow server, TiShadow app and TiShadow CLI
 for deploying full applications.
 
-~~Have a look at the following [video](http://www.youtube.com/watch?v=xUggUXQArUM) to get any idea of how to use TiShadow and what it can do.~~ (A little outdated.)
+~~Have a look at the following [video](http://www.youtube.com/watch?v=xUggUXQArUM) to get any idea of how to use TiShadow and what it can do.~~ (Outdated)
+~~Have a look at this [presentation](http://www.slideshare.net/londontitanium/titanium-london-tishadow-july-2012) (July 2012) given at the TiLondon meetup for a look at most of what you can do with TiShadow.~~ (Also outdated but more recent)
 
-Have a look at this [presentation](http://www.slideshare.net/londontitanium/titanium-london-tishadow-july-2012) (July 2012) recently given at the TiLondon meetup for a look at most of what you can do with TiShadow.
+
+Getting Started
+===============
 
 
 TiShadow Server Install
@@ -62,20 +64,16 @@ The server can then be started like any nodejs app:
 
 TiShadow App
 ------------
+
 The app is built using [Appcelerator](http://www.appcelerator.com/)'s
 Titanium.
 
-**NEW**
-
-TiShadow App now requires the following:
-
- * Some native zip modules what are included in the app/modules
-   directory. Install these as you would any native module. Please see
-    the README file there. 
-
 **TiShadow NO LONGER REQUIRES A CUSTOM SDK**
 
-~~Since the TiShadow app is not _yet_ in the App Store or Google Play~~, clone the 
+TiShadow App uses some third-party native modules - see the end of the
+README.
+
+Since the TiShadow app is not in the App Store ~~or Google Play~`, clone the 
 code and run/install as you would any Titanium project.
 
 
@@ -89,45 +87,14 @@ Fire up the server and launch the app.
 From the app just enter the ip address of the computer running the node
 server and hit connect.
 
-
-Code Snippets Via Webpage
--------------------------
-Enter the following address in a browser window:
-
-```
-    http://localhost:3000/
-```
-
-In the editor you can enter code and press Command+s to deploy the code
-snippet to all connected devices.
-
-Have a look at the demo [video](http://www.youtube.com/watch?v=xUggUXQArUM).
-
-If you want to include setup and clean up code, make sure you wrap your
-code in an anonymous function that returns `open` and `close`
-functions.
-
-For example, a window could be one such object:
-
-```javascript
-    (function() {
-      var win = Ti.UI.createWindow();
-
-      return win;
-    }());
-```
-
 Full Application Deployment
 ---------------------------
-
-Recently added to TiShadow is the ability to deploy full application. It
-is still in beta, but can be used for simple applications.
 
 If you installed TiShadow using npm, go to the root folder of your
 project and enter the following command to deploy an app:
 
 ```bash
-  tishadow
+  tishadow run
 ```
 
 (For manual installs, the `tishadow` script is included in the build folder. You may want to include the script in your
@@ -136,8 +103,24 @@ environment path.)
 If the app has been deployed and you want to push minor updates, use the following command:
 
 ```bash
-  tishadow update
+  tishadow run --update
 ```
+
+Here are full list of options:
+
+```
+ $ tishadow run --help
+
+  Usage: run [options]
+
+  Options:
+
+    -h, --help             output usage information
+    -u, --update           Only send recently changed files
+    -l, --locale <locale>  Set the locale in in the TiShadow app
+    -t, --tail-logs        Tail server logs on deploy
+```
+
 
 The app is then cached on the device. If need to clear the cache, use
 the following command:
@@ -148,21 +131,22 @@ the following command:
 
 __Some notes and limitations__
 
- * ~~Only works with applications that use the CommonJS structure.~~ 
-   `Ti.include` is partially supported and will work if included with the full path 
-    i.e. slash leading.
  * CommonJS modules should be required with their full path.
+ * `Ti.include` is partially supported and will work if included with the full path 
+    i.e. slash leading.
  * Only files in the Resources directory will will be sent to the device
-   using TiShadow. That said, localisation files **are** supported. 
+   using TiShadow. That said, localisation files **are** supported. (see
+   options above. 
  * Native modules _can_ be supported if built into the TiShadow app
    first. (I.e., add them to the tiapp.xml of the TiShadow app.)
  * If there any errors about a Titanium SDK command not being found, add
-   them to the Includes.js files and clean and build the TiShadow app. I
+   them to the Includes.js files and clean and build the TiShadow app. (I
    will gradually be adding commands.)
- * Any Ti.API logs will be redirected to the tishadow webpage.
+ * Any Ti.API logs will be redirected to the server logs and webpage.
+
 
 If you want to make sure the previous app deployed is closed prior to
-launching the new one, include the following code snippet in your
+updating or launching the new one, include the following code snippet in your
 `app.js` file:
 
 ```javascript
@@ -180,8 +164,6 @@ launching the new one, include the following code snippet in your
 Testing / Assertions
 --------------------
 
-**RECENTLY ADDED**
-
 TiShadow now support [Jasmine](http://pivotal.github.com/jasmine/) BDD tests. 
 Insipration taken from these two projects: [titanium-jasmine](https://github.com/guilhermechapiewski/titanium-jasmine/) and [jasmine-titanium](https://github.com/akahigeg/jasmine-titanium)
 
@@ -194,12 +176,23 @@ To execute the tests enter the following command:
   tishadow spec
 ```
 
-Alternatively the following command is also supported if there are only
-minor changes: 
+Here are a full list of options:
 
-```bash
-  tishadow spec update
 ```
+ $ ./tishadow spec --help
+
+  Usage: spec [options]
+
+  Options:
+
+    -h, --help             output usage information
+    -u, --update           Only send recently changed files
+    -l, --locale <locale>  Set the locale in in the TiShadow app
+    -j, --jshint           Analyse code with JSHint
+    -x, --junit-xml        Output report as JUnit XML
+```
+
+**NOTE** the new `--junit-xml` option.
 
 The test results will be returned to the server output:
 ![Spec Output](http://github.com/dbankier/TiShadow/raw/master/example/spec.png)
@@ -231,16 +224,50 @@ Also the equivalent not assertions are available as well, e.g.
 
 Configurable Localisation
 -------------------------
-TiShadow now supports localisation. You can also chose the locale locale
-you wish to execute when launch your app/tests. Simply add the
+TiShadow now supports localisation. You can also chose the locale 
+you wish to use when launching your app/tests. Simply add the
 two-letter language code to your command. For example:
 
 ```bash
-  tishadow en
-  tishadow update es
-  tishadow spec nl
-  tishadow spec update es
+  tishadow run --locale es
+  tishadow spec --locale nl
 ```
+
+Code Snippets Via Webpage
+-------------------------
+ 
+Enter the following address in a browser window:
+
+```
+    http://localhost:3000/
+```
+
+In the editor you can enter code and press Command+s to deploy the code
+snippet to all connected devices.
+
+Have a look at the demo [video](http://www.youtube.com/watch?v=xUggUXQArUM).
+
+**NEW** coding from the webpage now works much like a REPL and variables
+are stored in a sandboxed context. See the next section.
+
+
+TiShadow REPL
+-------------
+
+**NEW** The TiShadow REPL is now available and evaluates commands in a
+persistant sandboxed context. 
+
+To Launch the REPL enter the following command:
+
+```bash
+  tishadow repl
+```
+
+`launchApp(appName)`, `closeApp()` and `clearCache()` methods available
+to interact with apps cached in the TiShadow app.
+
+`require()`, `Ti.include()` and assests are relative the running app
+inside the TiShadow app.
 
 
 Launch From Web
@@ -263,10 +290,10 @@ to save and do a tishadow update, and Shift+F6 to save and perform a full
 tishadow deploy:
 
 ```
-    :map <F6> <Esc>:w<CR>:!tishadow update<CR>a
-    :imap <F6> <Esc>:w<CR>:!tishadow update<CR>a
-    :map <S-F6> <Esc>:w<CR>:!tishadow<CR>a
-    :imap <S-F6> <Esc>:w<CR>:!tishadow<CR>a 
+    :map <F6> <Esc>:w<CR>:!tishadow run --update<CR>a
+    :imap <F6> <Esc>:w<CR>:!tishadow run --update<CR>a
+    :map <S-F6> <Esc>:w<CR>:!tishadow run<CR>a
+    :imap <S-F6> <Esc>:w<CR>:!tishadow run<CR>a 
 ```
 
 
