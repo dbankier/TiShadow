@@ -1,6 +1,6 @@
 var TiShadow = {};
 TiShadow.init = function (session, guest){
-  var socket = io.connect("http://localhost");
+  var socket = io.connect();
   socket.on('connect', function(data) {
     socket.emit("join", {name: 'controller'});
   });
@@ -12,7 +12,7 @@ TiShadow.init = function (session, guest){
   });
   socket.on('device_log', function(e) {
     var now = new Date();
-    var log = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " [" + e.level + "] [" + e.name + "]    " + e.message.replace("\n","<br/>");
+    var log = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " [" + e.level + "] [" + e.name + "]    " + (e.message === undefined ? 'undefined' : e.message.toString().replace("\n","<br/>"));
     var style = e.level === "ERROR"  || e.level === "FAIL" ? " error" : e.level === "WARN" ? "" : " success"
     $(".console").append("<div class='alert-message" + style + "'>" + log + "</div>");
     $(".console").scrollTop($(".console")[0].scrollHeight);
