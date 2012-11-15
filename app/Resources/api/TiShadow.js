@@ -5,7 +5,6 @@ var p = require('/api/PlatformRequire');
 var assert = require('/api/Assert');
 var Spec = require("/api/Spec");
 var io = require('/lib/socket.io');
-var Beach = require('/api/Beach');
 
 exports.currentApp;
 var socket;
@@ -29,16 +28,9 @@ exports.connect = function(o) {
       o.onerror();
     }
   });
-
-  socket.on('message', function(message) {
-    try {
-      var ret = eval.call(Beach, message.code);
-      log.repl(ret);
-    } catch (e) {
-      var ret = utils.extractExceptionData(e)
-      log.error(ret);
-    }
-  });
+  
+  // REPL messages
+  socket.on('message',require('/api/Beach').eval);
 
   socket.on('bundle', function(o) {
     if(o.locale) {
@@ -48,26 +40,7 @@ exports.connect = function(o) {
   });
 
   socket.on('clear', function() {
-    try {
-      var files = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory).getDirectoryListing();
-      files.forEach(function(file_name) {
-        var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,file_name);
-        if (Ti.Platform.osname === "android") {
-          if (file.isFile()) {
-            file.deleteFile();
-          } else if (file.isDirectory()) {
-            file.deleteDirectory(true);
-          }
-        } else {
-          file.deleteFile();
-          file.deleteDirectory(true);
-        }
-      });
-      Ti.App.fireEvent("tishadow:refresh_list");
-    } catch (e) {
-      log.error(utils.extractExceptionData(e));
-    }
-    log.info("Cache cleared");
+    exports.clearCache();
   });
 
   socket.on('disconnect', function() {
@@ -95,12 +68,15 @@ exports.disconnect = function() {
 
 
 var bundle;
-exports.launchApp = function(name) {
-  try {
-    if (bundle && bundle.close !== undefined) {
+exports.closeApp = function(name) {
+  if (bundle && bundle.close !== undefined) {
       bundle.close();
       log.info("Previous bundle closed.");
-    }
+   }
+};
+exports.launchApp = function(name) {
+  try {
+    exports.closeApp();
     p.clearCache();
     require("/api/Localisation").clear();
     Ti.App.fireEvent("tishadow:refresh_list");
@@ -111,6 +87,29 @@ exports.launchApp = function(name) {
     log.error(utils.extractExceptionData(e));
   }
 };
+exports.clearCache = function() {
+  try {
+    var files = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory).getDirectoryListing();
+    files.forEach(function(file_name) {
+      var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,file_name);
+      if (Ti.Platform.osname === "android") {
+        if (file.isFile()) {
+          file.deleteFile();
+        } else if (file.isDirectory()) {
+          file.deleteDirectory(true);
+        }
+      } else {
+        file.deleteFile();
+        file.deleteDirectory(true);
+      }
+    });
+    Ti.App.fireEvent("tishadow:refresh_list");
+  } catch (e) {
+    log.error(utils.extractExceptionData(e));
+  }
+  log.info("Cache cleared");
+}
+
 
 function loadRemoteZip(name, url, spec) {
   var xhr = Ti.Network.createHTTPClient();

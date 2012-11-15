@@ -47,9 +47,8 @@ program.command('spec')
   .option('-x, --junit-xml','Output report as JUnit XML')
   .action(compiler);
 
-program.command('snip [code]')
-  .description('send code snippet to all connected device.\n'.grey +
-               'If code is not provided then a REPL will be made available'.grey)
+program.command('repl')
+  .description('launch REPL'.grey)
   .action(api.sendSnippet);
   
 program.command('log')
