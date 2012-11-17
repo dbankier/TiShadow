@@ -41,7 +41,7 @@ module.exports = function(env) {
     process.exit();
   }
 
-  config.init(env, function() {
+  config.buildPaths(env, function() {
     if (env.jshint) {
       logger.info("Running JSHint");
       jshint.checkPath(config.jshint_path);

@@ -13,7 +13,7 @@ pkginfo(module, 'name', 'version');
 program
   .version(module.exports.version, '-v, --version')
   .description('TiShadow CLI')
-  .usage('COMMAND [OPTIONS]')
+  .usage('COMMAND [OPTIONS]');
 
 program.command('server')
   .description('start the TiShadow server'.grey)
