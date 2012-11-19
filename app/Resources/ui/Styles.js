@@ -37,7 +37,8 @@ exports.text = {
 	host : {
 		top : "70dp",
 		height : "50dp",
-		width : "280dp",
+		left: "10dp",
+    width : "205dp",
     borderRadius: 5,
 		backgroundColor : 'white',
 		textAlign : 'center',
@@ -45,7 +46,33 @@ exports.text = {
 			fontSize : "20dp"
 		},
 		hintText : "IP Address"
-	}
+	},
+  port : {
+    top : "70dp",
+    right: "10dp",
+    height : "50dp",
+    width : "65dp",
+    borderRadius: 5,
+    backgroundColor : 'white',
+    textAlign : 'center',
+    font : {
+      fontSize : "20dp"
+    },
+    hintText : "Port"
+  },
+  colon : {
+    top : "70dp",
+    left: "215dp",
+    height : "50dp",
+    width : "10dp",
+    borderRadius: 5,
+    color: 'black',
+    textAlign : 'center',
+    font : {
+      fontSize : "20dp"
+    },
+    text : ":"
+  }
 };
 
 if(Ti.Platform.osname !== "android") {

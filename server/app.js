@@ -8,7 +8,8 @@ var express = require('express'),
     routes = require('./routes'),
     fs = require('fs'),
     path = require('path'),
-    Logger = require('./logger');
+    Logger = require('./logger'),
+    config = require('./bin/support/config');
 
 
 var app = module.exports = express.createServer();
@@ -21,6 +22,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+  app.use(express.limit('150mb'));
 });
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
@@ -29,12 +31,25 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+// allow for server-side port override (useful for PaaS)
+config.port = process.env.PORT || config.port;
+
 //Setup socket
 var sio=io.listen(app, {log: false});
 
+//force long-polling? e.g. heroku
+if(config.isLongPolling) {
+  Logger.debug("Forced long polling.");
+  sio.configure(function() {
+    sio.set("transports",["xhr-polling"]);
+    sio.set("polling duration", 10);
+  });
+}
 
-// Routes
+// HTTP Routes
 app.get('/', routes.index);
+
+// Bundles handled by GET/POST instead of socket connections.
 var bundle;
 app.get('/bundle', function(req,res) {
   Logger.debug("Bundle requested." );
@@ -53,13 +68,25 @@ app.get('/bundle', function(req,res) {
   });
 });
 
+// For remote bundle posting.
+app.post('/bundle', function(req, res) {
+  Logger.log("WARN", null, "Remote Bundle Received");
+  var name = req.files.bundle.name.replace(".zip","");
+  bundle = req.files.bundle.path;
+  Logger.log("INFO", null, "New Bundle: " + bundle + " | " + name);
+  var data = JSON.parse(req.body.data);
+  data.name = name;
+  data.bundle = null;
+  sio.sockets.emit("bundle", data);
+  res.send("OK", 200);
+});
 
 //FIRE IT UP
-app.listen(3000);
-Logger.debug("TiShadow server started. Go to http://localhost:3000");
+app.listen(config.port);
+Logger.debug("TiShadow server started. Go to http://"+ config.host + ":" + config.port);
+
 
 //WEB SOCKET STUFF
-
 var devices = [];
 sio.sockets.on('connection', function(socket) {
   Logger.debug('A socket connected');

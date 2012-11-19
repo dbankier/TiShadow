@@ -12,7 +12,7 @@ exports.connect = function(o) {
   if (socket) {
     exports.disconnect();
   }
-  socket = io.connect("http://" + o.host + ":3000");
+  socket = io.connect("http://" + o.host + ":"  + o.port);
 
   socket.on("connect", function() {
     socket.emit("join", {
@@ -32,11 +32,11 @@ exports.connect = function(o) {
   // REPL messages
   socket.on('message',require('/api/Beach').eval);
 
-  socket.on('bundle', function(o) {
-    if(o.locale) {
-      require("/api/Localisation").locale = o.locale;
+  socket.on('bundle', function(data) {
+    if(data.locale) {
+      require("/api/Localisation").locale = data.locale;
     }
-    loadRemoteZip(o.name, "http://" + Ti.App.Properties.getString("address") + ":3000/bundle", o.spec);
+    loadRemoteZip(data.name, "http://" + o.host + ":" + o.port + "/bundle", data.spec);
   });
 
   socket.on('clear', function() {

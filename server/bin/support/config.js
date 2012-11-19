@@ -16,6 +16,9 @@ function getAppName(callback) {
   });
 }
 
+//Default server setting
+config.port = 3000;
+config.host = "localhost";
 
 //Config setup
 config.buildPaths = function(env, callback) {
@@ -47,7 +50,9 @@ config.init = function(env) {
   config.locale   = env.locale;
   config.isJUnit  = env.junitXml;
   config.isREPL   = env._name === "repl";
-
+  config.host     = env.host || config.host;
+  config.port     = env.port || config.port;
+  config.isLongPolling = env.longPolling;
 };
 
 

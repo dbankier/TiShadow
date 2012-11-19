@@ -6,7 +6,7 @@ var logger = require("../../logger"),
 
 
 exports.connect = function(onconnect) {
-  var socket = io.connect("http://localhost:3000");
+  var socket = io.connect("http://" + config.host + ":" + config.port);
   socket.on('connect', function(data) {
     socket.emit("join", {name: 'controller'});
     if (onconnect && typeof onconnect === 'function') {

@@ -3,6 +3,7 @@ var
     api      = require('./support/api'),
     compiler = require('./support/compiler'),
     colors   = require('colors'),
+    config   = require('./support/config'),
     pkginfo  = require('pkginfo'),
     program  = require('commander')
     ;
@@ -17,7 +18,11 @@ program
 
 program.command('server')
   .description('start the TiShadow server'.grey)
-  .action(function() {
+  .option('-o, --host <host>', 'server host name / ip address')
+  .option('-p, --port <port>', 'server port')
+  .option('-l, --long-polling', 'force long polling')
+  .action(function(env) {
+    config.init(env);
     require("../app.js");
   });
 
@@ -29,7 +34,10 @@ program.command('run')
   .description('deploy full application to all connected devices'.grey)
   .option('-u, --update', 'Only send recently changed files')
   .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
+  .option('-j, --jshint', 'Analyse code with JSHint')
   .option('-t, --tail-logs', 'Tail server logs on deploy')
+  .option('-o, --host <host>', 'server host name / ip address')
+  .option('-p, --port <port>', 'server port')
   .action(compiler);
 
 program.command('bundle')
@@ -43,16 +51,22 @@ program.command('spec')
   .description('run jasmin spec tests on all connected devices'.grey)
   .option('-u, --update', 'Only send recently changed files')
   .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
+  .option('-o, --host <host>', 'server host name / ip address')
+  .option('-p, --port <port>', 'server port')
   .option('-j, --jshint', 'Analyse code with JSHint')
   .option('-x, --junit-xml','Output report as JUnit XML')
   .action(compiler);
 
 program.command('repl')
   .description('launch REPL'.grey)
+  .option('-o, --host <host>', 'server host name / ip address')
+  .option('-p, --port <port>', 'server port')
   .action(api.sendSnippet);
   
 program.command('log')
   .description('tail server logs'.grey)
+  .option('-o, --host <host>', 'server host name / ip address')
+  .option('-p, --port <port>', 'server port')
   .action(require('./support/socket').connect);
 
 
