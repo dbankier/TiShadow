@@ -48,7 +48,8 @@ exports.StartScreen = function() {
   login.zIndex = 10;
   function connect() {
     TiShadow.connect({
-      host: Ti.App.Properties.getString("address"),
+      host: Ti.App.Properties.getString("address", "localhost"),
+      port: Ti.App.Properties.getString("port", "3000"),
       name: Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address,
       callback: function(o) {
         activity.hide();

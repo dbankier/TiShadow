@@ -16,7 +16,13 @@ function getAppName(callback) {
   });
 }
 
-config.init = function(env, callback) {
+//Default server setting
+config.port = 3000;
+config.host = "localhost";
+
+//Config setup
+config.buildPaths = function(env, callback) {
+  config.init(env);
   getAppName(function(result) {
     var app_name = config.app_name = result.name || "bundle";
 
@@ -30,18 +36,24 @@ config.init = function(env, callback) {
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
     config.alloy_path        = path.join(config.resources_path, 'app');
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
-
-    config.isUpdate = env.update 
-                      && fs.existsSync(config.tishadow_src)
-                      && fs.existsSync(config.last_updated_file);
-    config.isSpec   = env._name === "spec";
-    config.isTailing = env.tailLogs || config.isSpec;
-    config.locale   = env.locale;
-    config.isJUnit  = env.junitXml;
-
+    
     callback();
   });
-}
+};
+
+config.init = function(env) {
+  config.isUpdate = env.update 
+                    && fs.existsSync(config.tishadow_src)
+                    && fs.existsSync(config.last_updated_file);
+  config.isSpec   = env._name === "spec";
+  config.isTailing = env.tailLogs || config.isSpec;
+  config.locale   = env.locale;
+  config.isJUnit  = env.junitXml;
+  config.isREPL   = env._name === "repl";
+  config.host     = env.host || config.host;
+  config.port     = env.port || config.port;
+  config.isLongPolling = env.longPolling;
+};
 
 
 module.exports = config;

@@ -1,3 +1,4 @@
+var config = require("./bin/support/config");
 require('colors');
 
 color = {
@@ -17,7 +18,11 @@ exports.log = function(level, name, msg) {
   if (color[level]) {
     msg = msg[color[level]];
   };
-  console.log(msg);
+  if (config.isREPL) {
+    process.stdout.write("\r" + msg + "\n> ");
+  }else {
+    console.log(msg);
+  }
 }
 
 var levels = ['info','debug','error'];
