@@ -8,7 +8,7 @@ var logger = require("../../logger"),
 exports.connect = function(onconnect) {
   var socket = io.connect("http://" + config.host + ":" + config.port);
   socket.on('connect', function(data) {
-    socket.emit("join", {name: 'controller'});
+    socket.emit("join", {name: 'controller', room: config.room});
     if (onconnect && typeof onconnect === 'function') {
       onconnect(socket);
     }

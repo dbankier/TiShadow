@@ -1,81 +1,100 @@
 /*global exports,require*/
+var _ = require("/lib/underscore");
 
-exports.button = {
-	height : '40dp',
-	width : '280dp',
-	color : 'white',
-	backgroundColor : "#4377d2",
+var textField = {
+  top : "50dp",
+  height : "40dp",
+  color: 'black',
+  borderRadius: 5,
+  backgroundColor : 'white',
+  textAlign : 'center',
+  font : {
+    fontSize : "18dp"
+  },
+  autocorrect: false,
+  autocapitlization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
+};
 
-	font : {
-		fontSize : '16dp',
-		fontWeight : 'bold'
-	},
-	borderRadius : '10',
-	bottom : '20dp',
-	title : "Connect"
+var tab = {
+  textAlign: 'center',
+  font: {fontWeight: 'bold', fontSize: '14dp'},
+  bottom: 0,
+  color: 'black',
+  width: '50%',
+  height: '30dp'
 };
 
 
-exports.text = {
+exports.login = {
 	container : {
-		height : "200dp",
+		height : "190dp",
 		width : "300dp",
 		borderRadius : "20",
 		backgroundColor : "#d6e0f0"
 	},
 	header : {
-		top : "20dp",
+		top : "10dp",
 		height : "30dp",
 		font : {
-			fontSize : "20dp",
+			fontSize : "16dp",
 			fontWeight : 'bold'
 		},
 		color: 'black',
-		text : "Connect to Local Computer",
+		text : "Connect to TiShadow Server",
 		textAlign : 'center'
 	},
-	host : {
-		top : "70dp",
-		height : "50dp",
+	host : _.defaults({
 		left: "10dp",
-    width : "205dp",
-    borderRadius: 5,
-		backgroundColor : 'white',
-		textAlign : 'center',
-		font : {
-			fontSize : "20dp"
-		},
+    width : "280dp",
+    height: "40dp",
 		hintText : "IP Address"
-	},
-  port : {
-    top : "70dp",
+	}, textField),
+  port : _.defaults({
     right: "10dp",
-    height : "50dp",
     width : "65dp",
-    borderRadius: 5,
-    backgroundColor : 'white',
-    textAlign : 'center',
-    font : {
-      fontSize : "20dp"
-    },
-    hintText : "Port"
-  },
-  colon : {
-    top : "70dp",
+    hintText : "Port",
+    visible: false
+  }, textField),
+  colon : _.defaults({
     left: "215dp",
-    height : "50dp",
     width : "10dp",
-    borderRadius: 5,
-    color: 'black',
-    textAlign : 'center',
+    text : ":",
+    backgroundColor: 'transparent',
+    visible: false
+  }, textField),
+  room: _.defaults({
+		top : "95dp",
+		left: "10dp",
+    width : "280dp",
+		hintText : "Room",
+    visible: false
+	}, textField),
+  leftTab: _.defaults({
+    text: 'Standard',
+    left: 0
+  }, tab),
+  rightTab: _.defaults({
+    text: 'Advanced',
+    backgroundColor: "#4377d2",
+    right: 0
+  },tab),
+  button : {
+    height : '40dp',
+    width : '280dp',
+    color : 'white',
+    backgroundColor : "#4377d2",
+
     font : {
-      fontSize : "20dp"
+      fontSize : '16dp',
+      fontWeight : 'bold'
     },
-    text : ":"
+    borderRadius : '10',
+    bottom : '50dp',
+    title : "Connect"
   }
 };
 
 if(Ti.Platform.osname !== "android") {
-	exports.button.backgroundImage = 'none';
-  exports.text.host.backgroundImage = 'none';
+	exports.login.button.backgroundImage = 'none';
+  exports.login.host.backgroundImage = 'none';
 }

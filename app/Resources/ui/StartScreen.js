@@ -4,6 +4,7 @@ var Activity = require('/ui/Activity');
 //Includes do not need to be included at runtime, just needed to trick
 //require("/api/Includes");
 var TiShadow = require('/api/TiShadow');
+var NavBar = require("/ui/NavBar");
 Titanium.App.idleTimerDisabled = true;
 
 exports.StartScreen = function() {
@@ -20,7 +21,7 @@ exports.StartScreen = function() {
     activity.hide();
   });
 
-  (require("/ui/NavBar")).add({
+  NavBar.add({
     win:win,
     connect: function() {
       login.show();
@@ -50,21 +51,25 @@ exports.StartScreen = function() {
     TiShadow.connect({
       host: Ti.App.Properties.getString("address", "localhost"),
       port: Ti.App.Properties.getString("port", "3000"),
+      room: Ti.App.Properties.getString("room", "default"),
       name: Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address,
       callback: function(o) {
         activity.hide();
         label.text = "Connected";
         login.hide();
+        NavBar.connectEnabled = false;
       },
       onerror: function(o) {
         activity.hide();
         alert("Connect Failed");
         label.text = "Not Connected";
         login.show();
+        NavBar.connectEnabled = true;
       },
       disconnected:  function(o) {
         label.text = "Not Connected";
         login.show();
+        NavBar.connectEnabled = true;
       }
     });
   }

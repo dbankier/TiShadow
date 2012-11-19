@@ -25,6 +25,8 @@ function postZipToServer (_path, data) {
     path: '/' + _path,
     method: 'POST'
   };
+  // Send the room
+  data.room = config.room;
   var request = http.request(post_options, function(res) {
     res.setEncoding('utf8');
     res.on('data', function (chunk) {

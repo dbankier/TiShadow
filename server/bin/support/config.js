@@ -52,6 +52,7 @@ config.init = function(env) {
   config.isREPL   = env._name === "repl";
   config.host     = env.host || config.host;
   config.port     = env.port || config.port;
+  config.room     = env.room || "default";
   config.isLongPolling = env.longPolling;
 };
 

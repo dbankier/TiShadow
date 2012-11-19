@@ -38,6 +38,7 @@ program.command('run')
   .option('-t, --tail-logs', 'Tail server logs on deploy')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
+  .option('-r, --room <room>', 'server room')
   .action(compiler);
 
 program.command('bundle')
@@ -53,6 +54,7 @@ program.command('spec')
   .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
+  .option('-r, --room <room>', 'server room')
   .option('-j, --jshint', 'Analyse code with JSHint')
   .option('-x, --junit-xml','Output report as JUnit XML')
   .action(compiler);
@@ -61,12 +63,14 @@ program.command('repl')
   .description('launch REPL'.grey)
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
+  .option('-r, --room <room>', 'server room')
   .action(api.sendSnippet);
   
 program.command('log')
   .description('tail server logs'.grey)
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
+  .option('-r, --room <room>', 'server room')
   .action(require('./support/socket').connect);
 
 

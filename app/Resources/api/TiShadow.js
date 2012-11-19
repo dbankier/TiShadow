@@ -7,8 +7,9 @@ var Spec = require("/api/Spec");
 var io = require('/lib/socket.io');
 
 exports.currentApp;
-var socket;
+var socket, room;
 exports.connect = function(o) {
+  room = o.room;
   if (socket) {
     exports.disconnect();
   }
@@ -16,8 +17,10 @@ exports.connect = function(o) {
 
   socket.on("connect", function() {
     socket.emit("join", {
-      name : o.name
+      name : o.name,
+      room : o.room
     });
+
     if(o.callback) {
       o.callback();
     }
@@ -47,6 +50,7 @@ exports.connect = function(o) {
     if(o.disconnected) {
       o.disconnected();
     }
+    exports.disconnect();
   });
 
 };
@@ -60,7 +64,6 @@ exports.emitLog = function(e) {
 exports.disconnect = function() {
   if (socket) {
     socket.disconnect();
-    socket = null;
   }
 };
 
@@ -144,7 +147,7 @@ function loadRemoteZip(name, url, spec) {
   xhr.onerror = function(e){
     Ti.UI.createAlertDialog({title:'XHR', message:'Error: ' + e.error}).show();
   };
-  xhr.open('GET', url);
+  xhr.open('GET', url + "/" + room);
   xhr.send();
 }
 
