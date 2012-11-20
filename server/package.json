@@ -5,6 +5,7 @@
     "express": "2.5.2",
     "jade": ">= 0.0.1",
     "socket.io": ">= 0.9.6",
+    "socket.io-client": ">=0.9.11",
     "path": ">=0.4.9",
     "xml2js": "0.1.x",
     "zipstream" :">=0.2.1",
