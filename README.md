@@ -7,125 +7,117 @@ There are three parts to TiShadow: the TiShadow server, TiShadow app and TiShado
 for deploying full applications.
 
 ~~Have a look at the following [video](http://www.youtube.com/watch?v=xUggUXQArUM) to get any idea of how to use TiShadow and what it can do.~~ (Outdated)
+
 ~~Have a look at this [presentation](http://www.slideshare.net/londontitanium/titanium-london-tishadow-july-2012) (July 2012) given at the TiLondon meetup for a look at most of what you can do with TiShadow.~~ (Also outdated but more recent)
 
 
 Getting Started
 ===============
 
+TiShadow Install
+----------------
 
-TiShadow Server Install
------------------------
+TiShadow is built on [node.js](http://nodejs.org/) and is required.
 
 TiShadow can be installed via npm using the following command:
 
-```bash
+```
   sudo npm install -g tishadow
 ```
+
+
+Alternatively you can install TiShadow from the source:
+
+```
+  git clone https://github.com/dbankier/TiShadow.git
+  cd TiShadow/server
+  sudo npm install -g .
+```
+
+Since the TiShadow app is not in the App Store ~~or Google Play~~, clone the 
+code and run/install as you would any Titanium project.
 
 **NOTE**: I will endevour to update the npm package on significant changes but
 might lag, so if the app doesn't seem to be playing nicely install the
 server side from source. In general upgrade the server side and app at
 the same time.
 
-Once installed, the server can be started by typing the following
-command:
-
-```bash
-  tishadow server
-```
-
-The server code uses the following and are included:
-
- * [node.js](http://nodejs.org/)
- * [express] (http://expressjs.com/)
- * [socket.io] (http://socket.io)
- * [Twitter Bootstrap](http://twitter.github.com/bootstrap/)
- * [Ace](https://github.com/ajaxorg/ace)
-
-
-
-TiShadow Server Install From Source
------------------------------------
-
-After cloning the server code, make sure you run the following to
-install dependancies:
-
-```bash
-    npm install -d
-```
-
-The server can then be started like any nodejs app:
-
-```bash
-    node app.js
-```
-
-
-TiShadow App
-------------
-
-The app is built using [Appcelerator](http://www.appcelerator.com/)'s
-Titanium.
-
-**TiShadow NO LONGER REQUIRES A CUSTOM SDK**
-
-TiShadow App uses some third-party native modules - see the end of the
-README.
-
-Since the TiShadow app is not in the App Store ~~or Google Play~`, clone the 
-code and run/install as you would any Titanium project.
-
 
 How To
 ======
 
-Common Tasks
+Start TiShadow Server
+---------------------
+
+The server can be started by typing the following command:
+
+```
+  tishadow server
+```
+
+The following options are available:
+
+```
+    -h, --help          output usage information
+    -p, --port <port>   server port
+    -l, --long-polling  force long polling
+```
+
+Remote Server Mode and Private Rooms
+------------------------------------
+
+**NEW**: The TiShadow Server now support remote hosting with configurable http
+ports. It also allow for private "rooms" (much like chat rooms) so that
+the TiShadow server can be shared. 
+
+The `tishadow log` command is
+available to tail remote server logs (in the default or selected room).
+
+The `tishadow config` command is available to set the default host, port
+and room for all the relevant command below.
+
+TiShadow App
 ------------
 
-Fire up the server and launch the app.
-From the app just enter the ip address of the computer running the node
-server and hit connect.
+Once the server is running launch the app.
+From the app just enter the ip address of the computer running the
+server and hit connect. There are also more advanced connection settings
+that can be used for remote server connections.
+
 
 Full Application Deployment
 ---------------------------
 
-If you installed TiShadow using npm, go to the root folder of your
-project and enter the following command to deploy an app:
+Go to the root folder of your project and enter the following command to deploy an app:
 
-```bash
+```
   tishadow run
 ```
 
-(For manual installs, the `tishadow` script is included in the build folder. You may want to include the script in your
-environment path.)
-
 If the app has been deployed and you want to push minor updates, use the following command:
 
-```bash
+```
   tishadow run --update
 ```
 
 Here are full list of options:
 
 ```
- $ tishadow run --help
-
-  Usage: run [options]
-
-  Options:
-
     -h, --help             output usage information
     -u, --update           Only send recently changed files
-    -l, --locale <locale>  Set the locale in in the TiShadow app
-    -t, --tail-logs        Tail server logs on deploy
+    -l, --locale <locale>  set the locale in in the TiShadow app
+    -j, --jshint           analyse code with JSHint
+    -t, --tail-logs        tail server logs on deploy
+    -o, --host <host>      server host name / ip address
+    -p, --port <port>      server port
+    -r, --room <room>      server room
 ```
 
 
 The app is then cached on the device. If need to clear the cache, use
 the following command:
 
-```bash
+```
   tishadow clear
 ```
 
@@ -136,7 +128,7 @@ __Some notes and limitations__
     i.e. slash leading.
  * Only files in the Resources directory will will be sent to the device
    using TiShadow. That said, localisation files **are** supported. (see
-   options above. 
+   options above). 
  * Native modules _can_ be supported if built into the TiShadow app
    first. (I.e., add them to the tiapp.xml of the TiShadow app.)
  * If there any errors about a Titanium SDK command not being found, add
@@ -179,17 +171,14 @@ To execute the tests enter the following command:
 Here are a full list of options:
 
 ```
- $ ./tishadow spec --help
-
-  Usage: spec [options]
-
-  Options:
-
     -h, --help             output usage information
     -u, --update           Only send recently changed files
     -l, --locale <locale>  Set the locale in in the TiShadow app
-    -j, --jshint           Analyse code with JSHint
-    -x, --junit-xml        Output report as JUnit XML
+    -o, --host <host>      server host name / ip address
+    -p, --port <port>      server port
+    -r, --room <room>      server room
+    -j, --jshint           analyse code with JSHint
+    -x, --junit-xml        output report as JUnit XML
 ```
 
 **NOTE** the new `--junit-xml` option.
@@ -224,11 +213,11 @@ Also the equivalent not assertions are available as well, e.g.
 
 Configurable Localisation
 -------------------------
-TiShadow now supports localisation. You can also chose the locale 
+TiShadow supports dynamic localisation. You can also chose the locale 
 you wish to use when launching your app/tests. Simply add the
 two-letter language code to your command. For example:
 
-```bash
+```
   tishadow run --locale es
   tishadow spec --locale nl
 ```
@@ -243,11 +232,9 @@ Enter the following address in a browser window:
 ```
 
 In the editor you can enter code and press Command+s to deploy the code
-snippet to all connected devices.
+snippet to all connected devices. Have a look at the demo [video](http://www.youtube.com/watch?v=xUggUXQArUM).
 
-Have a look at the demo [video](http://www.youtube.com/watch?v=xUggUXQArUM).
-
-**NEW** coding from the webpage now works much like a REPL and variables
+**NEW** coding from the webpage now works much like the REPL and variables
 are stored in a sandboxed context. See the next section.
 
 
@@ -262,6 +249,15 @@ To Launch the REPL enter the following command:
 ```bash
   tishadow repl
 ```
+With the following options: 
+
+```
+    -h, --help         output usage information
+    -o, --host <host>  server host name / ip address
+    -p, --port <port>  server port
+    -r, --room <room>  server room
+```
+
 
 `launchApp(appName)`, `closeApp()` and `clearCache()` methods available
 to interact with apps cached in the TiShadow app.
@@ -297,6 +293,20 @@ tishadow deploy:
 ```
 
 
+Credits
+=======
+
+The server code uses the following and are included:
+
+ * [node.js](http://nodejs.org/)
+ * [express](http://expressjs.com/)
+ * [socket.io](http://socket.io)
+ * [Twitter Bootstrap](http://twitter.github.com/bootstrap/)
+ * [Ace](https://github.com/ajaxorg/ace)
+
+The app is built using [Appcelerator](http://www.appcelerator.com/)'s
+Titanium.
+
 Third Party Modules
 -------------------
 
@@ -329,6 +339,7 @@ released under an MIT License. It has been modified slightly and built for 1.8+.
 Feedback appreciated.
 
 @davidbankier
+
 
 
 

@@ -18,7 +18,6 @@ program
 
 program.command('server')
   .description('start the TiShadow server'.grey)
-  .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-l, --long-polling', 'force long polling')
   .action(function(env) {
@@ -32,10 +31,10 @@ program.command('clear')
 
 program.command('run')
   .description('deploy full application to all connected devices'.grey)
-  .option('-u, --update', 'Only send recently changed files')
-  .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
-  .option('-j, --jshint', 'Analyse code with JSHint')
-  .option('-t, --tail-logs', 'Tail server logs on deploy')
+  .option('-u, --update', 'only send recently changed files')
+  .option('-l, --locale <locale>', 'set the locale in in the TiShadow app')
+  .option('-j, --jshint', 'analyse code with JSHint')
+  .option('-t, --tail-logs', 'tail server logs on deploy')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
@@ -43,20 +42,18 @@ program.command('run')
 
 program.command('bundle')
   .description('prepare a TiShadow bundle without deploying it'.grey)
-  .option('-u, --update', 'Only send recently changed files')
-  .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
-  .option('-j, --jshint', 'Analyse code with JSHint')
+  .option('-j, --jshint', 'analyse code with JSHint')
   .action(compiler);
 
 program.command('spec')
   .description('run jasmin spec tests on all connected devices'.grey)
-  .option('-u, --update', 'Only send recently changed files')
-  .option('-l, --locale <locale>', 'Set the locale in in the TiShadow app')
+  .option('-u, --update', 'only send recently changed files')
+  .option('-l, --locale <locale>', 'set the locale in in the TiShadow app')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
-  .option('-j, --jshint', 'Analyse code with JSHint')
-  .option('-x, --junit-xml','Output report as JUnit XML')
+  .option('-j, --jshint', 'analyse code with JSHint')
+  .option('-x, --junit-xml','output report as JUnit XML')
   .action(compiler);
 
 program.command('repl')
@@ -72,6 +69,14 @@ program.command('log')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .action(require('./support/socket').connect);
+
+program.command('config')
+  .description('set default configuration settings'.grey)
+  .option('-o, --host <host>', 'set default server host name / ip address')
+  .option('-p, --port <port>', 'set default server port')
+  .option('-r, --room <room>', 'set default server room')
+  .action(config.write);
+
 
 
 program.parse(process.argv);
