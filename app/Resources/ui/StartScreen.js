@@ -51,7 +51,7 @@ exports.StartScreen = function() {
     TiShadow.connect({
       host: Ti.App.Properties.getString("address", "localhost"),
       port: Ti.App.Properties.getString("port", "3000"),
-      room: Ti.App.Properties.getString("room", "default"),
+      room: Ti.App.Properties.getString("room", "default").trim() || "default",
       name: Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address,
       callback: function(o) {
         activity.hide();
