@@ -71,7 +71,6 @@ app.get('/bundle/:room', function(req,res) {
 // For remote bundle posting.
 app.post('/bundle', function(req, res) {
   Logger.log("WARN", null, "Remote Bundle Received");
-  console.log("RECEIVED: " + JSON.stringify(req.body));
   var data = JSON.parse(req.body.data);
   var name = req.files.bundle.name.replace(".zip","");
 
@@ -97,7 +96,6 @@ sio.sockets.on('connection', function(socket) {
   socket.on('join', function(e) {
     // Private Room (?)
     var room = e.room || "default";
-    console.log(e.room);
     socket.join(room);
     socket.set('room', room);
 
