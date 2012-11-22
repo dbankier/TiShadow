@@ -39,14 +39,15 @@ config.buildPaths = function(env, callback) {
     config.alloy_path        = path.join(config.resources_path, 'app');
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
     
+    config.isUpdate = env.update 
+                    && fs.existsSync(config.tishadow_src)
+                    && fs.existsSync(config.last_updated_file);
+
     callback();
   });
 };
 
 config.init = function(env) {
-  config.isUpdate = env.update 
-                    && fs.existsSync(config.tishadow_src)
-                    && fs.existsSync(config.last_updated_file);
   config.isSpec   = env._name === "spec";
   config.isTailing = env.tailLogs || config.isSpec;
   config.locale   = env.locale;
