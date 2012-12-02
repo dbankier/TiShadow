@@ -57,19 +57,19 @@ exports.StartScreen = function() {
         activity.hide();
         label.text = "Connected";
         login.hide();
-        NavBar.connectEnabled = false;
+        NavBar.setConnectEnabled(false);
       },
       onerror: function(o) {
         activity.hide();
         alert("Connect Failed");
         label.text = "Not Connected";
         login.show();
-        NavBar.connectEnabled = true;
+        NavBar.setConnectEnabled(true);
       },
       disconnected:  function(o) {
         label.text = "Not Connected";
         login.show();
-        NavBar.connectEnabled = true;
+        NavBar.setConnectEnabled(true);
       }
     });
   }
