@@ -1,2 +1,3 @@
 server/npm-debug.log
 .DS_Store
+/app/.fastdev.lock

@@ -41,6 +41,7 @@ var includes = [
   Ti.Media.createMusicPlayer,
   Ti.Media.createSound,
   Ti.Media.createVideoPlayer,
+  Ti.Media.showCamera,
   Ti.Network.Socket.createTCP,
   Ti.Stream,
   Ti.Codec,
@@ -49,7 +50,10 @@ var includes = [
   Ti.Contacts.createPerson,
   Ti.Database.open,
   Ti.Database.execute,
-  Ti.Facebook
+  Ti.Facebook,
+  Ti.Map,
+  Ti.Geolocation,
+  Ti.Gesture
 ];
 if (Ti.Platform.osname !== "android"){
   var ios_includes = [Titanium.UI.iPhone.ActivityIndicatorStyle,
