@@ -1,11 +1,7 @@
-/*
-socket.io javascript client has been modified and adapted for titanium mobile
-by jordi domenech <jordi@iamyellow.net>
-https://github.com/iamyellow
-*/
-/*! Socket.IO.js build:0.9.6, development. Copyright(c) 2011 LearnBoost <dev@learnboost.com> MIT Licensed */
-
-var io = ('undefined' === typeof module ? {} : module.exports);
+/*! Socket.IO.js build:0.9.10, development. Copyright(c) 2011 LearnBoost <dev@learnboost.com> MIT Licensed */
+/*global Ti: true, console: true, setTimeout: true, clearTimeout: true, setInterval: true, clearTimeout: true, clearInterval: true, module: true, exports: true, require: true, document: true, XMLHttpRequest: true, window: true*/
+/*jshint laxcomma: true, laxbreak: true, unused: false, asi: false */
+var io = {}; module.exports = io;
 (function() {
 
 /**
@@ -30,7 +26,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    * @api public
    */
 
-  io.version = '0.9.6';
+  io.version = '0.9.11';
 
   /**
    * Protocol implemented.
@@ -77,12 +73,12 @@ var io = ('undefined' === typeof module ? {} : module.exports);
       , uuri
       , socket;
 
-    if (global && global.location) {
+    /*if (global && global.location) {
       uri.protocol = uri.protocol || global.location.protocol.slice(0, -1);
       uri.host = uri.host || (global.document
         ? global.document.domain : global.location.hostname);
       uri.port = uri.port || global.location.port;
-    }
+    }*/
 
     uuri = io.util.uniqueUri(uri);
 
@@ -109,7 +105,8 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     return socket.of(uri.path.length > 1 ? uri.path : '');
   };
 
-})('object' === typeof module ? module.exports : (this.io = {}), this);/**
+})(io, this);
+/**
  * socket.io
  * Copyright(c) 2011 LearnBoost <dev@learnboost.com>
  * MIT Licensed
@@ -162,16 +159,10 @@ var io = ('undefined' === typeof module ? {} : module.exports);
       , host = uri.host
       , port = uri.port;
 
-    if ('document' in global) {
-      host = host || document.domain;
-      port = port || (protocol == 'https'
-        && document.location.protocol !== 'https:' ? 443 : document.location.port);
-    } else {
-      host = host || 'localhost';
+    host = host || 'localhost';
 
-      if (!port && protocol == 'https') {
-        port = 443;
-      }
+    if (!port && protocol == 'https') {
+      port = 443;
     }
 
     return (protocol || 'http') + '://' + host + ':' + (port || 80);
@@ -232,14 +223,8 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    * @api public
    */
 
-  var pageLoaded = false;
-
   util.load = function (fn) {
-    if ('document' in global && document.readyState === 'complete' || pageLoaded) {
-      return fn();
-    }
-
-    util.on(global, 'load', fn, false);
+    fn();
   };
 
   /**
@@ -265,40 +250,9 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    */
 
   util.request = function (xdomain) {
-
-    if (xdomain && 'undefined' != typeof XDomainRequest) {
-      return new XDomainRequest();
-    }
-
-    if ('undefined' != typeof XMLHttpRequest && (!xdomain || util.ua.hasCORS)) {
-      return new XMLHttpRequest();
-    }
-
-    if (!xdomain) {
-      try {
-        return new window[(['Active'].concat('Object').join('X'))]('Microsoft.XMLHTTP');
-      } catch(e) { }
-    }
-
-    return null;
+    var request = Ti.Network.createHTTPClient();
+    return request;
   };
-
-  /**
-   * XHR based transport constructor.
-   *
-   * @constructor
-   * @api public
-   */
-
-  /**
-   * Change the internal pageLoaded value.
-   */
-
-  if ('undefined' != typeof window) {
-    util.load(function () {
-      pageLoaded = true;
-    });
-  }
 
   /**
    * Defers a function to ensure a spinner is not displayed by the browser
@@ -308,13 +262,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    */
 
   util.defer = function (fn) {
-    if (!util.ua.webkit || 'undefined' != typeof importScripts) {
-      return fn();
-    }
-
-    util.load(function () {
-      setTimeout(fn, 100);
-    });
+    fn();
   };
 
   /**
@@ -322,7 +270,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    *
    * @api public
    */
-  
+
   util.merge = function merge (target, additional, deep, lastseen) {
     var seen = lastseen || []
       , depth = typeof deep == 'undefined' ? 2 : deep
@@ -347,7 +295,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    *
    * @api public
    */
-  
+
   util.mixin = function (ctor, ctor2) {
     util.merge(ctor.prototype, ctor2.prototype);
   };
@@ -361,7 +309,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
   util.inherit = function (ctor, ctor2) {
     function f() {};
     f.prototype = ctor2.prototype;
-    ctor.prototype = new f;
+    ctor.prototype = new f();
   };
 
   /**
@@ -395,7 +343,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     }
 
     return ret;
-  }
+  };
 
   /**
    * Array indexOf compatibility.
@@ -405,8 +353,8 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    */
 
   util.indexOf = function (arr, o, i) {
-    
-    for (var j = arr.length, i = i < 0 ? i + j < 0 ? 0 : i + j : i || 0; 
+
+    for (var j = arr.length, i = i < 0 ? i + j < 0 ? 0 : i + j : i || 0;
          i < j && arr[i] !== o; i++) {}
 
     return j <= i ? -1 : i;
@@ -441,15 +389,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    * @api public
    */
 
-  util.ua.hasCORS = 'undefined' != typeof XMLHttpRequest && (function () {
-    try {
-      var a = new XMLHttpRequest();
-    } catch (e) {
-      return false;
-    }
-
-    return a.withCredentials != undefined;
-  })();
+  util.ua.hasCORS = true;
 
   /**
    * Detect webkit.
@@ -457,8 +397,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    * @api public
    */
 
-  util.ua.webkit = 'undefined' != typeof navigator
-    && /webkit/i.test(navigator.userAgent);
+  util.ua.webkit = false;
 
    /**
    * Detect iPad/iPhone/iPod.
@@ -466,11 +405,9 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    * @api public
    */
 
-  util.ua.iDevice = 'undefined' != typeof navigator
-      && /iPad|iPhone|iPod/i.test(navigator.userAgent);
+  util.ua.iDevice = false;
 
 })('undefined' != typeof io ? io : module.exports, this);
-
 /**
  * socket.io
  * Copyright(c) 2011 LearnBoost <dev@learnboost.com>
@@ -581,11 +518,10 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    */
 
   EventEmitter.prototype.removeAllListeners = function (name) {
-    // TODO: enable this when node 0.5 is stable
-    //if (name === undefined) {
-      //this.$events = {};
-      //return this;
-    //}
+    if (name === undefined) {
+      this.$events = {};
+      return this;
+    }
 
     if (this.$events && this.$events[name]) {
       this.$events[name] = null;
@@ -970,6 +906,17 @@ var io = ('undefined' === typeof module ? {} : module.exports);
 
   io.util.mixin(Transport, io.EventEmitter);
 
+
+  /**
+   * Indicates whether heartbeats is enabled for this transport
+   *
+   * @api private
+   */
+
+  Transport.prototype.heartbeats = function () {
+    return true;
+  };
+
   /**
    * Handles the response from the server. When a new response is received
    * it will automatically update the timeout, decode the message and
@@ -981,8 +928,8 @@ var io = ('undefined' === typeof module ? {} : module.exports);
 
   Transport.prototype.onData = function (data) {
     this.clearCloseTimeout();
-    
-    // If the connection in currently open (or in a reopening state) reset the close 
+
+    // If the connection in currently open (or in a reopening state) reset the close
     // timeout since we have just received data. This check is necessary so
     // that we don't reset the timeout on an explicitly disconnected connection.
     if (this.socket.connected || this.socket.connecting || this.socket.reconnecting) {
@@ -1021,7 +968,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     }
 
     if (packet.type == 'error' && packet.advice == 'reconnect') {
-      this.open = false;
+      this.isOpen = false;
     }
 
     this.socket.onPacket(packet);
@@ -1034,7 +981,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    *
    * @api private
    */
-  
+
   Transport.prototype.setCloseTimeout = function () {
     if (!this.closeTimeout) {
       var self = this;
@@ -1052,7 +999,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    */
 
   Transport.prototype.onDisconnect = function () {
-    if (this.close && this.open) this.close();
+    if (this.isOpen) this.close();
     this.clearTimeouts();
     this.socket.onDisconnect();
     return this;
@@ -1067,7 +1014,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
   Transport.prototype.onConnect = function () {
     this.socket.onConnect();
     return this;
-  }
+  };
 
   /**
    * Clears close timeout
@@ -1118,7 +1065,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
   Transport.prototype.onHeartbeat = function (heartbeat) {
     this.packet({ type: 'heartbeat' });
   };
- 
+
   /**
    * Called when the transport opens.
    *
@@ -1126,7 +1073,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    */
 
   Transport.prototype.onOpen = function () {
-    this.open = true;
+    this.isOpen = true;
     this.clearCloseTimeout();
     this.socket.onOpen();
   };
@@ -1146,7 +1093,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
       self.open();
     }, this.socket.options['reopen delay']);*/
 
-    this.open = false;
+    this.isOpen = false;
     this.socket.onClose();
     this.onDisconnect();
   };
@@ -1218,14 +1165,14 @@ var io = ('undefined' === typeof module ? {} : module.exports);
       , 'reconnection limit': Infinity
       , 'reopen delay': 3000
       , 'max reconnection attempts': 10
-      , 'sync disconnect on unload': true
+      , 'sync disconnect on unload': false
       , 'auto connect': true
       , 'flash policy port': 10843
+      , 'manualFlush': false
     };
 
     io.util.merge(this.options, options);
 
-    this.firstHandshake = true;
     this.connected = false;
     this.open = false;
     this.connecting = false;
@@ -1237,8 +1184,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     if (this.options['sync disconnect on unload'] &&
         (!this.isXDomain() || io.util.ua.hasCORS)) {
       var self = this;
-
-      io.util.on(global, 'unload', function () {
+      io.util.on(global, 'beforeunload', function () {
         self.disconnectSync();
       }, false);
     }
@@ -1317,34 +1263,33 @@ var io = ('undefined' === typeof module ? {} : module.exports);
         , options.host + ':' + options.port
         , options.resource
         , io.protocol
-        , io.util.query(this.options.query, 't=' + +new Date)
+        , io.util.query(this.options.query, 't=' + new Date())
       ].join('/');
 
-    var xhr = Ti.Network.createHTTPClient({
-      withCredentials: true,
-      onload: function () {
-        self.firstHandshake = false;
-        complete(xhr.responseText);
-      },
-      onerror: function (ev) {
-        if (self.firstHandshake) {
-          setTimeout(function () {
-            self.handshake(fn);
-          }, 6120);
-          return;
-        }
+    var xhr = io.util.request();
 
-        self.connecting = false;
-        var err = {
-          reason: ev.error
-        };
-        if (ev.error.indexOf('refused')) {
-          err.advice = 'reconnect';
-        }
-        !self.reconnecting && self.onError(err);
-      }
-    });
     xhr.open('GET', url, true);
+    if (this.isXDomain()) {
+      xhr.withCredentials = true;
+    }
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        xhr.onreadystatechange = empty;
+
+        if (xhr.status == 200) {
+          complete(xhr.responseText);
+        } else if (xhr.status == 403) {
+          self.onError(xhr.responseText);
+        } else {
+          self.connecting = false;            
+          !self.reconnecting && self.onError(xhr.responseText);
+        }
+      }
+    };
+    xhr.onerror = function (ev) {
+      self.connecting = false;            
+      !self.reconnecting && self.onError(ev.error);
+    };
     xhr.send(null);
   };
 
@@ -1360,7 +1305,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     for (var i = 0, transport; transport = transports[i]; i++) {
       if (io.Transport[transport]
         && io.Transport[transport].check(this)
-        && (!this.isXDomain() || io.Transport[transport].xdomainCheck())) {
+        && (!this.isXDomain() || io.Transport[transport].xdomainCheck(this))) {
         return new io.Transport[transport](this, this.sessionid);
       }
     }
@@ -1388,10 +1333,11 @@ var io = ('undefined' === typeof module ? {} : module.exports);
       self.sessionid = sid;
       self.closeTimeout = close * 1000;
       self.heartbeatTimeout = heartbeat * 1000;
-      self.transports = transports ? io.util.intersect(
-          transports.split(',')
-        , self.options.transports
-      ) : self.options.transports;
+      if(!self.transports)
+          self.transports = self.origTransports = (transports ? io.util.intersect(
+              transports.split(',')
+            , self.options.transports
+          ) : self.options.transports);
 
       self.setHeartbeatTimeout();
 
@@ -1403,9 +1349,6 @@ var io = ('undefined' === typeof module ? {} : module.exports);
 
         // once the transport is ready
         self.transport.ready(self, function () {
-          if (typeof self.transport.open != "function")
-            return self.publish('connect_failed');
-            
           self.connecting = true;
           self.publish('connecting', self.transport.name);
           self.transport.open();
@@ -1416,11 +1359,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
                 self.connecting = false;
 
                 if (self.options['try multiple transports']) {
-                  if (!self.remainingTransports) {
-                    self.remainingTransports = self.transports.slice(0);
-                  }
-
-                  var remaining = self.remainingTransports;
+                  var remaining = self.transports;
 
                   while (remaining.length > 0 && remaining.splice(0,1)[0] !=
                          self.transport.name) {}
@@ -1431,6 +1370,10 @@ var io = ('undefined' === typeof module ? {} : module.exports);
                       self.publish('connect_failed');
                     }
                 }
+                else self.publish('connect_failed');
+              }
+              else {
+                self.publish('connect_failed');
               }
             }, self.options['connect timeout']);
           }
@@ -1462,6 +1405,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     if (typeof this.heartbeatTimeoutTimer === 'number') {
       clearTimeout(this.heartbeatTimeoutTimer);
     }    
+    if(this.transport && !this.transport.heartbeats()) return;
 
     var self = this;
     this.heartbeatTimeoutTimer = setTimeout(function () {
@@ -1497,10 +1441,24 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     this.doBuffer = v;
 
     if (!v && this.connected && this.buffer.length) {
-      this.transport.payload(this.buffer);
-      this.buffer = [];
+      if (!this.options['manualFlush']) {
+        this.flushBuffer();
+      }
     }
   };
+
+  /**
+   * Flushes the buffer data over the wire.
+   * To be invoked manually when 'manualFlush' is set to true.
+   *
+   * @api public
+   */
+
+  Socket.prototype.flushBuffer = function() {
+    this.transport.payload(this.buffer);
+    this.buffer = [];
+  };
+  
 
   /**
    * Disconnect the established connect.
@@ -1530,10 +1488,18 @@ var io = ('undefined' === typeof module ? {} : module.exports);
 
   Socket.prototype.disconnectSync = function () {
     // ensure disconnection
-    var xhr = Ti.Network.createHTTPClient()
-      , uri = this.resource + '/' + io.protocol + '/' + this.sessionid;
+    var xhr = io.util.request();
+    var uri = [
+        'http' + (this.options.secure ? 's' : '') + ':/'
+      , this.options.host + ':' + this.options.port
+      , this.options.resource
+      , io.protocol
+      , ''
+      , this.sessionid
+    ].join('/') + '/?disconnect=1';
 
-    xhr.open('GET', uri, true);
+    xhr.open('GET', uri, false);
+    xhr.send(null);
 
     // handle disconnection immediately
     this.onDisconnect('booted');
@@ -1636,8 +1602,10 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     this.open = false;
 
     if (wasConnected || wasConnecting) {
-      this.transport.close();
-      this.transport.clearTimeouts();
+      if (this.transport) {
+        this.transport.close();
+        this.transport.clearTimeouts();
+      }
       if (wasConnected) {
         this.publish('disconnect', reason);
 
@@ -1705,16 +1673,8 @@ var io = ('undefined' === typeof module ? {} : module.exports);
       }
 
       if (self.reconnectionAttempts++ >= maxAttempts) {
-        if (!self.redoTransports) {
-          self.on('connect_failed', maybeReconnect);
-          self.options['try multiple transports'] = true;
-          self.transport = self.getTransport();
-          self.redoTransports = true;
-          self.connect();
-        } else {
-          self.publish('reconnect_failed');
-          reset();
-        }
+        self.publish('reconnect_failed');
+        reset();
       } else {
         if (self.reconnectionDelay < limit) {
           self.reconnectionDelay *= 2; // exponential back off
@@ -2053,10 +2013,11 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     });
 
     this.websocket.addEventListener('error', function (ev) {
-      self.onError(ev);
+      self.onError({
+        advice: 'reconnect'
+      });
     });
 
-    Ti.API.info(this.prepareUrl() + query);
     this.websocket.open(this.prepareUrl() + query);
 
     return this;
@@ -2070,23 +2031,10 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    * @api public
    */
 
-  // Do to a bug in the current IDevices browser, we need to wrap the send in a 
-  // setTimeout, when they resume from sleeping the browser will crash if 
-  // we don't allow the browser time to detect the socket has been closed
-  if (io.util.ua.iDevice) {
-    WS.prototype.send = function (data) {
-      var self = this;
-      setTimeout(function() {
-         self.websocket.send(data);
-      },0);
-      return this;
-    };
-  } else {
-    WS.prototype.send = function (data) {
-      this.websocket.send(data);
-      return this;
-    };
-  }
+  WS.prototype.send = function (data) {
+    this.websocket.send(data);
+    return this;
+  };
 
   /**
    * Payload
@@ -2109,9 +2057,9 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    */
 
   WS.prototype.close = function () {
-    // server is going to close the socket after we send the disconnect packet 
-    // then, the webscoket will destroy itself (e.g. dealloc in ios)
-    //this.websocket.close();
+    if (this.websocket) {
+      this.websocket.close();
+    }    
     return this;
   };
 
@@ -2166,6 +2114,371 @@ var io = ('undefined' === typeof module ? {} : module.exports);
    */
 
   io.transports.push('websocket');
+
+})(
+    'undefined' != typeof io ? io.Transport : module.exports
+  , 'undefined' != typeof io ? io : module.parent.exports
+  , this
+);
+
+/**
+ * socket.io
+ * Copyright(c) 2011 LearnBoost <dev@learnboost.com>
+ * MIT Licensed
+ */
+
+(function (exports, io, global) {
+
+  /**
+   * Expose constructor.
+   *
+   * @api public
+   */
+
+  exports.XHR = XHR;
+
+  /**
+   * XHR constructor
+   *
+   * @costructor
+   * @api public
+   */
+
+  function XHR (socket) {
+    if (!socket) return;
+
+    io.Transport.apply(this, arguments);
+    this.sendBuffer = [];
+  };
+
+  /**
+   * Inherits from Transport.
+   */
+
+  io.util.inherit(XHR, io.Transport);
+
+  /**
+   * Establish a connection
+   *
+   * @returns {Transport}
+   * @api public
+   */
+
+  XHR.prototype.open = function () {
+    this.socket.setBuffer(false);
+    this.onOpen();
+    this.get();
+
+    // we need to make sure the request succeeds since we have no indication
+    // whether the request opened or not until it succeeded.
+    this.setCloseTimeout();
+
+    return this;
+  };
+
+  /**
+   * Check if we need to send data to the Socket.IO server, if we have data in our
+   * buffer we encode it and forward it to the `post` method.
+   *
+   * @api private
+   */
+
+  XHR.prototype.payload = function (payload) {
+    var msgs = [];
+
+    for (var i = 0, l = payload.length; i < l; i++) {
+      msgs.push(io.parser.encodePacket(payload[i]));
+    }
+
+    this.send(io.parser.encodePayload(msgs));
+  };
+
+  /**
+   * Send data to the Socket.IO server.
+   *
+   * @param data The message
+   * @returns {Transport}
+   * @api public
+   */
+
+  XHR.prototype.send = function (data) {
+    this.post(data);
+    return this;
+  };
+
+  /**
+   * Posts a encoded message to the Socket.IO server.
+   *
+   * @param {String} data A encoded message.
+   * @api private
+   */
+
+  function empty () { };
+
+  XHR.prototype.post = function (data) {
+    var self = this;
+    this.socket.setBuffer(true);
+
+    function stateChange () {
+      if (this.readyState == 4) {
+        this.onreadystatechange = empty;
+        self.posting = false;
+
+        if (this.status == 200){
+          self.socket.setBuffer(false);
+        } else {
+          self.onClose();
+        }
+      }
+    }
+
+    function onerror () {
+      this.onerror = empty;
+      self.onClose();
+    };
+
+    this.sendXHR = this.request('POST');
+
+    this.sendXHR.onerror = onerror;
+    this.sendXHR.onreadystatechange = stateChange;
+
+    this.sendXHR.send(data);
+  };
+
+  /**
+   * Disconnects the established `XHR` connection.
+   *
+   * @returns {Transport}
+   * @api public
+   */
+
+  XHR.prototype.close = function () {
+    this.onClose();
+    return this;
+  };
+
+  /**
+   * Generates a configured XHR request
+   *
+   * @param {String} url The url that needs to be requested.
+   * @param {String} method The method the request should use.
+   * @returns {XMLHttpRequest}
+   * @api private
+   */
+
+  XHR.prototype.request = function (method) {
+    var req = io.util.request(this.socket.isXDomain())
+      , query = io.util.query(this.socket.options.query, 't=' + (new Date()));
+
+    req.timeout = 0;
+    req.enableKeepAlive = true;
+    
+    req.open(method || 'GET', this.prepareUrl() + query, true);    
+
+    if (method == 'POST') {
+      req.setRequestHeader('Content-type', 'text/plain;charset=UTF-8');
+    }
+
+    return req;
+  };
+
+  /**
+   * Returns the scheme to use for the transport URLs.
+   *
+   * @api private
+   */
+
+  XHR.prototype.scheme = function () {
+    return this.socket.options.secure ? 'https' : 'http';
+  };
+
+  /**
+   * Check if the XHR transports are supported
+   *
+   * @param {Boolean} xdomain Check if we support cross domain requests.
+   * @returns {Boolean}
+   * @api public
+   */
+
+  XHR.check = function (socket, xdomain) {
+    return true;
+  };
+
+  /**
+   * Check if the XHR transport supports cross domain requests.
+   *
+   * @returns {Boolean}
+   * @api public
+   */
+
+  XHR.xdomainCheck = function (socket) {
+    return XHR.check(socket, true);
+  };
+
+})(
+    'undefined' != typeof io ? io.Transport : module.exports
+  , 'undefined' != typeof io ? io : module.parent.exports
+  , this
+);
+
+/**
+ * socket.io
+ * Copyright(c) 2011 LearnBoost <dev@learnboost.com>
+ * MIT Licensed
+ */
+
+(function (exports, io, global) {
+
+  /**
+   * Expose constructor.
+   */
+
+  exports['xhr-polling'] = XHRPolling;
+
+  /**
+   * The XHR-polling transport uses long polling XHR requests to create a
+   * "persistent" connection with the server.
+   *
+   * @constructor
+   * @api public
+   */
+
+  function XHRPolling () {
+    io.Transport.XHR.apply(this, arguments);
+  };
+
+  /**
+   * Inherits from XHR transport.
+   */
+
+  io.util.inherit(XHRPolling, io.Transport.XHR);
+
+  /**
+   * Merge the properties from XHR transport
+   */
+
+  io.util.merge(XHRPolling, io.Transport.XHR);
+
+  /**
+   * Transport name
+   *
+   * @api public
+   */
+
+  XHRPolling.prototype.name = 'xhr-polling';
+
+  /**
+   * Indicates whether heartbeats is enabled for this transport
+   *
+   * @api private
+   */
+
+  XHRPolling.prototype.heartbeats = function () {
+    return false;
+  };
+
+  /** 
+   * Establish a connection, for iPhone and Android this will be done once the page
+   * is loaded.
+   *
+   * @returns {Transport} Chaining.
+   * @api public
+   */
+
+  XHRPolling.prototype.open = function () {
+    var self = this;
+
+    io.Transport.XHR.prototype.open.call(self);
+    return false;
+  };
+
+  /**
+   * Starts a XHR request to wait for incoming messages.
+   *
+   * @api private
+   */
+
+  function empty () {};
+
+  XHRPolling.prototype.get = function () {
+    if (!this.isOpen) return;
+
+    var self = this;
+
+    function stateChange () {
+      if (this.readyState == 4) {
+        this.onreadystatechange = empty;
+
+        if (this.status == 200) {
+          self.onData(this.responseText);
+          self.get();
+        } else {
+          self.onClose();
+        }
+      }
+    };
+
+    function onerror () {
+      self.retryCounter ++;
+      if(!self.retryCounter || self.retryCounter > 3) {
+        self.onClose();  
+      } else {
+        self.get();
+      }
+    };
+
+    this.xhr = this.request();
+
+    this.xhr.onerror = onerror;
+    this.xhr.onreadystatechange = stateChange;
+
+    this.xhr.send(null);
+  };
+
+  /**
+   * Handle the unclean close behavior.
+   *
+   * @api private
+   */
+
+  XHRPolling.prototype.onClose = function () {
+    io.Transport.XHR.prototype.onClose.call(this);
+
+    if (this.xhr) {
+      this.xhr.onreadystatechange = this.xhr.onload = this.xhr.onerror = empty;
+      try {
+        this.xhr.abort();
+      } catch(e){}
+      this.xhr = null;
+    }
+  };
+
+  /**
+   * Webkit based browsers show a infinit spinner when you start a XHR request
+   * before the browsers onload event is called so we need to defer opening of
+   * the transport until the onload event is called. Wrapping the cb in our
+   * defer method solve this.
+   *
+   * @param {Socket} socket The socket instance that needs a transport
+   * @param {Function} fn The callback
+   * @api private
+   */
+
+  XHRPolling.prototype.ready = function (socket, fn) {
+    var self = this;
+
+    io.util.defer(function () {
+      fn.call(self);
+    });
+  };
+
+  /**
+   * Add the transport to your public io.transports array.
+   *
+   * @api private
+   */
+
+  io.transports.push('xhr-polling');
 
 })(
     'undefined' != typeof io ? io.Transport : module.exports
