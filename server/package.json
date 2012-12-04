@@ -27,5 +27,11 @@
   },
   "bin" : { 
     "tishadow" : "./bin/tishadow"
-  }
+  },
+
+  "license": "Apache Public License v2",
+
+  "framework": "none",
+  "private": "true",
+  "main": "app.js"
 }

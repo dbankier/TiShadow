@@ -11,7 +11,6 @@ var express = require('express'),
     Logger = require('./logger'),
     config = require('./bin/support/config');
 
-
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -31,8 +30,13 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
-// allow for server-side port override (useful for PaaS)
-config.port = process.env.PORT || config.port;
+// if executed from package.json - "main":"app.js"
+if (config.port === undefined) {
+  config.init({
+    port: process.env.PORT,
+    longPolling: true
+  });
+}
 
 //Setup socket
 var sio=io.listen(app, {log: false});
