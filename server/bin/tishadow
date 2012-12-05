@@ -27,6 +27,9 @@ program.command('server')
 
 program.command('clear')
   .description('clear the application cache on all connected devices'.grey)
+  .option('-o, --host <host>', 'server host name / ip address')
+  .option('-p, --port <port>', 'server port')
+  .option('-r, --room <room>', 'server room')
   .action(api.clearCache);
 
 program.command('run')
