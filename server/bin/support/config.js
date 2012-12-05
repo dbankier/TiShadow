@@ -53,6 +53,7 @@ config.init = function(env) {
   config.locale   = env.locale;
   config.isJUnit  = env.junitXml;
   config.isREPL   = env._name === "repl";
+  config.isBundle = env._name === "bundle";
   config.host     = env.host || config.host || "localhost";
   config.port     = env.port || config.port || "3000";
   config.room     = env.room || config.room || "default";

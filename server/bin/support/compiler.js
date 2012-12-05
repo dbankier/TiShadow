@@ -11,7 +11,7 @@ var path = require("path"),
     require("./fs_extension");
 
 // Copies all Resource files and prepares JS files
-function prepare(src, dst) {
+function prepare(src, dst, callback) {
   var app_name = config.app_name;
   if (src.match("js$")){ 
     var src_text = "var __p = require('/api/PlatformRequire'), __log = require('/api/Log'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString;\n" 
@@ -26,14 +26,40 @@ function prepare(src, dst) {
       src_text =  "var jasmine = require('/lib/jasmine-1.2.0');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe'];methods.forEach(function(method) {this[method] = jasmine[method];});"
         +src_text;
     }
-    fs.writeFileSync(dst,src_text);
+    fs.writeFile(dst,src_text, callback);
   } else { // Non-JS file - just pump it
     var  is = fs.createReadStream(src);
     var  os = fs.createWriteStream(dst);
-    util.pump(is, os);
+    is.on("end", callback).pipe(os);
   }
 }
 
+function prepareFiles(index, file_list, i18n_list) {
+  if (file_list.files.length === index) {
+    finalise(file_list, i18n_list);
+  } else {
+    var file = file_list.files[index];
+    prepare(path.join(config.resources_path,file), path.join(config.tishadow_src, file), function(){
+      index++;
+      prepareFiles(index, file_list, i18n_list);
+    });
+  }
+}
+
+function finalise(file_list, i18n_list) {
+  // Bundle up to go
+  file_list.files = file_list.files.concat(i18n_list.files);
+  var total = file_list.files.length;
+  bundle.pack(file_list.files,function(written) { 
+    logger.info(total+ " file(s) bundled."); 
+    fs.touch(config.last_updated_file);
+    if (config.isBundle) {
+      logger.info("Bundle Ready: " + config.bundle_file);
+    } else {
+      api.newBundle();
+    }
+  });
+}
 
 module.exports = function(env) {
   if (!fs.existsSync(path.join(config.base,'tiapp.xml'))) {
@@ -75,37 +101,14 @@ module.exports = function(env) {
      // Build the required directory structure
      fs.mkdirs(file_list.dirs, config.tishadow_src);
      fs.mkdirs(i18n_list.dirs, config.tishadow_src);
-
-     // Process Files
-     //
-     // Added timeout was to fix for file access errors (not ideal).
-     var end;
-     file_list.files.forEach(function(file, idx) {
-       end = idx;
-       setTimeout(function(){
-         prepare(path.join(config.resources_path,file), path.join(config.tishadow_src, file));
-       }, end * 1);
-     });
-
+     
+     
      // Just pump out localisation files
      i18n_list.files.forEach(function(file, idx) {
        util.pump(fs.createReadStream(path.join(config.i18n_path,file)),fs.createWriteStream(path.join(config.tishadow_src, file)));
      });
 
-     // Bundle up to go
-     setTimeout(function() {
-       file_list.files = file_list.files.concat(i18n_list.files);
-       var total = file_list.files.length;
-       bundle.pack(file_list.files,function(written) { 
-         logger.info(total+ " file(s) bundled."); 
-         fs.touch(config.last_updated_file);
-         if (env._name === "bundle") {
-           logger.info("Bundle Ready: " + config.bundle_file);
-         } else {
-           api.newBundle();
-           //require("./socket").connect();
-         } 
-       });
-     }, (end + 1)* 1);
+     // Process Files
+     prepareFiles(0, file_list, i18n_list);
   });
 }
