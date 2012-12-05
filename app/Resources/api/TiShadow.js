@@ -116,7 +116,7 @@ exports.clearCache = function() {
 
 function loadRemoteZip(name, url, spec) {
   var xhr = Ti.Network.createHTTPClient();
-  xhr.setTimeout(1000);
+  xhr.setTimeout(10000);
   xhr.onload=function(e) {
     try {
       log.info("Unpacking new bundle: " + name);

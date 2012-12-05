@@ -1272,9 +1272,11 @@ var io = {}; module.exports = io;
     if (this.isXDomain()) {
       xhr.withCredentials = true;
     }
-    xhr.onreadystatechange = function () {
+    function readyStateChanged() {
       if (xhr.readyState == 4) {
         xhr.onreadystatechange = empty;
+        // this is to account for android bug Ti API 2.x
+        xhr.onreadystatechanged = empty;
 
         if (xhr.status == 200) {
           complete(xhr.responseText);
@@ -1285,7 +1287,10 @@ var io = {}; module.exports = io;
           !self.reconnecting && self.onError(xhr.responseText);
         }
       }
-    };
+    }
+    xhr.onreadystatechange = readyStateChanged;
+    // this is to account for android bug Ti API 2.x
+    xhr.onreadystatechanged = readyStateChanged;
     xhr.onerror = function (ev) {
       self.connecting = false;            
       !self.reconnecting && self.onError(ev.error);
