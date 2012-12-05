@@ -83,7 +83,7 @@ app.post('/bundle', function(req, res) {
 
   data.name = name;
   data.room = data.bundle = null;
-  sio.sockets.emit("bundle", data);
+  sio.sockets.in(data.room).emit("bundle", data);
   res.send("OK", 200);
 });
 
