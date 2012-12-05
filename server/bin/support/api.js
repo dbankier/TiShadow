@@ -4,7 +4,8 @@ var config = require("./config"),
     repl = require('repl'),
     http = require('http'),
     path = require('path'),
-    fs = require('fs');
+    fs = require('fs'),
+    rest = require('restler');
 
 // Used to be an http request - now over sockets.
 function postToServer(path, data) {
@@ -19,36 +20,15 @@ function postToServer(path, data) {
 
 // For posting the zip file to a remote TiShadow server (http POST)
 function postZipToServer (_path, data) {
-  var post_options = {
-    host: config.host,
-    port: config.port,
-    path: '/' + _path,
-    method: 'POST'
-  };
-  // Send the room
-  data.room = config.room;
-  var request = http.request(post_options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      console.log('Response: ' + chunk);
-    });
-  }); 
-  var boundaryKey = Math.random().toString(16); // random string
-  request.setHeader('Content-Type', 'multipart/form-data; boundary="'+boundaryKey+'"');
-  request.write(
-    '--' + boundaryKey + '\r\n'
-    + 'Content-Type: application/json\r\n' 
-    + 'Content-Disposition: form-data; name="data"\r\n\r\n'
-    + JSON.stringify(data)+ "\r\n"
-    + '--' + boundaryKey + '\r\n'
-    + 'Content-Type: application/zip\r\n' 
-    + 'Content-Disposition: form-data; name="bundle"; filename="' + path.basename(config.bundle_file) + '"\r\n'
-    + 'Content-Transfer-Encoding: binary\r\n\r\n' 
-  );
-  var stream = fs.createReadStream(config.bundle_file, { bufferSize: 4 * 1024 })
-  .on('end', function() {
-    request.end('\r\n--' + boundaryKey + '--'); 
-  }).pipe(request, { end: false });
+  var r = rest.post("http://" + config.host + ":" + config.port + "/" + _path, {
+    multipart:true,
+    data: {
+      data: JSON.stringify(data),
+      bundle: rest.file(config.bundle_file, null, fs.statSync(config.bundle_file).size)
+    }
+  }).on("complete", function(o) {
+    console.log(JSON.stringify(o));
+  })
 }
 
 exports.clearCache = function(env) {
