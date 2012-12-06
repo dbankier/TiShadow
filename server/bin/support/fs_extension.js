@@ -14,7 +14,9 @@ function getList(start, last_update, _path) {
     var coll = filenames.reduce(function (acc, name) {
       var abspath = path.join(start, name);
       var file_stat = fs.statSync(abspath);
-      if (file_stat.isDirectory()) {
+      if (name.match(/^\./)) {
+        // IGNORING HIDDEN FILES
+      } else if (file_stat.isDirectory()) {
         acc.dirs.push(name);
       } else {
         if (last_update === undefined || last_update < file_stat.mtime) {
