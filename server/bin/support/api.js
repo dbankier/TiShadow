@@ -20,6 +20,7 @@ function postToServer(path, data) {
 
 // For posting the zip file to a remote TiShadow server (http POST)
 function postZipToServer (_path, data) {
+  data.room = config.room;
   var r = rest.post("http://" + config.host + ":" + config.port + "/" + _path, {
     multipart:true,
     data: {
