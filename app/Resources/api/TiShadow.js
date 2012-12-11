@@ -13,7 +13,7 @@ exports.connect = function(o) {
   if (socket) {
     exports.disconnect();
   }
-  socket = io.connect("http://" + o.host + ":"  + o.port);
+  socket = io.connect("http://" + o.host + ":"  + o.port, {'force new connection': true});
 
   socket.on("connect", function() {
     socket.emit("join", {
@@ -25,10 +25,14 @@ exports.connect = function(o) {
       o.callback();
     }
   });
-
-  socket.on("connect_failed", function() {
+  socket.on("error", function(e) {
+    if (o.onerror) {
+      o.onerror(e);
+    }
+  });
+  socket.on("connect_failed", function(e) {
     if(o.onerror) {
-      o.onerror();
+      o.onerror(e);
     }
   });
   
@@ -50,7 +54,6 @@ exports.connect = function(o) {
     if(o.disconnected) {
       o.disconnected();
     }
-    exports.disconnect();
   });
 
 };

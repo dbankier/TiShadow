@@ -5,6 +5,7 @@ var Activity = require('/ui/Activity');
 //require("/api/Includes");
 var TiShadow = require('/api/TiShadow');
 var NavBar = require("/ui/NavBar");
+var Util = require("/api/Utils");
 Titanium.App.idleTimerDisabled = true;
 
 exports.StartScreen = function() {
@@ -12,7 +13,7 @@ exports.StartScreen = function() {
     backgroundColor : 'white',
     exitOnClose : true,
     keepScreenOn: true,
-    title: "TiShadow",
+    title: "TiShadow"
   });
   var app_list= new (require("/ui/AppList"))();
   app_list.addEventListener("launch", function(e) {
@@ -61,10 +62,15 @@ exports.StartScreen = function() {
       },
       onerror: function(o) {
         activity.hide();
-        alert("Connect Failed");
-        label.text = "Not Connected";
-        login.show();
-        NavBar.setConnectEnabled(true);
+        var isReconnectAlert = o && o.advice === "reconnect";
+        label.text = "Connect Failed : Not Connected";
+        if (o && !isReconnectAlert) {
+          alert("Connect Failed\n\n" + Util.extractExceptionData(o));
+        }
+        if (!isReconnectAlert) {
+          login.show();
+          NavBar.setConnectEnabled(true);
+        }
       },
       disconnected:  function(o) {
         label.text = "Not Connected";

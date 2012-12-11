@@ -4,6 +4,10 @@ var extractExceptionData;
 
 if (Ti.UI.Android) {
 	extractExceptionData = function(e) {
+    if (e.stack === undefined) {
+      return JSON.stringify(e);
+    }
+
 		var temp = e.stack.split("\n");
 		var myerror = {};
 		var exceptionTypeAndMessage = temp[0].split(":");

@@ -2227,6 +2227,8 @@ var io = {}; module.exports = io;
     function stateChange () {
       if (this.readyState == 4) {
         this.onreadystatechange = empty;
+        // this is to account for android bug Ti API 2.x
+        this.onreadystatechanged = empty;
         self.posting = false;
 
         if (this.status == 200){
@@ -2246,6 +2248,8 @@ var io = {}; module.exports = io;
 
     this.sendXHR.onerror = onerror;
     this.sendXHR.onreadystatechange = stateChange;
+    // this is to account for android bug Ti API 2.x
+    this.sendXHR.onreadystatechanged = stateChange;
 
     this.sendXHR.send(data);
   };
