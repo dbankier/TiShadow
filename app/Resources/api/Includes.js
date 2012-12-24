@@ -75,4 +75,6 @@ if (Ti.Platform.osname !== "android"){
     Titanium.UI.iOS.TabbedBar,
     Titanium.UI.iOS.Toolbar
   ];
+} else {
+  var android_includes = [Ti.UI.Android.createProgressIndicator];
 }
