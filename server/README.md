@@ -131,6 +131,8 @@ __Some notes and limitations__
    options above). 
  * Native modules _can_ be supported if built into the TiShadow app
    first. (I.e., add them to the tiapp.xml of the TiShadow app.)
+ * Custom fonts will be loaded if placed in the `Resources/fonts`
+   directory.
  * If there any errors about a Titanium SDK command not being found, add
    them to the Includes.js files and clean and build the TiShadow app. (I
    will gradually be adding commands.)

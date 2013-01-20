@@ -5,6 +5,7 @@ var p = require('/api/PlatformRequire');
 var assert = require('/api/Assert');
 var Spec = require("/api/Spec");
 var io = require('/lib/socket.io');
+var osname = Ti.Platform.osname;
 
 exports.currentApp;
 var socket, room;
@@ -85,6 +86,10 @@ exports.launchApp = function(name) {
     exports.closeApp();
     p.clearCache();
     require("/api/Localisation").clear();
+    // Custom Fonts
+    if (osname === "ipad" || osname === "iphone") {
+      require("/api/Fonts").loadCustomFonts(name);
+    }
     Ti.App.fireEvent("tishadow:refresh_list");
     exports.currentApp = name;
     bundle = p.require("/app");
