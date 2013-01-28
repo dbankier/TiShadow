@@ -57,6 +57,7 @@ var includes = [
 ];
 if (Ti.Platform.osname !== "android"){
   var ios_includes = [Titanium.UI.iPhone.ActivityIndicatorStyle,
+    Titanium.UI.iPhone.AlertDialogStyle,
     Titanium.UI.iPhone.AnimationStyle,
     Titanium.UI.iPhone.NavigationGroup,
     Titanium.UI.iPhone.ProgressBarStyle,
