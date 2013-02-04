@@ -59,7 +59,20 @@ exports.include = function(context) {
   }
 };
 
+// Currently only doing retina check for iOS. Android is TODO
+function densityFile(file) {
+  //iOS Retina Check
+  if ((os === "ipad" || os === "iphone") && Ti.Platform.displayCaps.density === "high") {
+    var file_parts = file.split(".");
+    var ext = file_parts.pop();
+    var ret_file_name = file_parts.join(".") + "@2x." + ext;
+    if (Ti.Filesystem.getFile(ret_file_name).exists()) {
+      return ret_file_name;
+    }
+  }
+  return file;
 
+}
 exports.file = function(extension) {
   if (extension === "/" || extension === "//" ) { // Avoid conflicts with Backbone.js
     return extension;
@@ -84,16 +97,10 @@ exports.file = function(extension) {
   var file = Ti.Filesystem.getFile(platform_path + (needsJS ? ".js" : ""));
   if (file.exists()) {
     path = platform_path;
-  }
-
-  //iOS Retina Check
-  if ((os === "ipad" || os === "iphone") && Ti.Platform.displayCaps.density === "high") {
-    var file_parts = path.split(".");
-    var ext = file_parts.pop();
-    var ret_file_name = file_parts.join(".") + "@2x." + ext;
-    file = Ti.Filesystem.getFile(ret_file_name);
-    if (file.exists()) {
-      path = ret_file_name;
+  } else if (!needsJS) { // Might have density file only in platform specific folder
+    var platform_dense = densityFile(platform_path);
+    if (Ti.Filesystem.getFile(platform_dense).exists()){
+      path = platform_dense;
     }
   }
   return path;
