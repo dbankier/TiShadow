@@ -75,6 +75,7 @@ exports.file = function(extension) {
   }
   // Full Path
   var path = base + extension;
+
   //Try platform specific path first
   var platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
   //Add ".js" for CommonJS inclusion lookups.
@@ -83,6 +84,17 @@ exports.file = function(extension) {
   var file = Ti.Filesystem.getFile(platform_path + (needsJS ? ".js" : ""));
   if (file.exists()) {
     path = platform_path;
+  }
+
+  //iOS Retina Check
+  if ((os === "ipad" || os === "iphone") && Ti.Platform.displayCaps.density === "high") {
+    var file_parts = path.split(".");
+    var ext = file_parts.pop();
+    var ret_file_name = file_parts.join(".") + "@2x." + ext;
+    file = Ti.Filesystem.getFile(ret_file_name);
+    if (file.exists()) {
+      path = ret_file_name;
+    }
   }
   return path;
 };
