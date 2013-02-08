@@ -89,8 +89,11 @@ app.post('/bundle', function(req, res) {
 
 //FIRE IT UP
 app.listen(config.port);
-Logger.debug("TiShadow server started. Go to http://"+ config.host + ":" + config.port);
-
+if (app.address() != null) {
+    Logger.debug("TiShadow server started. Go to http://"+ config.host + ":" + config.port);
+} else {
+    Logger.error("Failed to start server on port: " + config.port );
+}
 
 //WEB SOCKET STUFF
 var devices = {};
