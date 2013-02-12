@@ -29,11 +29,13 @@ config.buildPaths = function(env, callback) {
     var app_name = config.app_name = result.name || "bundle";
     config.base              = base;
     config.resources_path    = path.join(base, 'Resources');
+    config.spec_path         = path.join(base, 'spec');
     config.i18n_path         = path.join(base, 'i18n');
     config.build_path        = path.join(base, 'build');
     config.tishadow_build    = path.join(config.build_path, 'tishadow');
     config.last_updated_file = path.join(config.tishadow_build, 'last_updated'); 
     config.tishadow_src      = path.join(config.tishadow_build, 'src');
+    config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
     config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
     config.alloy_path        = path.join(config.resources_path, 'app');

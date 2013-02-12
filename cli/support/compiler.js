@@ -34,21 +34,20 @@ function prepare(src, dst, callback) {
   }
 }
 
-function prepareFiles(index, file_list, i18n_list,callback) {
+function prepareFiles(index, file_list, isSpec, callback) {
   if (file_list.files.length === index) {
-    finalise(file_list, i18n_list,callback);
+    callback();
   } else {
     var file = file_list.files[index];
-    prepare(path.join(config.resources_path,file), path.join(config.tishadow_src, file), function(){
+    prepare(path.join(isSpec? config.base : config.resources_path,file), path.join(config.tishadow_src, file), function(){
       index++;
-      prepareFiles(index, file_list, i18n_list,callback);
+      prepareFiles(index, file_list, isSpec, callback);
     });
   }
 }
 
-function finalise(file_list, i18n_list,callback) {
+function finalise(file_list,callback) {
   // Bundle up to go
-  file_list.files = file_list.files.concat(i18n_list.files);
   var total = file_list.files.length;
   bundle.pack(file_list.files,function(written) { 
     logger.info(total+ " file(s) bundled."); 
@@ -77,13 +76,14 @@ module.exports = function(env, callback) {
     }
 
     logger.info("Beginning Build Process");
-    var file_list,i18n_list;
+    var file_list,i18n_list,spec_list;
     if( config.isUpdate) {
        var last_stat = fs.statSync(config.last_updated_file);
        file_list = fs.getList(config.resources_path,last_stat.mtime);
        i18n_list = fs.getList(config.i18n_path,last_stat.mtime);
+       spec_list = fs.getList(config.spec_path,last_stat.mtime);
 
-       if (file_list.files.length === 0 && i18n_list.files.length === 0) {
+       if (file_list.files.length === 0 && i18n_list.files.length === 0 && spec_list.files.length === 0) {
          logger.error("Nothing to update.");
          process.exit();
        }
@@ -99,19 +99,29 @@ module.exports = function(env, callback) {
        fs.mkdirs([config.tishadow_build, config.tishadow_src, config.tishadow_dist]);
        file_list = fs.getList(config.resources_path);
        i18n_list = fs.getList(config.i18n_path);
+       spec_list = fs.getList(config.spec_path);
      }
 
      // Build the required directory structure
      fs.mkdirs(file_list.dirs, config.tishadow_src);
      fs.mkdirs(i18n_list.dirs, config.tishadow_src);
-     
-     
+     if(spec_list.files.length > 0) {
+       fs.mkdirSync(config.tishadow_spec, 0755);
+       fs.mkdirs(spec_list.dirs, config.tishadow_spec);
+       spec_list.files = spec_list.files.map(function(file) { return "spec/" + file;});
+     }
+
      // Just pump out localisation files
      i18n_list.files.forEach(function(file, idx) {
        util.pump(fs.createReadStream(path.join(config.i18n_path,file)),fs.createWriteStream(path.join(config.tishadow_src, file)));
      });
 
      // Process Files
-     prepareFiles(0, file_list, i18n_list, callback);
+     prepareFiles(0, file_list, false, function() {
+       prepareFiles(0, spec_list, true, function() {
+          file_list.files = file_list.files.concat(i18n_list.files).concat(spec_list.files);
+          finalise(file_list,callback);
+       });
+     });
   });
 }
