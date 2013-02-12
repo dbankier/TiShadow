@@ -26,6 +26,10 @@ exports.copyCoreProject = function(env) {
     logger.error("Destination folder does not exist.");
     return false;
   }
+  if (dest === ".") {
+    logger.error("You really don't want to write to the current directory.");
+    return false
+  }
   wrench.copyDirSyncRecursive(tishadow_app, dest);
   logger.info("TiShadow app ready");
   return true;
