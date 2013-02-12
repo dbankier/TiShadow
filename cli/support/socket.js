@@ -1,4 +1,4 @@
-var logger = require("../../logger"),
+var logger = require("../../server/logger"),
     io     = require("socket.io-client"),
     config = require("./config"),
     fs     = require("fs"),

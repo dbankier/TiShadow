@@ -38,7 +38,7 @@ config.buildPaths = function(env, callback) {
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
     config.alloy_path        = path.join(config.resources_path, 'app');
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
-    
+
     config.isUpdate = env.update 
                     && fs.existsSync(config.tishadow_src)
                     && fs.existsSync(config.last_updated_file);

@@ -1,4 +1,4 @@
-var config = require("./bin/support/config");
+var config = require("../cli/support/config");
 require('colors');
 
 color = {

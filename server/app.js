@@ -9,7 +9,7 @@ var express = require('express'),
     fs = require('fs'),
     path = require('path'),
     Logger = require('./logger'),
-    config = require('./bin/support/config');
+    config = require('../cli/support/config');
 
 var app = module.exports = express.createServer();
 

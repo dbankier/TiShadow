@@ -5,7 +5,7 @@ var path = require("path"),
     api = require("./api"),
     bundle = require("./bundle"),
     config = require("./config"),
-    logger = require("../../logger.js"),
+    logger = require("../../server/logger.js"),
     jshint = require("./jshint_runner");
 
     require("./fs_extension");
@@ -34,19 +34,19 @@ function prepare(src, dst, callback) {
   }
 }
 
-function prepareFiles(index, file_list, i18n_list) {
+function prepareFiles(index, file_list, i18n_list,callback) {
   if (file_list.files.length === index) {
-    finalise(file_list, i18n_list);
+    finalise(file_list, i18n_list,callback);
   } else {
     var file = file_list.files[index];
     prepare(path.join(config.resources_path,file), path.join(config.tishadow_src, file), function(){
       index++;
-      prepareFiles(index, file_list, i18n_list);
+      prepareFiles(index, file_list, i18n_list,callback);
     });
   }
 }
 
-function finalise(file_list, i18n_list) {
+function finalise(file_list, i18n_list,callback) {
   // Bundle up to go
   file_list.files = file_list.files.concat(i18n_list.files);
   var total = file_list.files.length;
@@ -55,13 +55,16 @@ function finalise(file_list, i18n_list) {
     fs.touch(config.last_updated_file);
     if (config.isBundle) {
       logger.info("Bundle Ready: " + config.bundle_file);
+      if (callback) {
+        callback();
+      }
     } else {
       api.newBundle();
     }
   });
 }
 
-module.exports = function(env) {
+module.exports = function(env, callback) {
   if (!fs.existsSync(path.join(config.base,'tiapp.xml'))) {
     logger.error("Script must be executed in the Titanium project's root directory");
     process.exit();
@@ -109,6 +112,6 @@ module.exports = function(env) {
      });
 
      // Process Files
-     prepareFiles(0, file_list, i18n_list);
+     prepareFiles(0, file_list, i18n_list, callback);
   });
 }

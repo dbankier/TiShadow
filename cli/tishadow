@@ -22,7 +22,7 @@ program.command('server')
   .option('-l, --long-polling', 'force long polling')
   .action(function(env) {
     config.init(env);
-    require("../app.js");
+    require("../server/app.js");
   });
 
 program.command('clear')
@@ -80,6 +80,18 @@ program.command('config')
   .option('-r, --room <room>', 'set default server room')
   .action(config.write);
 
+program.command('app')
+  .description('generate a titanium project with TiShadow app source code'.grey)
+  .option('-d, --destination <path>', 'target path for generated project')
+  .action(require('./support/appify').copyCoreProject);
+
+program.command('appify')
+  .description('generate an appified TiShadow app'.grey)
+  .option('-d, --destination <path>', 'target path for generated project')
+  .option('-o, --host <host>', 'set default server host name / ip address')
+  .option('-p, --port <port>', 'set default server port')
+  .option('-r, --room <room>', 'set default server room')
+  .action(require('./support/appify').build);
 
 
 program.parse(process.argv);

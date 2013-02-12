@@ -1,5 +1,5 @@
 var jshint = require("jshint").JSHINT,
-    logger = require("../../logger"),
+    logger = require("../../server/logger"),
     fs = require("fs"),
     path =require("path");
 

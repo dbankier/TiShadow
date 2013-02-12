@@ -13,7 +13,9 @@
     "commander": "1.0.x",
     "pkginfo": "0.2.3",
     "jshint": "0.9.1",
-    "restler": "~2.0.1"
+    "restler": "~2.0.1",
+    "wrench":"1.4.x",
+    "underscore":"*"
   },
   "devDependencies": {},
   "optionalDependencies": {},
@@ -27,10 +29,10 @@
     "url": "git://github.com/dbankier/TiShadow.git"
   },
   "bin": {
-    "tishadow": "./bin/tishadow"
+    "tishadow": "./cli/tishadow"
   },
   "license": "Apache Public License v2",
   "framework": "none",
   "private": "true",
-  "main": "app.js"
+  "main": "server/app.js"
 }

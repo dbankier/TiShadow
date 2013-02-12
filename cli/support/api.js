@@ -1,5 +1,5 @@
 var config = require("./config"),
-    logger = require("../../logger"),
+    logger = require("../../server/logger"),
     colors = require('colors'),
     repl = require('repl'),
     http = require('http'),
