@@ -50,7 +50,7 @@ exports.newBundle = function(data) {
 exports.sendSnippet = function(env) {
   config.init(env);
   var socket = require("./socket").connect();
-  console.log("TiShadow REPL\n\nlaunchApp(appName), closeApp() and clearCache() methods available.\nrequire(), Ti.include() and assests are relative the running app.\n\n".grey);
+  console.log("TiShadow REPL\n\nlaunchApp(appName), closeApp(), runSpec() and clearCache() methods available.\nrequire(), Ti.include() and assests are relative the running app.\n\n".grey);
   repl.start({
     eval: function(command, context, filename, callback) {
       if (command.trim() !== "(\n)") {

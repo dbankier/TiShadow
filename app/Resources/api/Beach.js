@@ -5,11 +5,15 @@ this.assert = require('/api/Assert');
 this.closeApp =require('/api/TiShadow').closeApp;
 this.launchApp = require('/api/TiShadow').launchApp;
 this.clearCache = require('/api/TiShadow').clearCache;
+this.runSpec = function() {
+  var path_name = require('/api/TiShadow').currentApp.replace(/ /g,"_");
+  require("/api/Spec").run(path_name, false);
+}
 var context = this;
 exports.eval = function(message) {
   try {
     var ret = eval.call(context, message.code
-      .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+ (exports.currentApp ? exports.currentApp.replace(/ /g,"_")+"/'" : "/"))
+      .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+ ( require('/api/TiShadow').currentApp ?  require('/api/TiShadow').currentApp.replace(/ /g,"_")+"/'" : "/"))
       .replace(/require\(/g, "__p.require(")
       .replace(/Ti(tanium)?.include\(/g, "__p.include(this,")
       .replace(/Ti.Locale.getString/g, "L")

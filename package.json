@@ -15,7 +15,7 @@
     "jshint": "0.9.1",
     "restler": "~2.0.1",
     "wrench":"1.4.x",
-    "underscore":"*"
+    "underscore":"1.4.x"
   },
   "devDependencies": {},
   "optionalDependencies": {},
