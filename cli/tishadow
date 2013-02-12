@@ -88,9 +88,9 @@ program.command('app')
 program.command('appify')
   .description('generate an appified TiShadow app'.grey)
   .option('-d, --destination <path>', 'target path for generated project')
-  .option('-o, --host <host>', 'set default server host name / ip address')
-  .option('-p, --port <port>', 'set default server port')
-  .option('-r, --room <room>', 'set default server room')
+  .option('-o, --host <host>', 'set server host name / ip address')
+  .option('-p, --port <port>', 'set server port')
+  .option('-r, --room <room>', 'set server room')
   .action(require('./support/appify').build);
 
 

@@ -35,12 +35,18 @@ Alternatively you can install TiShadow from the source:
 ```
 
 Since the TiShadow app is not in the App Store ~~or Google Play~~, clone the 
-code and run/install as you would any Titanium project.
+code and run/install as you would any Titanium project. **Alernatively
+and preferred**
+use the following to generate a Titanium project with the TiShadow app.
+
+```
+  tishadow app -d [destination folder]
+```
 
 **NOTE**: I will endevour to update the npm package on significant changes but
 might lag, so if the app doesn't seem to be playing nicely install the
 server side from source. In general upgrade the server side and app at
-the same time.
+the same time (using the `tishadow app` command).
 
 
 How To
@@ -161,7 +167,7 @@ Testing / Assertions
 TiShadow now support [Jasmine](http://pivotal.github.com/jasmine/) BDD tests. 
 Insipration taken from these two projects: [titanium-jasmine](https://github.com/guilhermechapiewski/titanium-jasmine/) and [jasmine-titanium](https://github.com/akahigeg/jasmine-titanium)
 
-Include your specs in the `Resources/spec` path of your project. Ensure
+Include your specs in the `spec` path of your project. Ensure
 the files are ending in `_spec.js`. (Note: simply write the spec without any including/requiring the jasmine library.)
 
 To execute the tests enter the following command:
@@ -267,6 +273,26 @@ to interact with apps cached in the TiShadow app.
 `require()`, `Ti.include()` and assests are relative the running app
 inside the TiShadow app.
 
+TiShadow Appify FTW!
+--------------------
+
+**NEW** The `tishadow appify` command can be used to create a
+stand-alone app that is integrated with TiShadow. It automatically
+launches the contained tishadow bundle and connects to a pre-configured
+server. The allows connecting to the deployed app via the repl and/or
+push upgrades.
+
+```
+  Usage: appify [options]
+
+  Options:
+
+    -h, --help                output usage information
+    -d, --destination <path>  target path for generated project
+    -o, --host <host>         set server host name / ip address
+    -p, --port <port>         set server port
+    -r, --room <room>         set server room
+```
 
 Launch From Web
 ---------------
