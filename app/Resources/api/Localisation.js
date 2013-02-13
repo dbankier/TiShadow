@@ -33,5 +33,5 @@ exports.fetchString = function (string) {
   if (lookup === null) {
     loadFile();
   }
-  return lookup[string].replace(/\\n/g,"\n") || string;
+  return lookup[string] !== undefined ? lookup[string].replace(/\\n/g,"\n") : string;
 };
