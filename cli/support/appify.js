@@ -62,7 +62,9 @@ exports.build = function(env) {
       var source_tiapp = fs.readFileSync(path.join(config.base,"tiapp.xml"),'utf8');
       required_modules.push("</modules>")
       fs.writeFileSync(path.join(dest,"tiapp.xml"), 
-                       source_tiapp.replace("<modules/>","<modules></modules>")
+                       source_tiapp
+                       .replace(/<plugins>(.|\n)*<\/plugins>/,"")
+                       .replace("<modules/>","<modules></modules>")
                        .replace("</modules>",required_modules.join("\n")));
       // copy the bundle
       fs.writeFileSync(path.join(dest_resources, config.app_name + ".zip"),fs.readFileSync(config.bundle_file));
