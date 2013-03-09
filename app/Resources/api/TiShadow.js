@@ -141,6 +141,7 @@ function loadRemoteZip(name, url, spec) {
       // Extract
       var dataDir = Ti.Platform.osname === "android" ?  Ti.Filesystem.applicationDataDirectory :  Ti.Filesystem.applicationDataDirectory.slice(0,Ti.Filesystem.applicationDataDirectory.length - 1).replace('file://localhost','').replace(/%20/g,' ');
       zipfile.extract(dataDir+'/' + name + '.zip', dataDir + "/" + path_name);
+      updateLocaleUsage(dataDir + "/" + path_name);
       // Launch
       if (spec.run) {
         exports.currentApp = path_name;
@@ -159,7 +160,28 @@ function loadRemoteZip(name, url, spec) {
   xhr.send();
 }
 
-
+function updateLocaleUsage(dir) {
+  var files = Ti.Filesystem.getFile(dir).getDirectoryListing();
+  files.forEach(function(file_name) {
+    var file = Ti.Filesystem.getFile(dir + "/" + file_name);
+    if (/.js$/.test(file_name) && file.isFile()) {
+      var blob = file.read();
+      var readText = blob.text;
+      if (readText !== null) {
+        file.write(readText
+          // Replace strings like "titleid = 'save'" -> "title = L('save')"
+          .replace(/\.(\w+)id\s\=\s[', "](\w+)[', "];/g, '.$1 = L(\'$2\');')
+          // Replace strings like "titleid: 'save'" -> "title: L('save')"
+          .replace(/(\w+)id:\s[',"](\w+)[',"]/g, '$1: L(\'$2\')')
+        );
+      }
+      file = null;
+      blob = null;
+    } else if (file.isDirectory()) {
+      updateLocaleUsage(dir + '/' + file_name);
+    }
+  });
+}
 
 // FOR URL SCHEME - tishadow://
 function loadRemoteBundle(url) {
