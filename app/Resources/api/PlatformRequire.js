@@ -27,10 +27,10 @@ function custom_require(file) {
 exports.require = function(extension) {
   try {
     // Full Path
-    var path = extension;
-    if (extension.indexOf(".") === -1 || extension.indexOf("/") > -1) {
-      path = exports.file(extension);
-    } else { // NATIVE MODULE
+    var path = exports.file(extension);
+    // Assuming that it is a native module if the path does not exist
+    if (!Ti.Filesystem.getFile(path + ".js").exists()) {
+      log.debug("Native module:" + extension);
       return require(extension);
     }
     // Is the CommonJS module in the cache
