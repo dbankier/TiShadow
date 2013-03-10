@@ -49,7 +49,8 @@ function prepareFiles(index, file_list, isSpec, callback) {
 function finalise(file_list,callback) {
   // Bundle up to go
   var total = file_list.files.length;
-  bundle.pack(file_list.files,function(written) { 
+  // Send the directories and files (see bundle.zip)
+  bundle.pack(file_list.dirs.concat(file_list.files),function(written) { 
     logger.info(total+ " file(s) bundled."); 
     fs.touch(config.last_updated_file);
     if (config.isBundle) {

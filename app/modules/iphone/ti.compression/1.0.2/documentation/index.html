@@ -1,0 +1,76 @@
+<h1>Ti.Compression Module</h1>
+
+<h2>Description</h2>
+
+<p>Lets you zip and unzip files.</p>
+
+<h2>Getting Started</h2>
+
+<p>View the <a href="http://docs.appcelerator.com/titanium/latest/#!/guide/Using_Titanium_Modules">Using Titanium Modules</a> document for instructions on getting
+started with using this module in your application.</p>
+
+<h2>Accessing the Ti.Compression Module</h2>
+
+<p>To access this module from JavaScript, you would do the following:</p>
+
+<pre><code>var Compression = require('ti.compression');
+</code></pre>
+
+<h2>Functions</h2>
+
+<h3>string zip(string archiveFile, string[] fileArray)</h3>
+
+<p>Compresses all of the files you pass in "fileArray" to the specified "archiveFile".</p>
+
+<h4>Arguments</h4>
+
+<ul>
+<li>string archiveFile: The path to the archive file to create</li>
+<li>string[] fileArray: An array of files to compress</li>
+</ul>
+
+<p>Returns the string "success" if the operation succeeded, or an error message if something went wrong.</p>
+
+<h3>string unzip(string destinationFolder, string archiveFile, bool overwrite)</h3>
+
+<p>Extracts the files in the archive file into the destination folder, optionally overriding existing files.</p>
+
+<h4>Arguments</h4>
+
+<ul>
+<li>string destinationFolder: The destination folder for the extracted files</li>
+<li>string archiveFile: The path to an existing compressed archive file</li>
+<li>bool overwrite: Indicates if existing files should be overwritten</li>
+</ul>
+
+<p>Returns the string "success" if the operation succeeded, or an error message if something went wrong.</p>
+
+<h2>Usage</h2>
+
+<p>To create an archive:  </p>
+
+<pre><code>var result = Ti.Compression.zip('test.zip', [ 'a.dat', 'b.dat', 'c.dat' ];
+</code></pre>
+
+<p>To extract an archive:</p>
+
+<pre><code>var result = Ti.Compression.unzip(Ti.Filesystem.applicationDataDirectory + 'data', 'test.zip', true);
+</code></pre>
+
+<p>See example for more details.</p>
+
+<h2>Author</h2>
+
+<p>Clint Tredway</p>
+
+<h2>Module History</h2>
+
+<p>View the <a href="changelog.html">change log</a> for this module.</p>
+
+<h2>Feedback and Support</h2>
+
+<p>Please direct all questions, feedback, and concerns to <a href="mailto:info@appcelerator.com?subject=iOS%20Compression%20Module">info@appcelerator.com</a>.</p>
+
+<h2>License</h2>
+
+<p>Copyright(c) 2010-2013 by Appcelerator, Inc. All Rights Reserved. Please see the LICENSE file included in the distribution for further details.</p>

@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0.2
+apiversion: 2
+description: Lets you zip and unzip files.
+author: Clint Tredway
+license: Apache License, Version 2.0
+copyright: Copyright (c) 2010-2013 by Appcelerator, Inc.
+
+
+# these should not be edited
+name: compression
+moduleid: ti.compression
+guid: c129f5f7-ace8-4cca-be47-b226f8b29f78
+platform: iphone
+minsdk: 2.1.3.GA

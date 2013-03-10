@@ -1,6 +1,6 @@
 var log = require('/api/Log');
 var utils = require('/api/Utils');
-var zipfile = Ti.Platform.osname === "android" ? require("com.yydigital.zip"): require("zipfile");
+var Compression = require("ti.compression");
 var p = require('/api/PlatformRequire');
 var assert = require('/api/Assert');
 var Spec = require("/api/Spec");
@@ -139,8 +139,8 @@ function loadRemoteZip(name, url, spec) {
         target.createDirectory();
       }
       // Extract
-      var dataDir = Ti.Platform.osname === "android" ?  Ti.Filesystem.applicationDataDirectory :  Ti.Filesystem.applicationDataDirectory.slice(0,Ti.Filesystem.applicationDataDirectory.length - 1).replace('file://localhost','').replace(/%20/g,' ');
-      zipfile.extract(dataDir+'/' + name + '.zip', dataDir + "/" + path_name);
+      var dataDir=Ti.Filesystem.applicationDataDirectory + "/";
+      Compression.unzip(dataDir + path_name, dataDir + name + '.zip',true);
       // Launch
       if (spec.run) {
         exports.currentApp = path_name;
