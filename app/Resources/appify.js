@@ -12,7 +12,7 @@ var path_name = "{{app_name}}".replace(/ /g,"_");
 var target = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, path_name);
 if (!target.exists()) {
   target.createDirectory();
-  Compression.unzip(Ti.Filesystem.applicationDataDirectory + "/" + path_name, Ti.Filesystem.resourcesDirectory + + "/{{app_name}}" + '.zip',true);
+  Compression.unzip(Ti.Filesystem.applicationDataDirectory + "/" + path_name, Ti.Filesystem.resourcesDirectory + "/" + path_name + '.zip',true);
 }
 
 

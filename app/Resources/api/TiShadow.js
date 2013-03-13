@@ -131,7 +131,7 @@ function loadRemoteZip(name, url, spec) {
 
       var path_name = name.replace(/ /g,"_");
       // SAVE ZIP
-      var zip_file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, name + '.zip');
+      var zip_file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, path_name + '.zip');
       zip_file.write(this.responseData);
       // Prepare path
       var target = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, path_name);
@@ -140,7 +140,7 @@ function loadRemoteZip(name, url, spec) {
       }
       // Extract
       var dataDir=Ti.Filesystem.applicationDataDirectory + "/";
-      Compression.unzip(dataDir + path_name, dataDir + name + '.zip',true);
+      Compression.unzip(dataDir + path_name, dataDir + path_name + '.zip',true);
       // Launch
       if (spec.run) {
         exports.currentApp = path_name;
