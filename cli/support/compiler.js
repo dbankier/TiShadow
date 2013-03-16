@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 var path = require("path"),
     fs = require("fs"),
-    util = require("util"),
     api = require("./api"),
     bundle = require("./bundle"),
     config = require("./config"),
@@ -118,7 +117,7 @@ module.exports = function(env, callback) {
 
      // Just pump out localisation files
      i18n_list.files.forEach(function(file, idx) {
-       util.pump(fs.createReadStream(path.join(config.i18n_path,file)),fs.createWriteStream(path.join(config.tishadow_src, file)));
+       fs.createReadStream(path.join(config.i18n_path,file)).pipe(fs.createWriteStream(path.join(config.tishadow_src, file)));
      });
 
      // Process Files
