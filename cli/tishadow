@@ -71,7 +71,10 @@ program.command('log')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
-  .action(require('./support/socket').connect);
+  .action(function(env) {
+    config.init(env);
+    require('./support/socket').connect();
+  });
 
 program.command('config')
   .description('set default configuration settings'.grey)
