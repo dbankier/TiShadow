@@ -1,6 +1,6 @@
 {
   "name": "tishadow",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "dependencies": {
     "express": "2.5.2",
     "jade": ">= 0.0.1",
@@ -8,14 +8,14 @@
     "socket.io-client": ">=0.9.11",
     "path": ">=0.4.9",
     "xml2js": "0.1.x",
-    "zipstream": ">=0.2.1",
     "colors": ">=0.6.0-1",
     "commander": "1.0.x",
     "pkginfo": "0.2.3",
     "jshint": "0.9.1",
     "restler": "~2.0.1",
-    "wrench":"1.4.x",
-    "underscore":"1.4.x"
+    "wrench": "1.4.x",
+    "underscore": "1.4.x",
+    "archiver": "~0.4.1"
   },
   "devDependencies": {},
   "optionalDependencies": {},

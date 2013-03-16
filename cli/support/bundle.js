@@ -1,14 +1,17 @@
 var config = require("./config"),
     fs = require("fs"),
     path = require("path"),
-    zipstream = require("zipstream"),
+    archiver = require('archiver'),
     Stream = require('stream');;
 
 exports.pack = function(files, callback, zip) {
   var out;
   if (zip === undefined) {
     out = fs.createWriteStream(config.bundle_file);
-    zip = zipstream.createZip({level:1});
+    zip = archiver('zip');
+    zip.on('error', function(err) {
+      throw err;
+    });
   }
   if (files.length === 0) {
     zip.finalize(callback);
@@ -26,7 +29,7 @@ exports.pack = function(files, callback, zip) {
       stream = fs.createReadStream(path.join(config.tishadow_src,file));
     }
 
-    zip.addFile(stream, {name: file}, function() {
+    zip.append(stream, {name: file}, function() {
       exports.pack(tail,callback,zip);
     });
 
