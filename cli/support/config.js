@@ -21,6 +21,7 @@ var config_path = path.join(home,'.tishadow.json');
 if (fs.existsSync(config_path)) {
   config = require(config_path);
 }
+config.base = base;
 
 //Config setup
 config.buildPaths = function(env, callback) {

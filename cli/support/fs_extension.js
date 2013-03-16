@@ -59,8 +59,9 @@ fs.rm_rf = function(dir) {
 // Builds directory structure
 fs.mkdirs = function(dirs, rel_root) {
   dirs.forEach(function(dir) {
-    if (!fs.existsSync(path.join(rel_root,dir)) ){
-      fs.mkdirSync(path.join(rel_root,dir));
+    var full_path = rel_root? path.join(rel_root,dir) : dir;
+    if (!fs.existsSync(full_path) ){
+      fs.mkdirSync(full_path);
     }
   });
 }
