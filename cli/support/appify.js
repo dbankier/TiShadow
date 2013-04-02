@@ -14,8 +14,8 @@ _.templateSettings = {
         '<module platform="iphone" version="0.1">yy.tidynamicfont</module>',
         '<module platform="iphone" version="0.3">net.iamyellow.tiws</module>',
         '<module platform="android" version="0.1">net.iamyellow.tiws</module>',
-        '<module platform="iphone" version="0.1.21">zipfile</module>',
-        '<module platform="android" version="0.2">com.yydigital.zip</module>'
+        '<module platform="iphone" version="1.0.2">ti.compression</module>',
+        '<module platform="android" version="2.0.1">ti.compression</module>'
  ];
 
 
