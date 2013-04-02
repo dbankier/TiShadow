@@ -113,6 +113,7 @@ module.exports = function(env, callback) {
        fs.mkdirSync(config.tishadow_spec, 0755);
        fs.mkdirs(spec_list.dirs, config.tishadow_spec);
        spec_list.files = spec_list.files.map(function(file) { return "spec/" + file;});
+       spec_list.dirs = ["spec"].concat(spec_list.dirs.map(function(dir) {return "spec/" + dir;}));
      }
 
      // Just pump out localisation files
@@ -124,6 +125,7 @@ module.exports = function(env, callback) {
      prepareFiles(0, file_list, false, function() {
        prepareFiles(0, spec_list, true, function() {
           file_list.files = file_list.files.concat(i18n_list.files).concat(spec_list.files);
+          file_list.dirs = file_list.dirs.concat(i18n_list.dirs).concat(spec_list.dirs);
           finalise(file_list,callback);
        });
      });
