@@ -99,18 +99,17 @@ exports.launchApp = function(name) {
   }
 };
 
-// Locate the applicationDatabaseDirectory for clearing cache
-var applicationDatabaseDirectory;
-if (Ti.UI.Android) {
-  applicationDatabaseDirectory = Ti.Filesystem.applicationDataDirectory + "databases";
-}
-if (Ti.UI.iOS) {
-  applicationDatabaseDirectory = Ti.Filesystem.applicationDataDirectory.replace("Documents/","") + "Library/Private%20Documents/";
-}
-
 exports.clearCache = function() {
+  var dirty_directories = [Ti.Filesystem.applicationDataDirectory];
+  if (Ti.UI.iOS) {
+    var applicationDatabaseDirectory = Ti.Filesystem.applicationDataDirectory.replace("Documents/","") + "Library/Private%20Documents/";
+    if (Ti.Filesystem.getFile(applicationDatabaseDirectory).exists()) {
+      dirty_directories.push(applicationDatabaseDirectory);
+    }
+  }
+
   try {
-    [Ti.Filesystem.applicationDataDirectory, applicationDatabaseDirectory].forEach(function(targetDirectory) {
+    dirty_directories.forEach(function(targetDirectory) {
       // Clear Applications
       var files = Ti.Filesystem.getFile(targetDirectory).getDirectoryListing();
       files.forEach(function(file_name) {
