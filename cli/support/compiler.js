@@ -26,7 +26,7 @@ function prepare(src, dst, callback) {
       .replace(/\b(title|text)id:\s{0,}['"](\w+)['"]/g, '$1: L(\'$2\')')
       .replace(/Ti(tanium)?.API/g, "__log");
     if (src.match("_spec.js$")) {
-      src_text =  "var jasmine = require('/lib/jasmine-1.2.0');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe'];methods.forEach(function(method) {this[method] = jasmine[method];});"
+      src_text =  "var __jasmine = require('/lib/jasmine-1.2.0');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
         +src_text;
     }
     fs.writeFile(dst,src_text, callback);
