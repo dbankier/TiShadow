@@ -38,6 +38,7 @@ exports.copyCoreProject = function(env) {
 exports.build = function(env) {
   var dest = env.destination || ".";
   var dest_resources = path.join(dest,"Resources");
+  var dest_modules = path.join(dest,"modules");
   var template_file = path.join(tishadow_app,"Resources","appify.js");
 
   //set to bundle mode
@@ -56,6 +57,9 @@ exports.build = function(env) {
       ['iphone', 'android'].forEach(function(platform) {
         if(fs.existsSync(path.join(config.resources_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.resources_path,platform),path.join(dest_resources,platform));
+        }
+        if(fs.existsSync(path.join(config.modules_path,platform))) {
+          wrench.copyDirSyncRecursive(path.join(config.modules_path,platform),path.join(dest_modules,platform),{preserve:true});
         }
       });
       // copy tiapp.xml and inject modules
