@@ -30,6 +30,7 @@ config.buildPaths = function(env, callback) {
     var app_name = config.app_name = result.name || "bundle";
     config.base              = base;
     config.resources_path    = path.join(base, 'Resources');
+    config.modules_path      = path.join(base, 'modules');
     config.spec_path         = path.join(base, 'spec');
     config.i18n_path         = path.join(base, 'i18n');
     config.build_path        = path.join(base, 'build');
