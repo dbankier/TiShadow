@@ -16,7 +16,7 @@ function prepare(src, dst, callback) {
     var src_text = "var __p = require('/api/PlatformRequire'), __log = require('/api/Log'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString;\n" 
       + fs.readFileSync(src).toString()
       .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+app_name.replace(/ /g,"_")+"/'")
-      .replace(/require\(/g, "__p.require(")
+      .replace(/([^\.])require\(/g, "$1__p.require(")
       .replace(/Ti(tanium)?.include\(/g, "__p.include(this,")
       .replace(/Ti.Locale.getString/g, "L")
       .replace(/([ :=\(])(['"])(\/[^'"].*?)(['"])/g, "$1__p.file($2$3$4)") // ignores "/"
