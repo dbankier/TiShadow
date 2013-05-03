@@ -8,3 +8,9 @@
   };
 });
 
+exports.log = function(level,message) {
+  if (exports[level]) {
+    exports[level](message);
+  }
+}
+
