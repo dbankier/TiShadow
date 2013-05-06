@@ -44,7 +44,7 @@ exports.connect = function(o) {
     if(data.locale) {
       require("/api/Localisation").locale = data.locale;
     }
-    loadRemoteZip(data.name, "http://" + o.host + ":" + o.port + "/bundle", data.spec);
+    loadRemoteZip(data.name, "http://" + o.host + ":" + o.port + "/bundle", data);
   });
 
   socket.on('clear', function() {
@@ -134,7 +134,7 @@ exports.clearCache = function() {
 }
 
 
-function loadRemoteZip(name, url, spec) {
+function loadRemoteZip(name, url, data) {
   var xhr = Ti.Network.createHTTPClient();
   xhr.setTimeout(10000);
   xhr.onload=function(e) {
@@ -154,10 +154,13 @@ function loadRemoteZip(name, url, spec) {
       var dataDir=Ti.Filesystem.applicationDataDirectory + "/";
       Compression.unzip(dataDir + path_name, dataDir + path_name + '.zip',true);
       // Launch
-      if (spec.run) {
+      log.debug(data.patch.run);
+      if (data.spec.run) {
         exports.currentApp = path_name;
-        Spec.run(path_name, spec.junitxml);
-      } else {
+        Spec.run(path_name, data.spec.junitxml);
+      } else if (data.patch.run) {
+        p.clearCache(data.patch.files);
+      } else  {
         exports.launchApp(path_name);
       }
     } catch (e) {
