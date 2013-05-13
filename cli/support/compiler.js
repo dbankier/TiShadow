@@ -24,6 +24,7 @@ function prepare(src, dst, callback) {
       .replace(/\.(title|text)id\s{0,}\=\s{0,}['"](\w+)['"]/g, '.$1 = L(\'$2\')')
       // Replace strings like "titleid: 'save'" -> "title: L('save')"
       .replace(/\b(title|text)id:\s{0,}['"](\w+)['"]/g, '$1: L(\'$2\')')
+      .replace(/console./g, "__log.")
       .replace(/Ti(tanium)?.API/g, "__log");
     if (src.match("_spec.js$")) {
       src_text =  "var __jasmine = require('/lib/jasmine-1.2.0');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
