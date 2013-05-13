@@ -18,7 +18,8 @@ exports.eval = function(message) {
       .replace(/Ti(tanium)?.include\(/g, "__p.include(this,")
       .replace(/Ti.Locale.getString/g, "L")
       .replace(/([ :=\(])(['"])(\/.*?)(['"])/g, "$1__p.file($2$3$4)")
-      .replace(/Ti(tanium)?.API/g, "__log"));
+      .replace(/Ti(tanium)?.API/g, "__log")
+      .replace(/console./g, "__log."));
     __log.repl(ret);
   } catch (e) {
     var ret =  require('/api/Utils').extractExceptionData(e)
