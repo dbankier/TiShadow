@@ -2,6 +2,7 @@ var log = require("/api/Log");
 var utils = require("/api/Utils");
 var os = Ti.Platform.osname;
 var tishadow_version = Ti.version.replace(/tishadow_?/,"").replace(/\./g,"");
+var _ = require("/lib/underscore");
 
 
 // The TiShadow build of the Titanium SDK does not cache CommonJS modules loaded
@@ -106,6 +107,16 @@ exports.file = function(extension) {
   return path;
 };
 
-exports.clearCache = function () {
-  cache = {};
+// if a list of files is provided it will selectively clear the cache
+exports.clearCache = function (list) {
+  if (_.isArray(list)) {
+    list.forEach(function(file) {
+      if (file.match(".js$")) {
+        cache[exports.file(file.replace(/.js$/,""))] = null;
+        cache[exports.file("/" + file.replace(/.js$/,""))] = null;
+      }
+    });
+  } else {
+    cache = {};
+  }
 };

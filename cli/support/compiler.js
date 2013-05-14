@@ -5,7 +5,8 @@ var path = require("path"),
     bundle = require("./bundle"),
     config = require("./config"),
     logger = require("../../server/logger.js"),
-    jshint = require("./jshint_runner");
+    jshint = require("./jshint_runner"),
+    _ =require("underscore");
 
     require("./fs_extension");
 
@@ -63,7 +64,7 @@ function finalise(file_list,callback) {
         callback();
       }
     } else {
-      api.newBundle();
+      api.newBundle(config.isPatch?_.filter(file_list.files, function(f) { return f.match(".js$");}):null );
     }
   });
 }
