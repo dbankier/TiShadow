@@ -12,6 +12,8 @@ var includes = [
   Ti.UI.createEmailDialog,
   Ti.UI.createImageView,
   Ti.UI.createLabel,
+  Ti.UI.createListSection,
+  Ti.UI.createListView,
   Ti.UI.createMaskedImage,
   Ti.UI.createNotification,
   Ti.UI.createOptionDialog,
@@ -59,6 +61,9 @@ if (Ti.Platform.osname !== "android"){
   var ios_includes = [Titanium.UI.iPhone.ActivityIndicatorStyle,
     Titanium.UI.iPhone.AlertDialogStyle,
     Titanium.UI.iPhone.AnimationStyle,
+    Titanium.UI.iPhone.ListViewCellSelectionStyle,
+    Titanium.UI.iPhone.ListViewScrollPosition,
+    Titanium.UI.iPhone.ListViewStyle,
     Titanium.UI.iPhone.NavigationGroup,
     Titanium.UI.iPhone.ProgressBarStyle,
     Titanium.UI.iPhone.RowAnimationStyle,
@@ -76,9 +81,19 @@ if (Ti.Platform.osname !== "android"){
     Titanium.UI.iPad.Popover,
     Titanium.UI.iOS.AdView,
     Titanium.UI.iOS.CoverFlowView,
+    Titanium.UI.iOS.DocumentViewer,
     Titanium.UI.iOS.TabbedBar,
     Titanium.UI.iOS.Toolbar
   ];
 } else {
-  var android_includes = [Ti.UI.Android.createProgressIndicator];
+  var android_includes = [
+    Ti.UI.Android.createProgressIndicator,
+    Ti.UI.Android.createSearchView,
+    Ti.Android.createBroadcastReceiver,
+    Ti.Android.createIntent,
+    Ti.Android.createNotification,
+    Ti.Android.createPendingIntent,
+    Ti.Android.createRemoteViews,
+    Ti.Android.createServiceIntent
+  ];
 }
