@@ -2,7 +2,7 @@ var log = require("/api/Log");
 
 var width = Ti.Platform.displayCaps.platformWidth / 4;
 var icon_width = width - 20;
-icon_width = icon_width  / Ti.Platform.displayCaps.logicalDensityFactor > 72 ? 72 : icon_width;
+icon_width = icon_width  / (Ti.Platform.osname === "android" ? Ti.Platform.displayCaps.logicalDensityFactor : 1) > 72 ? 72 : icon_width;
 
 function createIcon(o, idx) {
   var view = Ti.UI.createView({
