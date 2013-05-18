@@ -2,7 +2,7 @@ var log = require("/api/Log");
 
 var width = Ti.Platform.displayCaps.platformWidth / 4;
 var icon_width = width - 20;
-icon_width = icon_width > 72 ? 72 : icon_width;
+icon_width = icon_width  / Ti.Platform.displayCaps.logicalDensityFactor > 72 ? 72 : icon_width;
 
 function createIcon(o, idx) {
   var view = Ti.UI.createView({
@@ -17,19 +17,18 @@ function createIcon(o, idx) {
     touchEnabled: false,
     backgroundImage: o.image,
     borderRadius: 10,
-    top: 10,
-    width: icon_width,
-    height: icon_width
+    top: "10dp",
+    width: icon_width + "dp",
+    height: icon_width + "dp"
   }));
 
   view.add(Ti.UI.createLabel({
-    top: icon_width + 10,
+    top: icon_width + 10 + "dp",
     font: {
       fontSize: '10dp',
       fontWeight: 'bold'
     },
-    widht: Ti.UI.FILL,
-    height: 20,
+    height: 20 + "dp",
     textAlign: 'center',
     color: 'black',
     text: o.title,
