@@ -117,6 +117,7 @@ Here are full list of options:
 ```
     -h, --help             output usage information
     -u, --update           Only send recently changed files
+    -a, --patch            patch updated files without causing app restart
     -l, --locale <locale>  set the locale in in the TiShadow app
     -j, --jshint           analyse code with JSHint
     -t, --tail-logs        tail server logs on deploy
