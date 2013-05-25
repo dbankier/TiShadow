@@ -267,7 +267,7 @@ inside the TiShadow app.
 
 ###Spies
 
-**NEW:** You can add **spies** on object so that can modify them from
+**NEW:** You can add **spies** on objects so that you can modify them from
 the repl at run time. In your code add the following command:
 `addSpy(name, object)`. This can be included as a comment, eg:
 `//addSpy("mywindow",win)` which will be uncommented when pushed.
