@@ -8,8 +8,14 @@ this.clearCache = require('/api/TiShadow').clearCache;
 this.runSpec = function() {
   var path_name = require('/api/TiShadow').currentApp.replace(/ /g,"_");
   require("/api/Spec").run(path_name, false);
-}
+};
+this.getSpy = function(name) {
+  return spys[name];
+};
+
+var spys = {};
 var context = this;
+
 exports.eval = function(message) {
   try {
     var ret = eval.call(context, message.code
@@ -22,7 +28,12 @@ exports.eval = function(message) {
       .replace(/console./g, "__log."));
     __log.repl(ret);
   } catch (e) {
-    var ret =  require('/api/Utils').extractExceptionData(e)
-    __log.error(ret);
+    __log.error(require('/api/Utils').extractExceptionData(e));
   }
-}
+};
+
+exports.addSpy = function(name,spy) {
+  spys[name]=spy;
+};
+
+

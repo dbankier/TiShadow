@@ -14,7 +14,9 @@ var path = require("path"),
 function prepare(src, dst, callback) {
   var app_name = config.app_name;
   if (src.match("js$")){ 
-    var src_text = "var __p = require('/api/PlatformRequire'), __log = require('/api/Log'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString;\n" 
+    var src_text = "var __p = require('/api/PlatformRequire'), __log = require('/api/Log'), "
+      + "assert = require('/api/Assert'), L = require('/api/Localisation').fetchString, "
+      + "addSpy = require('api/Beach').addSpy;\n"
       + fs.readFileSync(src).toString()
       .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+app_name.replace(/ /g,"_")+"/'")
       .replace(/(^|[^\.])require\(/g, "$1__p.require(")
@@ -26,6 +28,7 @@ function prepare(src, dst, callback) {
       // Replace strings like "titleid: 'save'" -> "title: L('save')"
       .replace(/\b(title|text)id:\s{0,}['"](\w+)['"]/g, '$1: L(\'$2\')')
       .replace(/console./g, "__log.")
+      .replace(/\/\/addSpy\(/g,"addSpy(")
       .replace(/Ti(tanium)?.API/g, "__log");
     if (src.match("_spec.js$")) {
       src_text =  "var __jasmine = require('/lib/jasmine-1.2.0');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
@@ -133,3 +136,4 @@ module.exports = function(env, callback) {
      });
   });
 }
+

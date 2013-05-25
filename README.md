@@ -159,13 +159,11 @@ updating or launching the new one, include the following code snippet in your
 `app.js` file:
 
 ```javascript
-    try {
+    if (typeof exports !== "undefined") {
       exports.close = function() {
         // Your code to close, e.g, main_window.close();
       };
       Ti.API.info("Running in TiShadow");
-    } catch (e) {
-      Ti.API.info("Running stand-alone");
     }
 ```
 
@@ -266,6 +264,19 @@ to interact with apps cached in the TiShadow app.
 
 `require()`, `Ti.include()` and assets are relative the running app
 inside the TiShadow app.
+
+###Spies
+
+**NEW:** You can add **spies** on object so that can modify them from
+the repl at run time. In your code add the following command:
+`addSpy(name, object)`. This can be included as a comment, eg:
+`//addSpy("mywindow",win)` which will be uncommented when pushed.
+To get the object, simply use, e.g. `getSpy("mywindow")` from the repl.
+
+For Alloy, since comments are removed at compile time you can use the
+following [alloy.jmk](https://gist.github.com/dbankier/5648950) to
+automatically inject spies on the `$`object in your controllers, naming
+the spy with the file's name. 
 
 
 Code Snippets Via Webpage
