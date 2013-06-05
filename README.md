@@ -8,6 +8,8 @@ which are all need.
 
 ~~Have a look at this [presentation](http://www.slideshare.net/londontitanium/titanium-london-tishadow-july-2012) (July 2012) given at the TiLondon meetup for a look at most of what you can do with TiShadow.~~ (Outdated)
 
+Go to the new [project website](http://tishadow.yydigital.com)
+
 Join the discussion on the [Google Group](https://groups.google.com/forum/?fromgroups=#!forum/tishadow).
 You can also find some TiShadow related blog posts
 [here](http://www.yydigital.com/blog)
