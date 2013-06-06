@@ -156,7 +156,9 @@ sio.sockets.on('connection', function(socket) {
     socket.get("name", function(err, name) {
       socket.get("room", function(err, room) {
         if (name && room) {
+          data.level = data.level || '';
           data.name = name;
+          data.message = data.message || '';
           Logger.log(data.level, data.name, data.message);
           sio.sockets.in(room).emit("device_log", data);
         }
