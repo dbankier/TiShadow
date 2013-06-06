@@ -154,7 +154,6 @@ function loadRemoteZip(name, url, data) {
       var dataDir=Ti.Filesystem.applicationDataDirectory + "/";
       Compression.unzip(dataDir + path_name, dataDir + path_name + '.zip',true);
       // Launch
-      log.debug(data.patch.run);
       if (data.spec.run) {
         exports.currentApp = path_name;
         Spec.run(path_name, data.spec.junitxml);
