@@ -87,7 +87,13 @@ program.command('config')
 program.command('app')
   .description('generate a titanium project with TiShadow app source code'.grey)
   .option('-d, --destination <path>', 'target path for generated project')
-  .action(require('./support/appify').copyCoreProject);
+  .action(function(env) {
+    program.prompt("Enter app id [com.yydigital.tishadowapp]: ", function(appid) {
+      env.appid = appid.trim() || "com.yydigital.tishadowapp";
+      require('./support/appify').copyCoreProject(env);
+      process.stdin.destroy();
+    });
+  });
 
 program.command('appify')
   .description('generate an appified TiShadow app'.grey)
