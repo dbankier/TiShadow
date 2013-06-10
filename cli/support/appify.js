@@ -31,6 +31,12 @@ exports.copyCoreProject = function(env) {
     return false
   }
   wrench.copyDirSyncRecursive(tishadow_app, dest);
+
+  //inject new GUID
+  var source_tiapp = fs.readFileSync(path.join(tishadow_app,"tiapp.xml"),'utf8');
+  fs.writeFileSync(path.join(dest,"tiapp.xml"), 
+       source_tiapp.replace("{{GUID}}", 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);})) // GUID one-liner: http://stackoverflow.com/a/2117523
+                  );
   logger.info("TiShadow app ready");
   return true;
 }
