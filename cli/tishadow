@@ -66,7 +66,7 @@ program.command('repl')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .action(api.sendSnippet);
-  
+
 program.command('log')
   .description('tail server logs'.grey)
   .option('-o, --host <host>', 'server host name / ip address')
@@ -102,6 +102,13 @@ program.command('appify')
   .option('-p, --port <port>', 'set server port')
   .option('-r, --room <room>', 'set server room')
   .action(require('./support/appify').build);
+
+program.command('watch')
+  .description('monitor current directory and run on file save'.grey)
+  .action(function(env) {
+    // config.init(env);
+    require('./support/watch').watch(env);
+  });
 
 
 program.parse(process.argv);

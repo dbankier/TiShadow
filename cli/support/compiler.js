@@ -13,7 +13,7 @@ var path = require("path"),
 // Copies all Resource files and prepares JS files
 function prepare(src, dst, callback) {
   var app_name = config.app_name;
-  if (src.match("js$")){ 
+  if (src.match("js$")){
     var src_text = "var __p = require('/api/PlatformRequire'), __log = require('/api/Log'), "
       + "assert = require('/api/Assert'), L = require('/api/Localisation').fetchString, "
       + "addSpy = require('api/Beach').addSpy;\n"
@@ -58,17 +58,15 @@ function finalise(file_list,callback) {
   // Bundle up to go
   var total = file_list.files.length;
   // Send the directories and files (see bundle.zip)
-  bundle.pack(file_list.dirs.concat(file_list.files),function(written) { 
-    logger.info(total+ " file(s) bundled."); 
+  bundle.pack(file_list.dirs.concat(file_list.files),function(written) {
+    logger.info(total+ " file(s) bundled.");
     fs.touch(config.last_updated_file);
     if (config.isBundle) {
       logger.info("Bundle Ready: " + config.bundle_file);
-      if (callback) {
-        callback();
-      }
     } else {
       api.newBundle(config.isPatch?_.filter(file_list.files, function(f) { return f.match(".js$");}):null );
     }
+    if (callback) callback();
   });
 }
 
