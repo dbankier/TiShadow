@@ -55,7 +55,8 @@ var includes = [
   Ti.Facebook,
   Ti.Map,
   Ti.Geolocation,
-  Ti.Gesture
+  Ti.Gesture,
+  Ti.Accelerometer
 ];
 if (Ti.Platform.osname !== "android"){
   var ios_includes = [Titanium.UI.iPhone.ActivityIndicatorStyle,
