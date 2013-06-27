@@ -1,6 +1,6 @@
 var p = require('/api/PlatformRequire');
 var log = require('/api/Log');
-var jasmine = require('/lib/jasmine-1.2.0').jasmine;
+var jasmine = require('/lib/jasmine').jasmine;
 var TiShadowReporter = require('/api/TiShadowReporter');
 var JUnitXMLReporter = require('/api/JUnitXMLReporter');
 
@@ -23,7 +23,8 @@ function loadSpecs(name, base, filter) {
 }
 
 exports.run = function (name, junitxml) {
-  jasmine.getEnv().resetReporters();
+  //For a new environment reset
+  jasmine.currentEnv_ = new jasmine.Env();
   if (junitxml) {
     jasmine.getEnv().addReporter(new JUnitXMLReporter());
   } else {

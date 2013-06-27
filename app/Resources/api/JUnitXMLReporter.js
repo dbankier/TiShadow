@@ -2,7 +2,7 @@
 // (MIT Licenced) and has been modified for use in TiShadow.
 
 var log = require('/api/Log');
-var jasmine = require('/lib/jasmine-1.2.0').jasmine;
+var jasmine = require('/lib/jasmine').jasmine;
 
 function elapsed(startTime, endTime) {
   return (endTime - startTime)/1000;
