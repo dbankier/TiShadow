@@ -18,7 +18,7 @@ module.exports = {
         }
       });
 
-      var bar = Ti.UI.createToolbar({
+      var bar = Ti.UI.iOS.createToolbar({
         items:[connect_button,flexSpace, title, flexSpace],
         top:0,
         barColor:'#adbedd',
