@@ -11,6 +11,7 @@ exports.currentApp;
 var socket, room;
 exports.connect = function(o) {
   room = o.room;
+  var version_property = "__tishadow:" + room + ":version";
   if (socket) {
     exports.disconnect();
   }
@@ -19,7 +20,8 @@ exports.connect = function(o) {
   socket.on("connect", function() {
     socket.emit("join", {
       name : o.name,
-      room : o.room
+      room : o.room,
+      version: Ti.App.Properties.getInt(version_property) || undefined
     });
 
     if(o.callback) {
@@ -43,6 +45,11 @@ exports.connect = function(o) {
   socket.on('bundle', function(data) {
     if(data.locale) {
       require("/api/Localisation").locale = data.locale;
+    }
+    if (data.version) {
+      Ti.App.Properties.setInt(version_property, data.version);
+    } else {
+      Ti.App.Properties.removeProperty(version_property);
     }
     loadRemoteZip(data.name, "http://" + o.host + ":" + o.port + "/bundle", data);
   });
