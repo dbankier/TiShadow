@@ -128,7 +128,7 @@ sio.sockets.on('connection', function(socket) {
       } else {
         devices[room] = [e.name];
       }
-      if (config.isManageVersions && e.version !== rooms[room].version){
+      if (config.isManageVersions && rooms[room] && e.version !== rooms[room].version){
         socket.emit("bundle",{});
       }
     }
