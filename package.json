@@ -15,7 +15,8 @@
     "restler": "~2.0.1",
     "wrench": "1.4.x",
     "underscore": "1.4.x",
-    "archiver": "0.4.3"
+    "archiver": "0.4.3",
+    "watchr": "~2.4.3"
   },
   "devDependencies": {},
   "optionalDependencies": {},
