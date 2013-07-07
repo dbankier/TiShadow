@@ -4,6 +4,7 @@ this.L = require('/api/Localisation').fetchString;
 this.assert = require('/api/Assert');
 this.closeApp =require('/api/TiShadow').closeApp;
 this.launchApp = require('/api/TiShadow').launchApp;
+this.__w = require('/api/Windows');
 this.clearCache = require('/api/TiShadow').clearCache;
 this.runSpec = function() {
   var path_name = require('/api/TiShadow').currentApp.replace(/ /g,"_");
@@ -22,6 +23,7 @@ exports.eval = function(message) {
       .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+ ( require('/api/TiShadow').currentApp ?  require('/api/TiShadow').currentApp.replace(/ /g,"_")+"/'" : "/"))
       .replace(/(^|[^\.])require\(/g, "$1__p.require(")
       .replace(/Ti(tanium)?.include\(/g, "__p.include(this,")
+      .replace(/Ti(tanium)?.UI.createWindow\(/g, "__w.create(")
       .replace(/Ti.Locale.getString/g, "L")
       .replace(/([ :=\(])(['"])(\/[^'"].*?)(['"])/g, "$1__p.file($2$3$4)") // ignores "/"
       .replace(/Ti(tanium)?.API/g, "__log")

@@ -176,6 +176,6 @@
         <module platform="iphone" version="1.0.2">ti.compression</module>
         <module platform="android" version="2.0.1">ti.compression</module>
         <module platform="android" version="1.0">ti.physicalSizeCategory</module>
-        <module platform="commonjs" version="2.3.0">ti.cloud</module>
+        <module platform="commonjs">ti.cloud</module>
     </modules>
 </ti:app>

@@ -76,10 +76,8 @@ exports.disconnect = function() {
 
 var bundle;
 exports.closeApp = function(name) {
-  if (bundle && bundle.close !== undefined) {
-      bundle.close();
-      log.info("Previous bundle closed.");
-   }
+  require("/api/Windows").closeApp(name || exports.currentApp);
+  log.info("Previous bundle closed.");
 };
 exports.launchApp = function(name) {
   try {
@@ -100,6 +98,8 @@ exports.launchApp = function(name) {
 };
 
 exports.clearCache = function() {
+  require("/api/Windows").closeAll();
+  
   Ti.App.Properties.listProperties().forEach(function(property) {
     Ti.App.Properties.removeProperty(property);
   });
