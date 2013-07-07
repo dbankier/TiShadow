@@ -75,15 +75,16 @@ app.get('/bundle/:room', function(req,res) {
 // For remote bundle posting.
 app.post('/bundle', function(req, res) {
   Logger.log("WARN", null, "Remote Bundle Received");
-  var data = JSON.parse(req.body.data);
-  var name = req.files.bundle.name.replace(".zip","");
-
-  bundle[data.room] = req.files.bundle.path;
-  Logger.log("INFO", null, "New Bundle: " + bundle[data.room] + " | " + name);
-
+  var data = JSON.parse(req.body.data),
+      name = req.files.bundle.name.replace(".zip",""),
+      room = data.room;
   data.name = name;
   data.room = data.bundle = null;
-  sio.sockets.in(data.room).emit("bundle", data);
+
+  bundle[room] = req.files.bundle.path;
+  Logger.log("INFO", null, "New Bundle: " + bundle[room] + " | " + name);
+
+  sio.sockets.in(room).emit("bundle", data);
   res.send("OK", 200);
 });
 
