@@ -20,12 +20,9 @@ function stack(e) {
 }
 
 function unstack(e) {
-	var win = e.source.__tishadowWin;
-	var app = e.source.__tishadowApp;
+	log.debug("Unstacked window #" + _.size(windows[e.app]) + " : " + e.app + "/" + e.win);
 	
-	log.debug("Unstacked window #" + _.size(windows[app]) + " : " + app + "/" + win);
-	
-	delete windows[app][win];
+	delete windows[e.app][e.win];
 	
 	return;
 }
@@ -40,7 +37,9 @@ exports.create = function(parameters) {
 	w.__tishadowApp = app;
 	
 	w.addEventListener('open', stack);
-	w.addEventListener('close', unstack);
+	w.addEventListener('close', function(e) {
+    unstack({ app: app, win: win });
+  });
 	
 	log.debug("Created window: " + app + " / " + win);
 	
