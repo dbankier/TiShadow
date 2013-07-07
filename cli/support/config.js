@@ -63,6 +63,7 @@ config.init = function(env) {
   config.port     = env.port || config.port || "3000";
   config.room     = env.room || config.room || "default";
   config.isLongPolling = env.longPolling;
+  config.isManageVersions = env.manageVersions;
 };
 
 config.write = function(env) {

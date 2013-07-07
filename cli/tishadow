@@ -20,6 +20,7 @@ program.command('server')
   .description('start the TiShadow server'.grey)
   .option('-p, --port <port>', 'server port')
   .option('-l, --long-polling', 'force long polling')
+  .option('-z, --manage-versions', 'manage and automatically update bundles')
   .action(function(env) {
     config.init(env);
     require("../server/app.js");

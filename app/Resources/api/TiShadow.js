@@ -160,10 +160,10 @@ function loadRemoteZip(name, url, data) {
       var dataDir=Ti.Filesystem.applicationDataDirectory + "/";
       Compression.unzip(dataDir + path_name, dataDir + path_name + '.zip',true);
       // Launch
-      if (data.spec.run) {
+      if (data.spec && data.spec.run) {
         exports.currentApp = path_name;
         Spec.run(path_name, data.spec.junitxml);
-      } else if (data.patch.run) {
+      } else if (data.patch && data.patch.run) {
         p.clearCache(data.patch.files);
       } else  {
         exports.launchApp(path_name);

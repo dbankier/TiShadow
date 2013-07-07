@@ -54,13 +54,13 @@ if(config.isLongPolling) {
 app.get('/', routes.index);
 
 // Bundles handled by GET/POST instead of socket connections.
-var bundle={};
+var rooms={};
 app.get('/bundle/:room', function(req,res) {
   Logger.debug("Bundle requested." );
   res.setHeader('Content-disposition', 'attachment; filename=bundle.zip');
   res.setHeader('Content-type', "application/zip");
 
-  var filestream = fs.createReadStream(bundle[req.params.room]);
+  var filestream = fs.createReadStream(rooms[req.params.room].bundle);
   filestream.on('data', function(chunk) {
     res.write(chunk);
   });
@@ -78,12 +78,16 @@ app.post('/bundle', function(req, res) {
   var data = JSON.parse(req.body.data),
       name = req.files.bundle.name.replace(".zip",""),
       room = data.room;
+
+  rooms[room].bundle = req.files.bundle.path;
+  rooms[room].version = (new Date()).getTime();
+  Logger.log("INFO", null, "New Bundle: " + rooms[room].bundle + " | " + name);
+
   data.name = name;
   data.room = data.bundle = null;
-
-  bundle[room] = req.files.bundle.path;
-  Logger.log("INFO", null, "New Bundle: " + bundle[room] + " | " + name);
-
+  if (config.isManageVersions) {
+    data.version = rooms[room].version;
+  }
   sio.sockets.in(room).emit("bundle", data);
   res.send("OK", 200);
 });
@@ -124,6 +128,9 @@ sio.sockets.on('connection', function(socket) {
       } else {
         devices[room] = [e.name];
       }
+      if (config.isManageVersions && e.version !== rooms[room].version){
+        socket.emit("bundle",{});
+      }
     }
 
   });
@@ -138,8 +145,12 @@ sio.sockets.on('connection', function(socket) {
             if(command === 'bundle') {
               data.name = path.basename(data.bundle).replace(".zip","");
               Logger.log("INFO", null, "New Bundle: " + data.bundle + " | " + data.name);
-              bundle[room] = data.bundle;
+              rooms[room].bundle = data.bundle;
+              rooms[room].version = (new Date()).getTime();
               data.bundle = null;
+              if (config.isManageVersions) {
+                data.version = rooms[room].version;
+              }
             } else  {
               Logger.info(command.toUpperCase() + " requested");
             }
