@@ -100,6 +100,10 @@ exports.launchApp = function(name) {
 };
 
 exports.clearCache = function() {
+  Ti.App.Properties.listProperties().forEach(function(property) {
+    Ti.App.Properties.removeProperty(property);
+  });
+
   var dirty_directories = [Ti.Filesystem.applicationDataDirectory];
   if (Ti.UI.iOS) {
     var applicationDatabaseDirectory = Ti.Filesystem.applicationDataDirectory.replace("Documents/","") + "Library/Private%20Documents/";
