@@ -6,9 +6,13 @@ var assert = require('/api/Assert');
 var Spec = require("/api/Spec");
 var io = require('/lib/socket.io');
 var osname = Ti.Platform.osname;
+var socket, room;
+
+if (!Ti.App.Properties.hasProperty("tishadow:uuid")) {
+  Ti.App.Properties.setString("tishadow:uuid",Ti.Platform.createUUID());
+}
 
 exports.currentApp;
-var socket, room;
 exports.connect = function(o) {
   room = o.room;
   var version_property = "tishadow:" + room + ":version";
@@ -20,6 +24,7 @@ exports.connect = function(o) {
   socket.on("connect", function() {
     socket.emit("join", {
       name : o.name,
+      uuid : Ti.App.Properties.getString("tishadow:uuid"),
       room : o.room,
       version: Ti.App.Properties.getInt(version_property) || undefined
     });

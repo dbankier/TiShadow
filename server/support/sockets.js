@@ -31,18 +31,17 @@ exports.listen = function(app) {
 
       if (e.name === "controller") {
         socket.set('host', true, function() {Logger.log("INFO", "CONTROLLER", "Connected")});
-        Logger.debug(JSON.stringify(rooms.get(room)));
         if (rooms.get(room).devices) {
-          rooms.get(room).devices.forEach(function(d) {
-            socket.emit("device_connect", {name: d, id: new Buffer(d).toString('base64')});
-          });
+          for (var uuid in rooms.get(room).devices) {
+            socket.emit("device_connect", {name: rooms.get(room).devices[uuid].name, id:uuid}); 
+          };
         }
       } else{
-        socket.set('name', e.name);
+        socket.set('uuid', e.uuid);
         socket.set('host', false, function() {Logger.log("INFO", e.name, "Connected")});
-        e.id = new Buffer(e.name).toString('base64');
+        e.id = e.uuid;
         sio.sockets.in(room).emit("device_connect", e);
-        rooms.addDevice(room, e.name);
+        rooms.addDevice(room, e.uuid, e);
         if (config.isManageVersions && rooms.get(room).version && e.version !== rooms.get(room).version){
           socket.emit("bundle",{name: rooms.get(room).name});
         }
@@ -80,11 +79,12 @@ exports.listen = function(app) {
     });
 
     socket.on('log', function(data) {
-      socket.get("name", function(err, name) {
+      socket.get("uuid", function(err, uuid) {
         socket.get("room", function(err, room) {
-          if (name && room) {
+          if (uuid && room) {
+            var curr = rooms.getDevice(room, uuid); 
             data.level = data.level || '';
-            data.name = name;
+            data.name = curr.name;
             data.message = data.message || '';
             Logger.log(data.level, data.name, data.message);
             sio.sockets.in(room).emit("device_log", data);
@@ -98,17 +98,19 @@ exports.listen = function(app) {
         if (host) {
           //sio.sockets.emit('disconnect');
         } else {
-          socket.get("name", function(err, name) {
+          socket.get("uuid", function(err,uuid) {
             socket.get("room", function(err, room) {
-              Logger.log("WARN", name,"Disconnected");
-              sio.sockets.in(room).emit("device_disconnect", {name: name, id: new Buffer(name).toString('base64')});
-              rooms.removeDevice(room, name);
+              var curr = rooms.getDevice(room, uuid); 
+              if (curr) {
+                Logger.log("WARN", curr.name,"Disconnected");
+                sio.sockets.in(room).emit("device_disconnect", {name: curr.name, id:uuid});
+              }
+              rooms.removeDevice(room, uuid);
             });
           });
         }
       });
     });
-
   });
 };
 
