@@ -38,7 +38,7 @@ exports.postBundle = function(req, res) {
   var data = JSON.parse(req.body.data),
       name = req.files.bundle.name.replace(".zip",""),
       room = data.room;
-  rooms.addBundle(room, req.files.bundle.path);
+  rooms.addBundle(room, name, req.files.bundle.path);
   var curr = rooms.get(room);
   Logger.log("INFO", null, "New Bundle: " + curr.bundle + " | " + name);
 

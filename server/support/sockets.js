@@ -43,8 +43,8 @@ exports.listen = function(app) {
         e.id = new Buffer(e.name).toString('base64');
         sio.sockets.in(room).emit("device_connect", e);
         rooms.addDevice(room, e.name);
-        if (config.isManageVersions && e.version !== rooms.get(room).version){
-          socket.emit("bundle",{});
+        if (config.isManageVersions && rooms.get(room).version && e.version !== rooms.get(room).version){
+          socket.emit("bundle",{name: rooms.get(room).name});
         }
       }
 
@@ -60,7 +60,7 @@ exports.listen = function(app) {
               if(command === 'bundle') {
                 data.name = path.basename(data.bundle).replace(".zip","");
                 Logger.log("INFO", null, "New Bundle: " + data.bundle + " | " + data.name);
-                rooms.addBundle(room, data.bundle);
+                rooms.addBundle(room, data.name, data.bundle);
                 var curr = rooms.get(room);
                 data.bundle = null;
                 if (config.isManageVersions) {

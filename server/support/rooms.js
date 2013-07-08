@@ -2,9 +2,10 @@
 
 var rooms = {};
 
-exports.addBundle = function(room, bundle) {
+exports.addBundle = function(room, name, bundle) {
   rooms[room] = rooms[room] || {};
   rooms[room].bundle = bundle;
+  rooms[room].name = name;
   rooms[room].version = (new Date()).getTime();
 };
 
