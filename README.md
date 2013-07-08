@@ -62,10 +62,15 @@ The server can be started by typing the following command:
 The following options are available:
 
 ```
-    -h, --help          output usage information
-    -p, --port <port>   server port
-    -l, --long-polling  force long polling
+    -h, --help             output usage information
+    -p, --port <port>      server port
+    -l, --long-polling     force long polling
+    -z, --manage-versions  manage and automatically update bundles
 ```
+
+If `--manage-versions` is enabled, then bundle versions are tracked and
+devices that connect with an older version will automatically be
+updated.
 
 ### Remote Server Mode and Private Rooms
 
