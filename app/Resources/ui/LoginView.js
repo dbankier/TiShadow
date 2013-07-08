@@ -48,31 +48,31 @@ function LoginView() {
   });
 
 
-  host.value = Ti.App.Properties.getString("address");
+  host.value = Ti.App.Properties.getString("tishadow:address");
   host.addEventListener("change", function() {
-    Ti.App.Properties.setString("address", host.value);
+    Ti.App.Properties.setString("tishadow:address", host.value);
   });
 
-  port.value = Ti.App.Properties.getString("port");
+  port.value = Ti.App.Properties.getString("tishadow:port");
   port.addEventListener("change", function() {
-    Ti.App.Properties.setString("port", port.value);
+    Ti.App.Properties.setString("tishadow:port", port.value);
   });
 
-  room.value = Ti.App.Properties.getString("room");
+  room.value = Ti.App.Properties.getString("tishadow:room");
   room.addEventListener("change", function() {
-    Ti.App.Properties.setString("room", room.value);
+    Ti.App.Properties.setString("tishadow:room", room.value);
   });
 
 
 
   button.addEventListener('click', function() {
-    if (Ti.App.Properties.getString("port","").length === 0) {
+    if (Ti.App.Properties.getString("tishadow:port","").length === 0) {
       port.value = "3000";
     }
 
     // If user unnecessarily enters full url in the host field
     // e.g. http://localhost:3000
-    Ti.App.Properties.setString("port", port.value);
+    Ti.App.Properties.setString("tishadow:port", port.value);
     if (host.value.match("^http://")) {
       host.value = host.value.substring(7);
       host.fireEvent("change");
@@ -95,7 +95,7 @@ function LoginView() {
       port.fireEvent("change");
       rightTab.fireEvent('click');
       alert("Please use advanced settings to configure port");
-    } else if (Ti.App.Properties.getString("address","").length === 0) {
+    } else if (Ti.App.Properties.getString("tishadow:address","").length === 0) {
       alert("IP Address Required");
     } else {
       window.fireEvent("connect");

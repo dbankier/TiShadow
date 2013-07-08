@@ -101,7 +101,9 @@ exports.clearCache = function() {
   require("/api/UI").closeAll();
   
   Ti.App.Properties.listProperties().forEach(function(property) {
-    Ti.App.Properties.removeProperty(property);
+    if (!property.match("^tishadow:")) {
+      Ti.App.Properties.removeProperty(property);
+    }
   });
 
   var dirty_directories = [Ti.Filesystem.applicationDataDirectory];
