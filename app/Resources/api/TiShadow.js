@@ -11,7 +11,7 @@ exports.currentApp;
 var socket, room;
 exports.connect = function(o) {
   room = o.room;
-  var version_property = "__tishadow:" + room + ":version";
+  var version_property = "tishadow:" + room + ":version";
   if (socket) {
     exports.disconnect();
   }
