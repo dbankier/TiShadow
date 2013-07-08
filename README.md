@@ -156,22 +156,8 @@ __Some notes and limitations__
 
 ### Keeping it Clean
 
-If you want to make sure the previous app deployed is closed prior to
-updating or launching the new one, include the following code snippet in your
-`app.js` file:
-
-```javascript
-    if (typeof exports !== "undefined") {
-      exports.close = function() {
-        // Your code to close, e.g, main_window.close();
-      };
-      Ti.API.info("Running in TiShadow");
-    }
-```
-
-If you are using [Alloy](https://github.com/appcelerator/alloy), you can
-use the following [alloy.jmk](https://gist.github.com/dbankier/5087906) file instead.
-
+**NEW** - TiShadow now automatically cleans up Windows and TabGroups - thanks
+@FokkeZB
 
 Testing / Assertions
 --------------------
