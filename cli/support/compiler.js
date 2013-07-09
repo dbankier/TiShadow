@@ -29,7 +29,7 @@ function prepare(src, dst, callback) {
       .replace(/\.(title|text)id\s{0,}\=\s{0,}['"](\w+)['"]/g, '.$1 = L(\'$2\')')
       // Replace strings like "titleid: 'save'" -> "title: L('save')"
       .replace(/\b(title|text)id:\s{0,}['"](\w+)['"]/g, '$1: L(\'$2\')')
-      .replace(/console./g, "__log.")
+      .replace(/console\./g, "__log.")
       .replace(/\/\/addSpy\(/g,"addSpy(")
       .replace(/Ti(tanium)?.API/g, "__log");
     if (src.match("_spec.js$")) {
