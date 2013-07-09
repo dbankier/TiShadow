@@ -63,6 +63,8 @@ exports.connect = function(o) {
     exports.clearCache();
   });
 
+  socket.on('close', exports.closeApp);
+
   socket.on('disconnect', function() {
     if(o.disconnected) {
       o.disconnected();

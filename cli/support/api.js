@@ -37,6 +37,11 @@ exports.clearCache = function(env) {
   postToServer("clear");
 };
 
+exports.closeApp = function(env) {
+  config.init(env);
+  postToServer("close");
+};
+
 exports.newBundle = function(file_list) {
   var fn;
   if (config.host === "localhost") {

@@ -61,6 +61,13 @@ program.command('spec')
   .option('-x, --junit-xml','output report as JUnit XML')
   .action(compiler);
 
+program.command('close')
+  .description('close the running app on the device'.grey)
+  .option('-o, --host <host>', 'server host name / ip address')
+  .option('-p, --port <port>', 'server port')
+  .option('-r, --room <room>', 'server room')
+  .action(api.closeApp);
+
 program.command('repl')
   .description('launch REPL'.grey)
   .option('-o, --host <host>', 'server host name / ip address')

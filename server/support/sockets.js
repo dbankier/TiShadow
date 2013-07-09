@@ -51,7 +51,7 @@ exports.listen = function(app) {
 
     // Host only commands
     // message event - for code snippets
-    ['snippet','clear','bundle'].forEach(function(command) {
+    ['snippet','clear','bundle','close'].forEach(function(command) {
       socket.on(command, function(data,fn) {
         socket.get("host", function (err,host){
           socket.get("room", function(err, room) {
