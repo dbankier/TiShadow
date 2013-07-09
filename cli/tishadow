@@ -5,8 +5,18 @@ var
     colors   = require('colors'),
     config   = require('./support/config'),
     pkginfo  = require('pkginfo'),
-    program  = require('commander')
+    program  = require('commander'),
+    fs       = require('fs'),
+    watch    = require('watch')
     ;
+
+// check if watch enabled
+var at_index = process.argv.indexOf("@");
+config.isWatching = false;
+if (at_index > -1) {
+  config.isWatching = true;
+  process.argv.splice(at_index,1);
+}
 
 
 pkginfo(module, 'name', 'version');
@@ -111,12 +121,25 @@ program.command('appify')
   .option('-r, --room <room>', 'set server room')
   .action(require('./support/appify').build);
 
-
-program.parse(process.argv);
-
-// Display help on an invalid command
-if (program.args.length === 0 || typeof program.args[program.args.length -1] === 'string'){
-  program.help();
+function execute() {
+  program.parse(process.argv);
+  // Display help on an invalid command
+  if (program.args.length === 0 || typeof program.args[program.args.length -1] === 'string'){
+    program.help();
+  }
 }
 
+if (config.isWatching) {
+  function watcher(f, curr, prev) {
+    if (curr || prev) {
+      execute();
+    }
+  }
+  watch.watchTree(config.resources_path,watcher);
+  if (fs.existsSync(config.spec_path)) {
+    watch.watchTree(config.spec_path,watcher);
+  }
+} 
+
+execute()
 

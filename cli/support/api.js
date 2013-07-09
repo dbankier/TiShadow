@@ -5,17 +5,26 @@ var config = require("./config"),
     http = require('http'),
     path = require('path'),
     fs = require('fs'),
-    rest = require('restler');
+    rest = require('restler'),
+    connected_socket;
+
 
 // Used to be an http request - now over sockets.
 function postToServer(path, data) {
-  require("./socket").connect(function(socket) {
-    socket.emit(path,data);
-    if (!config.isTailing) {
-      socket.disconnect();
-    }
+  if (connected_socket) {
+    connected_socket.socket.reconnect();
+    connected_socket.emit(path,data);
     logger.info(path.toUpperCase() + " sent.");
-  });
+  } else {
+    require("./socket").connect(function(socket) {
+      connected_socket = socket;
+      socket.emit(path,data);
+      if (!config.isTailing){
+        socket.disconnect();
+      }
+      logger.info(path.toUpperCase() + " sent.");
+    });
+  }
 }
 
 // For posting the zip file to a remote TiShadow server (http POST)

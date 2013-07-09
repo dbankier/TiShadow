@@ -22,6 +22,11 @@ if (fs.existsSync(config_path)) {
   config = require(config_path);
 }
 config.base = base;
+config.resources_path    = path.join(base, 'Resources');
+config.modules_path      = path.join(base, 'modules');
+config.spec_path         = path.join(base, 'spec');
+config.i18n_path         = path.join(base, 'i18n');
+config.build_path        = path.join(base, 'build');
 
 //Config setup
 config.buildPaths = function(env, callback) {
@@ -29,11 +34,6 @@ config.buildPaths = function(env, callback) {
   getAppName(function(result) {
     var app_name = config.app_name = result.name || "bundle";
     config.base              = base;
-    config.resources_path    = path.join(base, 'Resources');
-    config.modules_path      = path.join(base, 'modules');
-    config.spec_path         = path.join(base, 'spec');
-    config.i18n_path         = path.join(base, 'i18n');
-    config.build_path        = path.join(base, 'build');
     config.tishadow_build    = path.join(config.build_path, 'tishadow');
     config.last_updated_file = path.join(config.tishadow_build, 'last_updated'); 
     config.tishadow_src      = path.join(config.tishadow_build, 'src');

@@ -14,7 +14,8 @@
     "wrench": "1.4.x",
     "underscore": "1.4.x",
     "archiver": "0.4.3",
-    "express": "~3.3.4"
+    "express": "~3.3.4",
+    "watch": "~0.8.0"
   },
   "devDependencies": {},
   "optionalDependencies": {},
