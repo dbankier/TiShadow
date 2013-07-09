@@ -4,12 +4,14 @@
 */
 
 var express = require('express'),
+    http = require("http"),
+    app = express(),
     routes = require('./routes'),
     sockets = require('./support/sockets'),
     Logger = require('./logger'),
     config = require('../cli/support/config');
 
-var app = module.exports = express.createServer();
+var server = module.exports = http.createServer(app);
 
 // Configuration
 app.configure(function(){
@@ -42,9 +44,9 @@ app.get('/bundle/:room', routes.getBundle);
 app.post('/bundle', routes.postBundle);
 
 //FIRE IT UP
-sockets.listen(app);
-app.listen(config.port);
-if (app.address() != null) {
+sockets.listen(server);
+server.listen(config.port);
+if (server.address() != null) {
     Logger.debug("TiShadow server started. Go to http://"+ config.host + ":" + config.port);
 } else {
     Logger.error("Failed to start server on port: " + config.port );
