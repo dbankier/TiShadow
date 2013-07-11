@@ -97,7 +97,8 @@ function mapAlloyFiles(last_stat) {
     // Alloy root files affect all resources
     if (ln === 1) {
       logger.debug('Alloy root file triggered full push: ' + file);
-      return file_list_files;
+      file_list.files = file_list_files;
+      return file_list;
     }
     
     if (file_path[0] === 'assets' || file_path[0] === 'lib') {
