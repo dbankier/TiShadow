@@ -22,6 +22,7 @@ if (fs.existsSync(config_path)) {
   config = require(config_path);
 }
 config.base = base;
+config.alloy_path          = path.join(base, 'app');
 config.resources_path    = path.join(base, 'Resources');
 config.modules_path      = path.join(base, 'modules');
 config.spec_path         = path.join(base, 'spec');
@@ -40,9 +41,9 @@ config.buildPaths = function(env, callback) {
     config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
     config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
-    config.alloy_path        = path.join(config.resources_path, 'app');
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
 
+    config.isAlloy = fs.existsSync(config.alloy_path);
     config.isPatch = env.patch;
     config.isUpdate = (env.update || env.patch) 
                     && fs.existsSync(config.tishadow_src)
