@@ -247,10 +247,7 @@ function mapAlloyFiles(last_stat) {
     
     file_list.files = undoubled;
   }
-  
-  logger.info(JSON.stringify(alloy_list.files));
-  logger.info(JSON.stringify(file_list.files));
-  
+    
   return file_list;
 }
 
