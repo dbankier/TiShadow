@@ -22,7 +22,7 @@ if (fs.existsSync(config_path)) {
   config = require(config_path);
 }
 config.base = base;
-config.alloy_path          = path.join(base, 'app');
+config.alloy_path        = path.join(base, 'app');
 config.resources_path    = path.join(base, 'Resources');
 config.modules_path      = path.join(base, 'modules');
 config.spec_path         = path.join(base, 'spec');
