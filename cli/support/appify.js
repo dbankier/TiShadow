@@ -69,6 +69,9 @@ exports.build = function(env) {
         if(fs.existsSync(path.join(config.modules_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.modules_path,platform),path.join(dest_modules,platform),{preserve:true});
         }
+        if(fs.existsSync(path.join(config.platform_path,platform))) {
+          wrench.copyDirSyncRecursive(path.join(config.platform_path,platform),path.join(dest_resources,platform));
+        }
       });
       // copy tiapp.xml and inject modules
       var source_tiapp = fs.readFileSync(path.join(config.base,"tiapp.xml"),'utf8');
