@@ -25,6 +25,7 @@ config.base = base;
 config.alloy_path        = path.join(base, 'app');
 config.resources_path    = path.join(base, 'Resources');
 config.modules_path      = path.join(base, 'modules');
+config.platform_path     = path.join(base, 'platform');
 config.spec_path         = path.join(base, 'spec');
 config.i18n_path         = path.join(base, 'i18n');
 config.build_path        = path.join(base, 'build');

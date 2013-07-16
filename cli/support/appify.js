@@ -47,6 +47,7 @@ exports.build = function(env) {
   var dest = env.destination || ".";
   var dest_resources = path.join(dest,"Resources");
   var dest_modules = path.join(dest,"modules");
+  var dest_platform = path.join(dest,"platform");
   var template_file = path.join(tishadow_app,"Resources","appify.js");
 
   //set to bundle mode
@@ -68,6 +69,9 @@ exports.build = function(env) {
         }
         if(fs.existsSync(path.join(config.modules_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.modules_path,platform),path.join(dest_modules,platform),{preserve:true});
+        }
+        if(fs.existsSync(path.join(config.platform_path,platform))) {
+          wrench.copyDirSyncRecursive(path.join(config.platform_path,platform),path.join(dest_platform,platform));
         }
       });
       // copy tiapp.xml and inject modules
