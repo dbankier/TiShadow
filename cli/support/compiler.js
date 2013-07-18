@@ -25,7 +25,9 @@ function prepare(src, dst, callback) {
       .replace(/Ti(tanium)?.UI.createWindow\(/g, "__ui.createWindow(")
       .replace(/Ti(tanium)?.UI.createTabGroup\(/g, "__ui.createTabGroup(")
       .replace(/Ti.Locale.getString/g, "L")
-      .replace(/([ :=\(])(['"])(\/[^'"].*?)(['"])/g, "$1__p.file($2$3$4)") // ignores "/"
+      .replace(/([ :=\(\+]+)(['"])(\/[^'"].*?)(['"])/g, function($0, $1, $2, $3, $4) {
+          if ($1.indexOf("+") > -1 ) { return $0; } else { return $1 +'__p.file(' +$2 + $3+ $4+ ')'; }
+        }) // ignores "/" or if preceeded by plus
       // Replace strings like ".titleid = 'save'" -> "title = L('save')"
       .replace(/\.(title|text)id\s{0,}\=\s{0,}['"](\w+)['"]/g, '.$1 = L(\'$2\')')
       // Replace strings like "titleid: 'save'" -> "title: L('save')"
