@@ -30,6 +30,7 @@ program.command('server')
   .description('start the TiShadow server'.grey)
   .option('-p, --port <port>', 'server port')
   .option('-l, --long-polling', 'force long polling')
+  .option('-i, --internal-ip <internal-ip>', 'internal ip to bind to')
   .option('-z, --manage-versions', 'manage and automatically update bundles')
   .action(function(env) {
     config.init(env);

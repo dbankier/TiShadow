@@ -64,6 +64,7 @@ config.init = function(env) {
   config.host     = env.host || config.host || "localhost";
   config.port     = env.port || config.port || "3000";
   config.room     = env.room || config.room || "default";
+  config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.isManageVersions = env.manageVersions;
 };

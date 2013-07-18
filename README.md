@@ -65,6 +65,7 @@ The following options are available:
     -h, --help             output usage information
     -p, --port <port>      server port
     -l, --long-polling     force long polling
+    -i, --internal-ip <internal-ip>  internal ip to bind to
     -z, --manage-versions  manage and automatically update bundles
 ```
 
