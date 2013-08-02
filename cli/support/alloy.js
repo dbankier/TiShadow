@@ -47,14 +47,14 @@ exports.mapFiles = function(last_stat) {
     } else if (file_path[0] === 'controllers') {
       file_path.unshift('alloy');
 
-    } else if (file_path[0] === 'views') {
+    } else if (file_path[0] === 'views' && file_path[la].match(/\.xml$/)) {
       file_path[0] = 'controllers';
       file_path[la] = file_path[la].replace('.xml', '.js');
       file_path.unshift('alloy');
 
       undouble = true;
 
-    } else if (file_path[0] === 'styles') {
+    } else if (file_path[0] === 'styles' && file_path[la].match(/\.tss$/)) {
 
       // app.tss effects all controllers and widget controllers
       if (ln === 2 && file_path[la] === 'app.tss') {
@@ -81,7 +81,7 @@ exports.mapFiles = function(last_stat) {
       if (file_path[0] === 'assets') {
         file_path.shift();
 
-      } else if (file_path[0] === 'styles') {
+      } else if (file_path[0] === 'styles' && file_path[la].match(/\.tss$/)) {
 
         if (file_path.length === 2 && file_path[la] === 'app.tss') {
           addAllControllers = true;
@@ -117,14 +117,14 @@ exports.mapFiles = function(last_stat) {
       } else if (file_path[2] === 'controllers') {
         file_path.unshift('alloy');
 
-      } else if (file_path[2] === 'views') {
+      } else if (file_path[2] === 'views' && file_path[la].match(/\.xml$/)) {
         file_path[2] = 'controllers';
         file_path[la] = file_path[la].replace('.xml', '.js');
         file_path.unshift('alloy');
 
         undouble = true;
 
-      } else if (file_path[2] === 'styles') {
+      } else if (file_path[2] === 'styles' && file_path[la].match(/\.tss$/)) {
         file_path[2] = 'controllers';
         file_path[la] = file_path[la].replace('.tss', '.js');
         file_path.unshift('alloy');
