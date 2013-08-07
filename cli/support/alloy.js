@@ -26,7 +26,7 @@ exports.mapFiles = function(last_stat) {
     // Alloy root files affect all resources
     if (ln === 1) {
       logger.debug('Alloy root file triggered full push: ' + file);
-      file_list.files = fi;e_list_files;
+      file_list.files = file_list_files;
       return file_list;
     }
 
