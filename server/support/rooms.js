@@ -11,7 +11,7 @@ exports.addBundle = function(room, name, bundle) {
   safeCheck(room);
   rooms[room].bundle = bundle;
   rooms[room].name = name;
-  rooms[room].version = (new Date()).getTime();
+  rooms[room].version = (new Date()).getTime().toString();
 };
 
 exports.addDevice = function(room, uuid, o) {
