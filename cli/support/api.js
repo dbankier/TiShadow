@@ -5,7 +5,7 @@ var config = require("./config"),
     http = require('http'),
     path = require('path'),
     fs = require('fs'),
-    rest = require('restler'),
+    request = require('request'),
     connected_socket;
 
 
@@ -30,15 +30,10 @@ function postToServer(path, data) {
 // For posting the zip file to a remote TiShadow server (http POST)
 function postZipToServer (_path, data) {
   data.room = config.room;
-  var r = rest.post("http://" + config.host + ":" + config.port + "/" + _path, {
-    multipart:true,
-    data: {
-      data: JSON.stringify(data),
-      bundle: rest.file(config.bundle_file, null, fs.statSync(config.bundle_file).size)
-    }
-  }).on("complete", function(o) {
-    console.log(JSON.stringify(o));
-  })
+  var r = request.post("http://" + config.host + ":" + config.port + "/" + _path);
+  var form = r.form();
+  form.append('data', JSON.stringify(data));
+  form.append('bundle', fs.createReadStream(config.bundle_file));
 }
 
 exports.clearCache = function(env) {
