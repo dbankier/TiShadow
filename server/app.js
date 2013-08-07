@@ -40,7 +40,7 @@ if (config.port === undefined) {
 
 // HTTP Routes
 app.get('/', routes.index);
-app.get('/bundle/:room', routes.getBundle);
+app.get('/bundle/:room/:uuid?', routes.getBundle);
 app.post('/bundle', routes.postBundle);
 
 //FIRE IT UP

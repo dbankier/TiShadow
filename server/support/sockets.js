@@ -43,7 +43,7 @@ exports.listen = function(app) {
         sio.sockets.in(room).emit("device_connect", e);
         rooms.addDevice(room, e.uuid, e);
         if (config.isManageVersions && rooms.get(room).version && e.version !== rooms.get(room).version){
-          socket.emit("bundle",{name: rooms.get(room).name});
+          socket.emit("bundle",{name: rooms.get(room).name, version: rooms.get(room).version});
         }
       }
 

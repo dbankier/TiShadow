@@ -25,8 +25,10 @@ exports.connect = function(o) {
     socket.emit("join", {
       name : o.name,
       uuid : Ti.App.Properties.getString("tishadow:uuid"),
+      os_osname: Ti.Platform.osname,
+      os_version: Ti.Platform.version,
       room : o.room,
-      version: Ti.App.Properties.getInt(version_property) || undefined
+      version: Ti.App.Properties.getString(version_property) || undefined
     });
 
     if(o.callback) {
@@ -51,12 +53,7 @@ exports.connect = function(o) {
     if(data.locale) {
       require("/api/Localisation").locale = data.locale;
     }
-    if (data.version) {
-      Ti.App.Properties.setInt(version_property, data.version);
-    } else {
-      Ti.App.Properties.removeProperty(version_property);
-    }
-    loadRemoteZip(data.name, "http://" + o.host + ":" + o.port + "/bundle", data);
+    loadRemoteZip(data.name, "http://" + o.host + ":" + o.port + "/bundle", data, version_property);
   });
 
   socket.on('clear', function() {
@@ -151,10 +148,10 @@ exports.clearCache = function() {
     log.error(utils.extractExceptionData(e));
   }
   log.info("Cache cleared");
-}
+};
 
 
-function loadRemoteZip(name, url, data) {
+function loadRemoteZip(name, url, data, version_property) {
   var xhr = Ti.Network.createHTTPClient();
   xhr.setTimeout(10000);
   xhr.onload=function(e) {
@@ -173,11 +170,16 @@ function loadRemoteZip(name, url, data) {
       // Extract
       var dataDir=Ti.Filesystem.applicationDataDirectory + "/";
       Compression.unzip(dataDir + path_name, dataDir + path_name + '.zip',true);
+      if (data && data.version && version_property) {
+        Ti.App.Properties.setString(version_property, data.version);
+      } else {
+        Ti.App.Properties.removeProperty(version_property);
+      }
       // Launch
-      if (data.spec && data.spec.run) {
+      if (data && data.spec && data.spec.run) {
         exports.currentApp = path_name;
         Spec.run(path_name, data.spec.junitxml);
-      } else if (data.patch && data.patch.run) {
+      } else if (data && data.patch && data.patch.run) {
         p.clearCache(data.patch.files);
       } else  {
         exports.launchApp(path_name);
@@ -189,7 +191,7 @@ function loadRemoteZip(name, url, data) {
   xhr.onerror = function(e){
     Ti.UI.createAlertDialog({title:'XHR', message:'Error: ' + e.error}).show();
   };
-  xhr.open('GET', url + "/" + room);
+  xhr.open('GET', url + "/" + room + "/" + Ti.App.Properties.getString("tishadow:uuid") );
   xhr.send();
 }
 
