@@ -1,4 +1,3 @@
-var log = require("/api/Log");
 var _ = require("/lib/underscore");
 var TiShadow = require("/api/TiShadow");
 
@@ -11,19 +10,12 @@ function stack(e) {
 	if (!containers[app]) {
 		containers[app] = {};
 	}
-	
 	containers[app][container] = e.source;
-	
-	log.debug("Stacked container #" + _.size(containers[app]) + " : " + app + " / " + container);
-	
 	return;
 }
 
 function unstack(e) {
-	log.debug("Unstacked container #" + _.size(containers[e.app]) + " : " + e.app + "/" + e.container);
-	
 	delete containers[e.app][e.container];
-	
 	return;
 }
 
@@ -38,9 +30,6 @@ var create = function(o) {
 	o.addEventListener('close', function(e) {
     unstack({ app: app, container: container });
   });
-	
-	log.debug("Created container: " + app + " / " + container);
-	
 	return o;
 };
 
@@ -55,13 +44,9 @@ exports.createTabGroup= function(paramaters) {
 exports.closeApp = function(app) {
 
 	if (app && containers[app]) {
-		
 		for (var c in containers[app]) {
-
 			if (containers[app].hasOwnProperty(c)) {
 				containers[app][c].close();
-				
-				log.debug("Closed container: " + app + " / " + c);
 			}
 		}
 	}
