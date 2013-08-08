@@ -62,8 +62,7 @@ function prepareFiles(index, file_list, isSpec, callback) {
 function finalise(file_list,callback) {
   // Bundle up to go
   var total = file_list.files.length;
-  // Send the directories and files (see bundle.zip)
-  bundle.pack(file_list.dirs.concat(file_list.files),function(written) { 
+  bundle.pack(file_list.files,function(written) { 
     logger.info(total+ " file(s) bundled."); 
     fs.touch(config.last_updated_file);
     if (config.isBundle) {
@@ -135,7 +134,6 @@ module.exports = function(env, callback) {
      prepareFiles(0, file_list, false, function() {
        prepareFiles(0, spec_list, true, function() {
           file_list.files = file_list.files.concat(i18n_list.files).concat(spec_list.files);
-          file_list.dirs = file_list.dirs.concat(i18n_list.dirs).concat(spec_list.dirs);
           finalise(file_list,callback);
        });
      });

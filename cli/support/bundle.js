@@ -1,11 +1,11 @@
-var config = require("./config"), 
-    fs = require("fs"), 
-    path = require("path"), 
-    archiver = require('archiver'), 
+var config = require("./config"),
+    fs = require("fs"),
+    path = require("path"),
+    archiver = require('archiver'),
     Stream = require('stream'),
     lazystream = require('lazystream');
 
-
+// Note that only files and not directories are sent to the function
 exports.pack = function(files, callback) {
   var out = fs.createWriteStream(config.bundle_file);
   // Use zlib compression 1 (fastest) to overcome a bug currently in Archiver on Macs
@@ -17,29 +17,24 @@ exports.pack = function(files, callback) {
 
   for(var i = 0, ln = files.length; i < ln; i++) {
     var file = files[i],
-    filename = config.tishadow_src + '/' + file,
-    stream,
-    isDir = fs.lstatSync(filename).isDirectory();
+        filename = config.tishadow_src + '/' + file,
+        stream;
 
-    // Skip directories, they are created as part of the filenames
-    // This means that empty directories are not stored at the moment
-    if(!isDir) {
-      // Lazy load streams, to counteract 'too many files' error on Node
-      // Lazystream only creates the actual ReadStream when a read command is received
-      stream = new lazystream.Readable(function (options) {
-        return fs.createReadStream(this.filename);
-      });
-      stream.filename = filename;
+    // Lazy load streams, to counteract 'too many files' error on Node
+    // Lazystream only creates the actual ReadStream when a read command is received
+    stream = new lazystream.Readable(function (options) {
+      return fs.createReadStream(this.filename);
+    });
+    stream.filename = filename;
 
-      // Archiver takes care of the async nature of reading streams
-      // Starting to read the next stream when the previous stream has closed
-      // Thus it is save to append them all here
-      zip.append(stream, {name : files[i]});
-    }
+    // Archiver takes care of the async nature of reading streams
+    // Starting to read the next stream when the previous stream has closed
+    // Thus it is save to append them all here
+    zip.append(stream, {name : files[i]});
   }
 
   zip.finalize(function(err, written) {
     callback(err, written);
   });
-}
+};
 
