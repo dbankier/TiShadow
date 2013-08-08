@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 2.0.1
+version: 2.0.3
 apiversion: 2
 description: Lets you zip and unzip files.
 author: Dawson Toth
