@@ -71,7 +71,9 @@ The following options are available:
 
 If `--manage-versions` is enabled, then bundle versions are tracked and
 devices that connect with an older version will automatically be
-updated.
+updated. When using this mode, you can use the `tishadow deploy` command
+to send a new bundle to the server without pushing it to connected
+devices.
 
 ### Remote Server Mode and Private Rooms
 
