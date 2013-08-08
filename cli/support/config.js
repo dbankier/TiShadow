@@ -55,15 +55,16 @@ config.buildPaths = function(env, callback) {
 };
 
 config.init = function(env) {
-  config.isSpec   = env._name === "spec";
-  config.isTailing = env.tailLogs || config.isSpec;
-  config.locale   = env.locale;
-  config.isJUnit  = env.junitXml;
-  config.isREPL   = env._name === "repl";
-  config.isBundle = env._name === "bundle";
-  config.host     = env.host || config.host || "localhost";
-  config.port     = env.port || config.port || "3000";
-  config.room     = env.room || config.room || "default";
+  config.isSpec     = env._name === "spec";
+  config.isDeploy   = env._name === "deploy";
+  config.isTailing  = env.tailLogs || config.isSpec;
+  config.locale     = env.locale;
+  config.isJUnit    = env.junitXml;
+  config.isREPL     = env._name === "repl";
+  config.isBundle   = env._name === "bundle";
+  config.host       = env.host || config.host || "localhost";
+  config.port       = env.port || config.port || "3000";
+  config.room       = env.room || config.room || "default";
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.isManageVersions = env.manageVersions;

@@ -65,10 +65,13 @@ exports.listen = function(app) {
                 if (config.isManageVersions) {
                   data.version = curr.version;
                 }
+                if (!data.deployOnly) {
+                  sio.sockets.in(room).emit(command === "snippet" ? "message" : command, data);
+                }
               } else  {
                 Logger.info(command.toUpperCase() + " requested");
+                sio.sockets.in(room).emit(command === "snippet" ? "message" : command, data);
               }
-              sio.sockets.in(room).emit(command === "snippet" ? "message" : command, data);
               if (fn) {
                 fn();
               }

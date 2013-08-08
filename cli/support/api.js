@@ -53,7 +53,13 @@ exports.newBundle = function(file_list) {
   } else {
     fn = postZipToServer;
   }
-  fn("bundle", {bundle:config.bundle_file, spec: {run: config.isSpec, junitxml: config.isJUnit}, locale: config.locale, patch : {run: config.isPatch, files: file_list}});
+  fn("bundle", {
+    bundle:config.bundle_file,
+    deployOnly: config.isDeploy || undefined,
+    spec: {run: config.isSpec, junitxml: config.isJUnit},
+    locale: config.locale,
+    patch : {run: config.isPatch, files: file_list}
+  });
 };
 
 exports.sendSnippet = function(env) {

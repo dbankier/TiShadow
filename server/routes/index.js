@@ -47,7 +47,9 @@ exports.postBundle = function(req, res) {
   if (config.isManageVersions) {
     data.version = curr.version;
   }
-  sockets.emit(room, "bundle", data);
+  if (!data.deployOnly) {
+    sockets.emit(room, "bundle", data);
+  }
   res.send("OK", 200);
 };
 

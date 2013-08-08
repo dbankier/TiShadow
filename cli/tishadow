@@ -56,6 +56,13 @@ program.command('run')
   .option('-r, --room <room>', 'server room')
   .action(compiler);
 
+program.command('deploy')
+  .description('deploy full application to the server without pushing'.grey)
+  .option('-o, --host <host>', 'server host name / ip address')
+  .option('-p, --port <port>', 'server port')
+  .option('-r, --room <room>', 'server room')
+  .action(compiler);
+
 program.command('bundle')
   .description('prepare a TiShadow bundle without deploying it'.grey)
   .option('-j, --jshint', 'analyse code with JSHint')
