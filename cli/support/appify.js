@@ -15,7 +15,7 @@ _.templateSettings = {
         '<module platform="iphone" version="0.3">net.iamyellow.tiws</module>',
         '<module platform="android" version="0.1">net.iamyellow.tiws</module>',
         '<module platform="iphone" version="1.0.2">ti.compression</module>',
-        '<module platform="android" version="2.0.1">ti.compression</module>'
+        '<module platform="android" version="2.0.3">ti.compression</module>'
  ];
 
 
