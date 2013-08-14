@@ -2,12 +2,12 @@ var config = require("./config"),
     fs = require("fs"),
     path = require("path"),
     archiver = require('archiver'),
-    Stream = require('stream'),
     lazystream = require('lazystream');
 
 // Note that only files and not directories are sent to the function
 exports.pack = function(files, callback) {
   var out = fs.createWriteStream(config.bundle_file);
+  out.on("close", callback);
   // Use zlib compression 1 (fastest) to overcome a bug currently in Archiver on Macs
   zip = archiver('zip', {zlib: {level: 1}});
   zip.on('error', function(err) {
@@ -27,14 +27,9 @@ exports.pack = function(files, callback) {
     });
     stream.filename = filename;
 
-    // Archiver takes care of the async nature of reading streams
-    // Starting to read the next stream when the previous stream has closed
-    // Thus it is save to append them all here
     zip.append(stream, {name : files[i]});
   }
 
-  zip.finalize(function(err, written) {
-    callback(err, written);
-  });
+  zip.finalize();
 };
 
