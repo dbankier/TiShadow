@@ -53,7 +53,8 @@ var includes = [
   Ti.Database.open,
   Ti.Database.execute,
   Ti.Facebook,
-  Ti.Map,
+  Ti.Map.createAnnotation,
+  Ti.Map.createView,
   Ti.Geolocation,
   Ti.Gesture,
   Ti.Accelerometer
