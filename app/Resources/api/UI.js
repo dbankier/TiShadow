@@ -28,7 +28,7 @@ var create = function(fn,args) {
   args.__tishadowApp = app;
 
   // exitOnClose hampers the upgrade process so we will prevent it
-  if (args.exitOnClose) { delete args.exitOnClose; }
+  args.exitOnClose = false;
 
   var o = fn(args);
   o.addEventListener('open', stack);
