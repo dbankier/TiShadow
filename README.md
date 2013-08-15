@@ -49,6 +49,7 @@ e.g.
 **NOTE**: In general upgrade the server side and app at
 the same time (using the `tishadow app` command).
 
+You can upgrade an existing tishadow app using the `--upgrade` flag.
 
 Start the TiShadow Server
 ---------------------
