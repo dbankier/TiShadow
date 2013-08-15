@@ -37,6 +37,7 @@ exports.copyCoreProject = function(env) {
       return false;
     }
     wrench.copyDirSyncRecursive(path.join(tishadow_app, 'Resources'), path.join(dest,'Resources'));
+    logger.info("TiShadow app upgraded");
   } else {
     wrench.copyDirSyncRecursive(tishadow_app, dest);
 
