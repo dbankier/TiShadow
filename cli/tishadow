@@ -42,6 +42,7 @@ program.command('clear')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-c, --ticaster', 'connect to ticaster')
   .action(api.clearCache);
 
 program.command('run')
@@ -54,6 +55,7 @@ program.command('run')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-c, --ticaster', 'connect to ticaster')
   .action(compiler);
 
 program.command('deploy')
@@ -61,6 +63,7 @@ program.command('deploy')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-c, --ticaster', 'connect to ticaster')
   .action(compiler);
 
 program.command('bundle')
@@ -75,6 +78,7 @@ program.command('spec')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-c, --ticaster', 'connect to ticaster')
   .option('-j, --jshint', 'analyse code with JSHint')
   .option('-x, --junit-xml','output report as JUnit XML')
   .action(compiler);
@@ -84,6 +88,7 @@ program.command('close')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-c, --ticaster', 'connect to ticaster')
   .action(api.closeApp);
 
 program.command('repl')
@@ -91,6 +96,7 @@ program.command('repl')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-c, --ticaster', 'connect to ticaster')
   .action(api.sendSnippet);
   
 program.command('log')
@@ -98,9 +104,9 @@ program.command('log')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-c, --ticaster', 'connect to ticaster')
   .action(function(env) {
-    config.init(env);
-    require('./support/socket').connect();
+    config.buildPaths(env, require('./support/socket').connect);
   });
 
 program.command('config')
@@ -132,6 +138,7 @@ program.command('appify')
   .option('-o, --host <host>', 'set server host name / ip address')
   .option('-p, --port <port>', 'set server port')
   .option('-r, --room <room>', 'set server room')
+  .option('-c, --ticaster', 'connect to ticaster')
   .action(require('./support/appify').build);
 
 function execute() {
@@ -154,5 +161,5 @@ if (config.isWatching) {
   }
 } 
 
-execute()
+execute();
 

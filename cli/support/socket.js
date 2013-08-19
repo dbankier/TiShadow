@@ -6,7 +6,7 @@ var logger = require("../../server/logger"),
 
 
 exports.connect = function(onconnect) {
-  var socket = io.connect("http://" + config.host + ":" + config.port);
+  var socket = io.connect("http"+ (config.isTiCaster ? "s" : "") + "://" + config.host + ":" + config.port);
   socket.on('connect', function(data) {
     socket.emit("join", {name: 'controller', room: config.room});
     if (onconnect && typeof onconnect === 'function') {

@@ -18,10 +18,11 @@ if (!target.exists()) {
 
 //Call home
 TiShadow.connect({
-  host: "{{host}}",
-  port: "{{port}}",
-  room: "{{room}}",
-  name: Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address
+  proto: "{{proto}}",
+  host : "{{host}}",
+  port : "{{port}}",
+  room : "{{room}}",
+  name : Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address
 });
 
 //Launch the app

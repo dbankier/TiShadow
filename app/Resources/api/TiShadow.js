@@ -19,7 +19,7 @@ exports.connect = function(o) {
   if (socket) {
     exports.disconnect();
   }
-  socket = io.connect("http://" + o.host + ":"  + o.port, {'force new connection': true});
+  socket = io.connect((o.proto || "http") + "://" + o.host + ":"  + o.port, {'force new connection': true});
 
   socket.on("connect", function() {
     socket.emit("join", {
@@ -53,7 +53,7 @@ exports.connect = function(o) {
     if(data.locale) {
       require("/api/Localisation").locale = data.locale;
     }
-    loadRemoteZip(data.name, "http://" + o.host + ":" + o.port + "/bundle", data, version_property);
+    loadRemoteZip(data.name, (o.proto || "http") + "://" + o.host + ":" + o.port + "/bundle", data, version_property);
   });
 
   socket.on('clear', function() {
