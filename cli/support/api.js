@@ -5,7 +5,7 @@ var config = require("./config"),
     http = require('http'),
     path = require('path'),
     fs = require('fs'),
-    request = require('request'),
+    FormData =require('form-data'),
     connected_socket;
 
 
@@ -30,20 +30,25 @@ function postToServer(path, data) {
 // For posting the zip file to a remote TiShadow server (http POST)
 function postZipToServer (_path, data) {
   data.room = config.room;
-  var r = request.post("http://" + config.host + ":" + config.port + "/" + _path);
-  var form = r.form();
+  var form = new FormData();
   form.append('data', JSON.stringify(data));
   form.append('bundle', fs.createReadStream(config.bundle_file));
+  logger.info('Uploading...');
+  form.submit("http" + (config.isTiCaster ? "s" : "") + "://" + config.host + ":" + config.port + "/" + _path, function(err, response) {
+    response.pipe(process.stdout);
+  });
 }
 
 exports.clearCache = function(env) {
-  config.init(env);
-  postToServer("clear");
+  config.buildPaths(env, function() {
+    postToServer("clear");
+  });
 };
 
 exports.closeApp = function(env) {
-  config.init(env);
-  postToServer("close");
+  config.buildPaths(env, function() {
+    postToServer("close");
+  });
 };
 
 exports.newBundle = function(file_list) {
@@ -63,16 +68,17 @@ exports.newBundle = function(file_list) {
 };
 
 exports.sendSnippet = function(env) {
-  config.init(env);
-  var socket = require("./socket").connect();
-  console.log("TiShadow REPL\n\nlaunchApp(appName), closeApp(), runSpec() and clearCache() methods available.\nrequire(), Ti.include() and assests are relative the running app.\n\n".grey);
-  repl.start({
-    eval: function(command, context, filename, callback) {
-      if (command.trim() !== "(\n)") {
-        socket.emit('snippet',{code: command.substring(1,command.length -2)}, function(e) {
-          callback("".blue);
-        });
+  config.buildPaths(env, function() {
+    var socket = require("./socket").connect();
+    console.log("TiShadow REPL\n\nlaunchApp(appName), closeApp(), runSpec() and clearCache() methods available.\nrequire(), Ti.include() and assests are relative the running app.\n\n".grey);
+    repl.start({
+      eval: function(command, context, filename, callback) {
+        if (command.trim() !== "(\n)") {
+          socket.emit('snippet',{code: command.substring(1,command.length -2)}, function(e) {
+            callback("".blue);
+          });
+        }
       }
-    }
+    });
   });
 };

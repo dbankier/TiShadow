@@ -15,8 +15,8 @@
     "archiver": "0.4.6",
     "express": "~3.3.4",
     "watch": "~0.8.0",
-    "request": "~2.25.0",
-    "lazystream": "~0.1.0"
+    "lazystream": "~0.1.0",
+    "form-data": "~0.1.0"
   },
   "devDependencies": {},
   "optionalDependencies": {},

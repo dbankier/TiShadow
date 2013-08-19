@@ -2,6 +2,7 @@ var path = require("path"),
     fs = require("fs"),
     xml2js = require("xml2js"),
     colors = require("colors"),
+    Logger = require("../../server/logger"),
     base = process.cwd(),
     home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
     config = {};
@@ -10,9 +11,12 @@ var path = require("path"),
 function getAppName(callback) {
   var parser = new xml2js.Parser();
   fs.readFile(path.join(base,'tiapp.xml'), function(err, data) {
-    parser.parseString(data, function (err, result) {
-      callback(result);
-    });
+    if (err) callback({});
+    else {
+      parser.parseString(data, function (err, result) {
+        callback(result);
+      });
+    }
   });
 }
 
@@ -43,7 +47,13 @@ config.buildPaths = function(env, callback) {
     config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
-
+    if (config.isTiCaster && result.ticaster_user && result.ticaster_app) {
+      config.room = result.ticaster_user + ":" + result.ticaster_app;
+    }
+    if (config.room === undefined) {
+      logger.error("ticaster setting missing from tiapp.xml");
+      process.exit();
+    }
     config.isAlloy = fs.existsSync(config.alloy_path);
     config.isPatch = env.patch;
     config.isUpdate = (env.update || env.patch) 
@@ -62,9 +72,15 @@ config.init = function(env) {
   config.isJUnit    = env.junitXml;
   config.isREPL     = env._name === "repl";
   config.isBundle   = env._name === "bundle";
-  config.host       = env.host || config.host || "localhost";
-  config.port       = env.port || config.port || "3000";
-  config.room       = env.room || config.room || "default";
+  config.isTiCaster = env.ticaster;
+  if (!env.ticaster) {
+    config.host     = env.host || config.host || "localhost";
+    config.port     = env.port || config.port || "3000";
+    config.room     = env.room || config.room || "default";
+  } else {
+    config.host     = "www.ticaster.io";
+    config.port     = 443;
+  }
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.isManageVersions = env.manageVersions;
