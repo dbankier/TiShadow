@@ -34,7 +34,8 @@ app.configure('production', function(){
 if (config.port === undefined) {
   config.init({
     port: process.env.PORT,
-    longPolling: true
+    longPolling: true,
+    manageVersions: true
   });
 }
 
