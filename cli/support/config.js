@@ -2,7 +2,7 @@ var path = require("path"),
     fs = require("fs"),
     xml2js = require("xml2js"),
     colors = require("colors"),
-    Logger = require("../../server/logger"),
+    logger = require("../../server/logger"),
     base = process.cwd(),
     home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
     config = {};
