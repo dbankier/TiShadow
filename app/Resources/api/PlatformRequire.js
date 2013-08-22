@@ -4,6 +4,46 @@ var os = Ti.Platform.osname;
 var tishadow_version = Ti.version.replace(/tishadow_?/,"").replace(/\./g,"");
 var _ = require("/lib/underscore");
 
+if (os === "android") {
+  var density_orientation = (Ti.Gesture.orientation === Ti.UI.LANDSCAPE_LEFT) ? "land" : "port",
+      density_folders = (function () {
+
+        var folders = [],
+            ratio = ((Ti.Platform.displayCaps.platformWidth / Ti.Platform.displayCaps.platformHeight) < ((density_orientation === "land") ? (320 / 240) : (240 / 320))) ? "long" : "notlong",
+            logicalDensityFactor = Ti.Platform.displayCaps.logicalDensityFactor,
+            density;
+
+        if (logicalDensityFactor <= 0.75) {
+          density = "ldpi";
+        } else if (logicalDensityFactor <= 1.0) {
+          density = "mdpi";
+        } else if (logicalDensityFactor <= 1.5) {
+          density = "hdpi";
+        } else {
+          density = "xhdpi";
+        }
+
+        folders.push("res-" + ratio + "-%ORIENTATION%-" + density);
+        folders.push("res-%ORIENTATION%-" + density);
+        folders.push("res-" + density);
+
+        if (density === "ldpi") {
+          folders.push("low");
+        } else if (density === "mdpi") {
+          folders.push("medium");
+        } else if (density === "hdpi") {
+          folders.push("high");
+        }
+
+        folders.push("res-mdpi");
+
+        return folders;
+  })();
+
+  Ti.Gesture.addEventListener("orientationchange", function (e) {
+    density_orientation = (e.orientation === Ti.UI.LANDSCAPE_LEFT) ? "land" : "port";
+  });
+}
 
 // The TiShadow build of the Titanium SDK does not cache CommonJS modules loaded
 // from the applicationDataDirectory. This is so that if an update to the app is
@@ -69,6 +109,21 @@ function densityFile(file) {
     var ret_file_name = file_parts.join(".") + "@2x." + ext;
     if (Ti.Filesystem.getFile(ret_file_name).exists()) {
       return ret_file_name;
+    }
+  } else if (os === "android") {
+    var d_file_name = file.replace("android//images/", "android//images/%FOLDER%/"),
+        do_file_name,
+        i;
+    for (i in density_folders) {
+      do_file_name = d_file_name.replace("%FOLDER%", density_folders[i].replace('%ORIENTATION%', density_orientation));
+      do9_file_name = do_file_name.replace('.png', '.9.png');
+      if (Ti.Filesystem.getFile(do9_file_name).exists()) {
+        log.info('return ' + do9_file_name);
+        return do_file_name;
+      } else if (Ti.Filesystem.getFile(do_file_name).exists()) {
+        log.info('return ' + do_file_name);
+        return do_file_name;
+      }
     }
   }
   return file;
