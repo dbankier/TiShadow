@@ -117,16 +117,12 @@ function densityFile(file) {
     for (i in density_folders) {
       do_file_name = d_file_name.replace("%FOLDER%", density_folders[i].replace('%ORIENTATION%', density_orientation));
       do9_file_name = do_file_name.replace('.png', '.9.png');
-      if (Ti.Filesystem.getFile(do9_file_name).exists()) {
-        log.info('return ' + do9_file_name);
-        return do_file_name;
-      } else if (Ti.Filesystem.getFile(do_file_name).exists()) {
-        log.info('return ' + do_file_name);
+      if (Ti.Filesystem.getFile(do_file_name).exists() || Ti.Filesystem.getFile(do9_file_name).exists()) {
         return do_file_name;
       }
     }
   }
-  return file;
+  return null;
 
 }
 exports.file = function(extension) {
@@ -155,7 +151,7 @@ exports.file = function(extension) {
     path = platform_path;
   } else if (!needsJS) { // Might have density file only in platform specific folder
     var platform_dense = densityFile(platform_path);
-    if (Ti.Filesystem.getFile(platform_dense).exists()){
+    if (null !== platform_dense) {
       path = platform_dense;
     }
   }
