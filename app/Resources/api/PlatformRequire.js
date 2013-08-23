@@ -36,6 +36,7 @@ if (os === "android") {
         }
 
         folders.push("res-mdpi");
+        folders.push("");
 
         return folders;
   })();
@@ -45,14 +46,7 @@ if (os === "android") {
   });
 }
 
-// The TiShadow build of the Titanium SDK does not cache CommonJS modules loaded
-// from the applicationDataDirectory. This is so that if an update to the app is
-// deployed, i.e. a file in the applicationDataDirectory is modified, the changes
-// while be loaded. That said loading a CommonJS module every time that it is loaded
-// make the deployed bundle run slowly. So we will manage the caching of those
-// modules here in the code.
 var cache={};
-
 function custom_require(file) {
   try {
     log.info("Requiring: " + file);
@@ -100,14 +94,21 @@ exports.include = function(context) {
   }
 };
 
-// Currently only doing retina check for iOS. Android is TODO
+function injectSuffix(file, suffix) {
+  var file_parts = file.split(".");
+  var ext = file_parts.pop();
+  return file_parts.join(".") + suffix + "." + ext;
+}
+
+//density files only for png files
 function densityFile(file) {
   //iOS Retina Check
-  if ((os === "ipad" || os === "iphone") && Ti.Platform.displayCaps.density === "high") {
-    var file_parts = file.split(".");
-    var ext = file_parts.pop();
-    var ret_file_name = file_parts.join(".") + "@2x." + ext;
-    if (Ti.Filesystem.getFile(ret_file_name).exists()) {
+  if ((os === "ipad" || os === "iphone")) {
+    if (Ti.Filesystem.getFile(file).exists()) {
+      return file;
+    }
+    var ret_file_name = injectSuffix(file, "@2x");
+    if (Ti.Filesystem.getFile(ret_file_name).exists() && Ti.Platform.displayCaps.density === "high") {
       return ret_file_name;
     }
   } else if (os === "android") {
@@ -116,14 +117,13 @@ function densityFile(file) {
         i;
     for (i in density_folders) {
       do_file_name = d_file_name.replace("%FOLDER%", density_folders[i].replace('%ORIENTATION%', density_orientation));
-      do9_file_name = do_file_name.replace('.png', '.9.png');
+      do9_file_name = injectSuffix(do_file_name, '.9');
       if (Ti.Filesystem.getFile(do_file_name).exists() || Ti.Filesystem.getFile(do9_file_name).exists()) {
         return do_file_name;
       }
     }
   }
   return null;
-
 }
 exports.file = function(extension) {
   if (extension === "/" || extension === "//" ) { // Avoid conflicts with Backbone.js
@@ -139,20 +139,21 @@ exports.file = function(extension) {
     }
   }
   // Full Path
-  var path = base + extension;
-
-  //Try platform specific path first
-  var platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
-  //Add ".js" for CommonJS inclusion lookups.
+  var path = base + extension,
+      platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
   var extension_parts = extension.split("/");
   var needsJS = extension_parts[extension_parts.length-1].indexOf(".") === -1;
-  var file = Ti.Filesystem.getFile(platform_path + (needsJS ? ".js" : ""));
-  if (file.exists()) {
-    path = platform_path;
-  } else if (!needsJS) { // Might have density file only in platform specific folder
+  var isPNG = extension.toLowerCase().match("\\.png$");
+  if (!isPNG) {
+    var file = Ti.Filesystem.getFile(platform_path + (needsJS ? ".js" : ""));
+    if (file.exists()) {
+      path = platform_path;
+    }
+  } else { 
     var platform_dense = densityFile(platform_path);
     if (null !== platform_dense) {
       path = platform_dense;
+      log.debug("Density File: " + path);
     }
   }
   return path;
