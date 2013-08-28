@@ -13,6 +13,7 @@ this.runSpec = function() {
 this.getSpy = function(name) {
   return spys[name];
 };
+this.Ti.Shadow = true;
 
 var spys = {};
 var context = this;
