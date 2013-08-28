@@ -18,6 +18,7 @@ function prepare(src, dst, callback) {
     var src_text = "var __ui = require('/api/UI'), __p = require('/api/PlatformRequire'), __log = require('/api/Log'), "
       + "assert = require('/api/Assert'), L = require('/api/Localisation').fetchString, "
       + "addSpy = require('api/Beach').addSpy;\n"
+      + "Ti.Shadow = true;\n"
       + fs.readFileSync(src).toString()
       .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+app_name.replace(/ /g,"_")+"/'")
       .replace(/(^|[^\.])require\(/g, "$1__p.require(")
