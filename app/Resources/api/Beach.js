@@ -26,6 +26,7 @@ exports.eval = function(message) {
       .replace(/Ti(tanium)?.include\(/g, "__p.include(this,")
       .replace(/Ti(tanium)?.UI.createWindow\(/g, "__ui.createWindow(")
       .replace(/Ti(tanium)?.UI.createTabGroup\(/g, "__ui.createTabGroup(")
+      .replace(/Ti(tanium)?.App.(addEventListener|removeEventListener|fireEvent)/g, "__app.$2")
       .replace(/Ti.Locale.getString/g, "L")
       .replace(/([ :=\(])(['"])(\/[^'"].*?)(['"])/g, "$1__p.file($2$3$4)") // ignores "/"
       .replace(/Ti(tanium)?.API/g, "__log")

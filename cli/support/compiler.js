@@ -16,7 +16,7 @@ function prepare(src, dst, callback) {
   var app_name = config.app_name;
   if (src.match("js$")){ 
     var src_text = "var __ui = require('/api/UI'), __p = require('/api/PlatformRequire'), __log = require('/api/Log'), "
-      + "assert = require('/api/Assert'), L = require('/api/Localisation').fetchString, "
+      + "__app = require('/api/App'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString, "
       + "addSpy = require('api/Beach').addSpy;\n"
       + "Ti.Shadow = true;\n"
       + fs.readFileSync(src).toString()
@@ -25,6 +25,7 @@ function prepare(src, dst, callback) {
       .replace(/Ti(tanium)?.include\(/g, "__p.include(this,")
       .replace(/Ti(tanium)?.UI.createWindow\(/g, "__ui.createWindow(")
       .replace(/Ti(tanium)?.UI.createTabGroup\(/g, "__ui.createTabGroup(")
+      .replace(/Ti(tanium)?.App.(addEventListener|removeEventListener|fireEvent)/g, "__app.$2")
       .replace(/Ti.Locale.getString/g, "L")
       .replace(/([ \t:=\(\+]+)(['"])(\/[^'"].*?)(['"])/g, function($0, $1, $2, $3, $4) {
           if ($1.indexOf("+") > -1 ) { return $0; } else { return $1 +'__p.file(' +$2 + $3+ $4+ ')'; }

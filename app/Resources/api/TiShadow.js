@@ -82,12 +82,10 @@ exports.disconnect = function() {
   }
 };
 
-
-
-
 var bundle;
 exports.closeApp = function(name) {
   require("/api/UI").closeApp(name || exports.currentApp);
+  require("/api/App").clearAll();
   log.info("Previous bundle closed.");
 };
 exports.launchApp = function(name) {
