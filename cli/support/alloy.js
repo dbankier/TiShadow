@@ -77,6 +77,7 @@ exports.mapFiles = function(last_stat) {
       }
 
       file_path = file_path.slice(2);
+      la = file_path.length - 1;
 
       if (file_path[0] === 'assets') {
         file_path.shift();
