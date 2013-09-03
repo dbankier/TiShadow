@@ -93,7 +93,7 @@ exports.build = function(env) {
                        .replace("<modules/>","<modules></modules>")
                        .replace("</modules>",required_modules.join("\n")));
       // copy the bundle
-      fs.writeFileSync(path.join(dest_resources, config.app_name + ".zip"),fs.readFileSync(config.bundle_file));
+      fs.writeFileSync(path.join(dest_resources, config.app_name.replace(/ /g,"_") + ".zip"),fs.readFileSync(config.bundle_file));
     }
   });
 }
