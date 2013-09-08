@@ -13,7 +13,7 @@ TiShadow.init = function (session, guest){
   socket.on('device_log', function(e) {
     var now = new Date();
     var log = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " [" + e.level + "] [" + e.name + "]    " + (e.message === undefined ? 'undefined' : e.message.toString().replace("\n","<br/>"));
-    var style = e.level === "ERROR"  || e.level === "FAIL" ? " error" : e.level === "WARN" ? "" : " success"
+    var style = e.level === "ERROR"  || e.level === "FAIL" ? " error" : e.level === "WARN" ? "" : e.level === "INFO" ? " info" : " success";
     $(".console").append("<div class='alert-message" + style + "'>" + log + "</div>");
     $(".console").scrollTop($(".console")[0].scrollHeight);
   });

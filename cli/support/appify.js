@@ -56,6 +56,7 @@ exports.copyCoreProject = function(env) {
 exports.build = function(env) {
   var dest = env.destination || ".";
   var dest_resources = path.join(dest,"Resources");
+  var dest_fonts = path.join(dest_resources,"fonts");
   var dest_modules = path.join(dest,"modules");
   var dest_platform = path.join(dest,"platform");
   var template_file = path.join(tishadow_app,"Resources","appify.js");
@@ -72,6 +73,10 @@ exports.build = function(env) {
       var template = fs.readFileSync(template_file,'utf8');
       var new_app_js = _.template(template, {proto: "http" + (config.isTiCaster ? "s" : ""), host:config.host, port: config.port, room: config.room, app_name: config.app_name});
       fs.writeFileSync(path.join(dest_resources,"app.js"),new_app_js);
+      //copy fonts
+      if(fs.existsSync(config.fonts_path)) {
+        wrench.copyDirSyncRecursive(config.fonts_path,dest_fonts);
+      }
       //copy splash screen and icons
       ['iphone', 'android'].forEach(function(platform) {
         if(fs.existsSync(path.join(config.resources_path,platform))) {
