@@ -63,6 +63,7 @@ exports.newBundle = function(file_list) {
     deployOnly: config.isDeploy || undefined,
     spec: {run: config.isSpec, junitxml: config.isJUnit},
     locale: config.locale,
+    platform: config.platform,
     patch : {run: config.isPatch, files: file_list}
   });
 };

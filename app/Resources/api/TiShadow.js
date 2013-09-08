@@ -48,12 +48,17 @@ exports.connect = function(o) {
   
   // REPL messages
   socket.on('message',require('/api/Beach').eval);
-
+  
+  var osname = Ti.Platform.osname;
+  osname = osname === "ipad" || osname === "iphone" ? "ios" : osname;
   socket.on('bundle', function(data) {
-    if(data.locale) {
-      require("/api/Localisation").locale = data.locale;
+    if (data.platform === undefined ||
+        data.platform === osname) { 
+      if(data.locale) {
+        require("/api/Localisation").locale = data.locale;
+      }
+      loadRemoteZip(data.name, (o.proto || "http") + "://" + o.host + ":" + o.port + "/bundle", data, version_property);
     }
-    loadRemoteZip(data.name, (o.proto || "http") + "://" + o.host + ":" + o.port + "/bundle", data, version_property);
   });
 
   socket.on('clear', function() {

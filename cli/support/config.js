@@ -55,6 +55,13 @@ config.buildPaths = function(env, callback) {
       process.exit();
     }
     config.isAlloy = fs.existsSync(config.alloy_path);
+    if (config.isAlloy) {
+      if (fs.existsSync(path.join(config.resources_path, 'iphone', 'alloy', 'CFG.js'))) {
+        config.platform = "ios";
+      } else if (fs.existsSync(path.join(config.resources_path, 'android', 'alloy', 'CFG.js'))) {
+        config.platform = "android";
+      }
+    }
     config.isPatch = env.patch;
     config.isUpdate = (env.update || env.patch) 
                     && fs.existsSync(config.tishadow_src)
