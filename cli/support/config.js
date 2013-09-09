@@ -4,7 +4,7 @@ var path = require("path"),
     colors = require("colors"),
     logger = require("../../server/logger"),
     base = process.cwd(),
-    home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+    home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'],
     platforms = ['iphone','android','blackberry','mobileweb'],
     config = {};
 
@@ -43,7 +43,7 @@ config.buildPaths = function(env, callback) {
     var app_name = config.app_name = result.name || "bundle";
     config.base              = base;
     config.tishadow_build    = path.join(config.build_path, 'tishadow');
-    config.last_updated_file = path.join(config.tishadow_build, 'last_updated'); 
+    config.last_updated_file = path.join(config.tishadow_build, 'last_updated');
     config.tishadow_src      = path.join(config.tishadow_build, 'src');
     config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
     config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
@@ -57,7 +57,7 @@ config.buildPaths = function(env, callback) {
       process.exit();
     }
     config.isAlloy = fs.existsSync(config.alloy_path);
-    if (config.isAlloy) {
+    if (!config.platform && config.isAlloy) {
       platforms.some(function(platform) {
         if (fs.existsSync(path.join(config.resources_path, platform, 'alloy', 'CFG.js'))) {
           config.platform = platform;
@@ -94,7 +94,7 @@ config.init = function(env) {
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.isManageVersions = env.manageVersions;
-  config.platform = (env.platform === 'ipad' || env.platform === 'ios') ? 'iphone' : env.platform;
+  config.platform = env.platform;
 };
 
 config.write = function(env) {
@@ -111,7 +111,7 @@ config.write = function(env) {
   console.log(config_text.grey);
   console.log("TiShadow configuration file updated.");
   fs.writeFileSync(config_path, config_text);
-}
+};
 
 
 module.exports = config;

@@ -6,7 +6,7 @@ var assert = require('/api/Assert');
 var Spec = require("/api/Spec");
 var io = require('/lib/socket.io');
 var osname = Ti.Platform.osname;
-var platform = (osname === 'ipad' ? 'iphone' : osname);
+var platform = (osname === 'ipad' || osname === 'iphone') ? 'ios' : osname;
 var socket, room;
 
 if (!Ti.App.Properties.hasProperty("tishadow:uuid")) {
@@ -49,14 +49,14 @@ exports.connect = function(o) {
   
   // REPL messages
   socket.on('message', function(data) {
-    if (data.platform && data.platform !== platform) {
+    if (data.platform && data.platform !== osname && data.platform !== platform) {
       return;
     }
     require('/api/Beach').eval(data);
   });
   
   socket.on('bundle', function(data) {
-    if (data.platform && data.platform !== platform) {
+    if (data.platform && data.platform !== osname && data.platform !== platform) {
       return;
     }
     if(data.locale) {
@@ -66,14 +66,14 @@ exports.connect = function(o) {
   });
 
   socket.on('clear', function(data) {
-    if (data.platform && data.platform !== platform) {
+    if (data.platform && data.platform !== osname && data.platform !== platform) {
       return;
     }
     exports.clearCache();
   });
 
   socket.on('close', function(data) {
-    if (data.platform && data.platform !== platform) {
+    if (data.platform && data.platform !== osname && data.platform !== platform) {
       return;
     }
     exports.closeApp();
