@@ -5,6 +5,7 @@ var path   = require("path"),
     api    = require("./api"),
     bundle = require("./bundle"),
     config = require("./config"),
+    uglify = require("./uglify"),
     logger = require("../../server/logger.js"),
     jshint = require("./jshint_runner"),
     _      = require("underscore");
@@ -19,24 +20,7 @@ function prepare(src, dst, callback) {
       + "__app = require('/api/App'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString, "
       + "addSpy = require('api/Beach').addSpy;\n"
       + "Ti.Shadow = true;\n"
-      + fs.readFileSync(src).toString()
-      .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+app_name.replace(/ /g,"_")+"/'")
-      .replace(/(^|[^\.])require\(/g, "$1__p.require(")
-      .replace(/Ti(tanium)?.include\(/g, "__p.include(this,")
-      .replace(/Ti(tanium)?.UI.createWindow\(/g, "__ui.createWindow(")
-      .replace(/Ti(tanium)?.UI.createTabGroup\(/g, "__ui.createTabGroup(")
-      .replace(/Ti(tanium)?.App.(addEventListener|removeEventListener|fireEvent)/g, "__app.$2")
-      .replace(/Ti.Locale.getString/g, "L")
-      .replace(/([ \t:=\(\+]+)(['"])(\/[^'"].*?)(['"])/g, function($0, $1, $2, $3, $4) {
-          if ($1.indexOf("+") > -1 ) { return $0; } else { return $1 +'__p.file(' +$2 + $3+ $4+ ')'; }
-        }) // ignores "/" or if preceeded by plus
-      // Replace strings like ".titleid = 'save'" -> "title = L('save')"
-      .replace(/\.(title|text)id\s{0,}\=\s{0,}['"](\w+)['"]/g, '.$1 = L(\'$2\')')
-      // Replace strings like "titleid: 'save'" -> "title: L('save')"
-      .replace(/\b(title|text)id:\s{0,}['"](\w+)['"]/g, '$1: L(\'$2\')')
-      .replace(/console\./g, "__log.")
-      .replace(/\/\/addSpy\(/g,"addSpy(")
-      .replace(/Ti(tanium)?.API/g, "__log");
+      + uglify.toString(fs.readFileSync(src).toString())
     if (src.match("_spec.js$")) {
       src_text =  "var __jasmine = require('/lib/jasmine');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
         +src_text;
