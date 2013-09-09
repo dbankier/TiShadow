@@ -5,6 +5,7 @@ var path = require("path"),
     logger = require("../../server/logger"),
     base = process.cwd(),
     home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+    platforms = ['iphone','android','blackberry','mobileweb'],
     config = {};
 
 //get app name
@@ -57,11 +58,12 @@ config.buildPaths = function(env, callback) {
     }
     config.isAlloy = fs.existsSync(config.alloy_path);
     if (config.isAlloy) {
-      if (fs.existsSync(path.join(config.resources_path, 'iphone', 'alloy', 'CFG.js'))) {
-        config.platform = "ios";
-      } else if (fs.existsSync(path.join(config.resources_path, 'android', 'alloy', 'CFG.js'))) {
-        config.platform = "android";
-      }
+      platforms.some(function(platform) {
+        if (fs.existsSync(path.join(config.resources_path, platform, 'alloy', 'CFG.js'))) {
+          config.platform = platform;
+          return true;
+        }
+      });
     }
     config.isPatch = env.patch;
     config.isUpdate = (env.update || env.patch) 
@@ -92,6 +94,7 @@ config.init = function(env) {
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.isManageVersions = env.manageVersions;
+  config.platform = (env.platform === 'ipad' || env.platform === 'ios') ? 'iphone' : env.platform;
 };
 
 config.write = function(env) {
