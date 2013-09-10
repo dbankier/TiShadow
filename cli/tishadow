@@ -43,6 +43,7 @@ program.command('clear')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .option('-c, --ticaster', 'connect to ticaster')
+  .option('-P, --platform <platform>', 'target platform')
   .action(api.clearCache);
 
 program.command('run')
@@ -56,6 +57,7 @@ program.command('run')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .option('-c, --ticaster', 'connect to ticaster')
+  .option('-P, --platform <platform>', 'target platform')
   .action(compiler);
 
 program.command('deploy')
@@ -81,6 +83,7 @@ program.command('spec')
   .option('-c, --ticaster', 'connect to ticaster')
   .option('-j, --jshint', 'analyse code with JSHint')
   .option('-x, --junit-xml','output report as JUnit XML')
+  .option('-P, --platform <platform>', 'target platform')
   .action(compiler);
 
 program.command('close')
@@ -89,6 +92,7 @@ program.command('close')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .option('-c, --ticaster', 'connect to ticaster')
+  .option('-P, --platform <platform>', 'target platform')
   .action(api.closeApp);
 
 program.command('repl')
@@ -97,6 +101,7 @@ program.command('repl')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .option('-c, --ticaster', 'connect to ticaster')
+  .option('-P, --platform <platform>', 'target platform')
   .action(api.sendSnippet);
   
 program.command('log')

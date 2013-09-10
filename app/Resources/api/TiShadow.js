@@ -6,6 +6,7 @@ var assert = require('/api/Assert');
 var Spec = require("/api/Spec");
 var io = require('/lib/socket.io');
 var osname = Ti.Platform.osname;
+var platform = (osname === 'ipad' || osname === 'iphone') ? 'ios' : osname;
 var socket, room;
 
 if (!Ti.App.Properties.hasProperty("tishadow:uuid")) {
@@ -47,25 +48,36 @@ exports.connect = function(o) {
   });
   
   // REPL messages
-  socket.on('message',require('/api/Beach').eval);
-  
-  var osname = Ti.Platform.osname;
-  osname = osname === "ipad" || osname === "iphone" ? "ios" : osname;
-  socket.on('bundle', function(data) {
-    if (data.platform === undefined ||
-        data.platform === osname) { 
-      if(data.locale) {
-        require("/api/Localisation").locale = data.locale;
-      }
-      loadRemoteZip(data.name, (o.proto || "http") + "://" + o.host + ":" + o.port + "/bundle", data, version_property);
+  socket.on('message', function(data) {
+    if (data.platform && data.platform !== osname && data.platform !== platform) {
+      return;
     }
+    require('/api/Beach').eval(data);
+  });
+  
+  socket.on('bundle', function(data) {
+    if (data.platform && data.platform !== osname && data.platform !== platform) {
+      return;
+    }
+    if(data.locale) {
+      require("/api/Localisation").locale = data.locale;
+    }
+    loadRemoteZip(data.name, (o.proto || "http") + "://" + o.host + ":" + o.port + "/bundle", data, version_property);
   });
 
-  socket.on('clear', function() {
+  socket.on('clear', function(data) {
+    if (data.platform && data.platform !== osname && data.platform !== platform) {
+      return;
+    }
     exports.clearCache();
   });
 
-  socket.on('close', exports.closeApp);
+  socket.on('close', function(data) {
+    if (data.platform && data.platform !== osname && data.platform !== platform) {
+      return;
+    }
+    exports.closeApp();
+  });
 
   socket.on('disconnect', function() {
     if(o.disconnected) {
@@ -212,7 +224,7 @@ function loadRemoteBundle(url) {
 }
 
 var url = '';
-if (Ti.Platform.osname !== "android") {
+if (osname !== "android") {
   var cmd = Ti.App.getArguments();
   if ( (typeof cmd == 'object') && cmd.hasOwnProperty('url') ) {
     url = cmd.url;
