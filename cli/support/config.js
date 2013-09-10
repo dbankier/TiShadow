@@ -60,7 +60,7 @@ config.buildPaths = function(env, callback) {
     if (!config.platform && config.isAlloy) {
       platforms.some(function(platform) {
         if (fs.existsSync(path.join(config.resources_path, platform, 'alloy', 'CFG.js'))) {
-          config.platform = platform;
+          config.platform = (platform === 'iphone') ? 'ios' : platform;
           return true;
         }
       });
