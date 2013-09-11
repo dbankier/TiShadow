@@ -1,7 +1,7 @@
 var fs     = require("fs"),
-path   = require("path"),
-logger = require("../../server/logger.js")
-;
+    path   = require("path"),
+    config = require("./config"),
+    logger = require("../../server/logger.js");
 
 exports.mapFiles = function(last_stat) {
   var alloy_list = fs.getList(config.alloy_path,last_stat.mtime);
