@@ -41,13 +41,13 @@ function postZipToServer (_path, data) {
 
 exports.clearCache = function(env) {
   config.buildPaths(env, function() {
-    postToServer("clear");
+    postToServer("clear", {platform: config.platform});
   });
 };
 
 exports.closeApp = function(env) {
   config.buildPaths(env, function() {
-    postToServer("close");
+    postToServer("close", {platform: config.platform});
   });
 };
 
@@ -75,7 +75,7 @@ exports.sendSnippet = function(env) {
     repl.start({
       eval: function(command, context, filename, callback) {
         if (command.trim() !== "(\n)") {
-          socket.emit('snippet',{code: command.substring(1,command.length -2)}, function(e) {
+          socket.emit('snippet',{code: command.substring(1,command.length -2), platform: config.platform}, function(e) {
             callback("".blue);
           });
         }
