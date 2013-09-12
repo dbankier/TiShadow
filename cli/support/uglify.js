@@ -13,10 +13,8 @@ function couldBeAsset(name) {
 }
 
 function doNotTouch(node) {
-  return node instanceof UglifyJS.AST_Null || 
-         node instanceof UglifyJS.AST_Undefined ||
-         node instanceof UglifyJS.AST_NaN ||
-         node instanceof UglifyJS.AST_Lambda;
+  return node instanceof UglifyJS.AST_Atom || //Booleans, Nulls, Undefined, etc 
+         node instanceof UglifyJS.AST_Lambda; //Functions, etc
 }
 
 var convert = new UglifyJS.TreeTransformer(null, function(node){
@@ -66,6 +64,13 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       if (node.expression.expression.property === "API") {
         return functionCall("__log."+node.expression.end.value, node.args);
       }
+    }
+    //assets
+    if (node.expression.end.value.match("^set") &&
+        !doNotTouch(node.args) &&
+        couldBeAsset(node.expression.end.value.replace("set","").toLowerCase())) {
+      node.args = [functionCall("__p.file",node.args)];
+      return node;
     }
   } else if (node instanceof UglifyJS.AST_Assign && !doNotTouch(node.right)){
     if (node.left.property && node.left.property.match && node.left.property.match("^(title|text)id$")) {
