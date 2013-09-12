@@ -11,3 +11,5 @@ params.image = null;
 $.myview.setSelectedImage(__p.file("app.png"));
 
 win.backgroundImage = __p.file("app.png");
+
+win.backgroundImage = __p.file("/images" + variable + "/app.png");

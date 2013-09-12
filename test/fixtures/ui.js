@@ -7,3 +7,4 @@ view.generateImage = function() {
 params.image = null;
 $.myview.setSelectedImage("app.png");
 win.backgroundImage = "app.png";
+win.backgroundImage = "/images" + variable + "/app.png";
