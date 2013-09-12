@@ -20,18 +20,7 @@ var context = this;
 
 exports.eval = function(message) {
   try {
-    var ret = eval.call(context, message.code
-      .replace(/Ti(tanium)?.Filesystem.(resourcesDirectory|getResourcesDirectory\(\))/g, "Ti.Filesystem.applicationDataDirectory + '"+ ( require('/api/TiShadow').currentApp ?  require('/api/TiShadow').currentApp.replace(/ /g,"_")+"/'" : "/"))
-      .replace(/(^|[^\.])require\(/g, "$1__p.require(")
-      .replace(/Ti(tanium)?.include\(/g, "__p.include(this,")
-      .replace(/Ti(tanium)?.UI.createWindow\(/g, "__ui.createWindow(")
-      .replace(/Ti(tanium)?.UI.createTabGroup\(/g, "__ui.createTabGroup(")
-      .replace(/Ti(tanium)?.App.(addEventListener|removeEventListener|fireEvent)/g, "__app.$2")
-      .replace(/Ti.Locale.getString/g, "L")
-      .replace(/([ :=\(])(['"])(\/[^'"].*?)(['"])/g, "$1__p.file($2$3$4)") // ignores "/"
-      .replace(/Ti(tanium)?.API/g, "__log")
-      .replace(/console./g, "__log."));
-    __log.repl(ret);
+    __log.repl(eval.call(context, message.code));
   } catch (e) {
     __log.error(require('/api/Utils').extractExceptionData(e));
   }

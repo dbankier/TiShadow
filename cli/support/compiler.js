@@ -16,16 +16,21 @@ var path   = require("path"),
 function prepare(src, dst, callback) {
   var app_name = config.app_name;
   if (src.match("js$")){ 
-    var src_text = "var __ui = require('/api/UI'), __p = require('/api/PlatformRequire'), __log = require('/api/Log'), "
-      + "__app = require('/api/App'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString, "
-      + "addSpy = require('api/Beach').addSpy;\n"
-      + "Ti.Shadow = true;\n"
-      + uglify.toString(fs.readFileSync(src).toString())
-    if (src.match("_spec.js$")) {
-      src_text =  "var __jasmine = require('/lib/jasmine');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
-        +src_text;
+    try {
+      var src_text = "var __ui = require('/api/UI'), __p = require('/api/PlatformRequire'), __log = require('/api/Log'), "
+        + "__app = require('/api/App'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString, "
+        + "addSpy = require('api/Beach').addSpy;\n"
+        + "Ti.Shadow = true;\n"
+        + uglify.toString(fs.readFileSync(src).toString())
+      if (src.match("_spec.js$")) {
+        src_text =  "var __jasmine = require('/lib/jasmine');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
+          +src_text;
+      }
+      fs.writeFile(dst,src_text, callback);
+    } catch (e) {
+      logger.error(e.message + "\nFile   : " + src + "\nLine   : " + e.line + "\nColumn : " + e.col);
+      process.exit(1);
     }
-    fs.writeFile(dst,src_text, callback);
   } else { // Non-JS file - just pump it
     var  is = fs.createReadStream(src);
     var  os = fs.createWriteStream(dst);

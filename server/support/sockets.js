@@ -2,6 +2,7 @@ var io = require('socket.io'),
     Logger = require('../logger'),
     rooms = require('./rooms'),
     path = require('path'),
+    uglify = require('../../cli/support/uglify'),
     config = require('../../cli/support/config');
 
 var sio;
@@ -66,11 +67,18 @@ exports.listen = function(app) {
                   data.version = curr.version;
                 }
                 if (!data.deployOnly) {
-                  sio.sockets.in(room).emit(command === "snippet" ? "message" : command, data);
+                  sio.sockets.in(room).emit(command, data);
                 }
               } else  {
                 Logger.info(command.toUpperCase() + " requested");
-                sio.sockets.in(room).emit(command === "snippet" ? "message" : command, data);
+                try {
+                  if (command === 'snippet' && data.code) {
+                    data.code = uglify.toString(data.code);
+                  }
+                  sio.sockets.in(room).emit(command === "snippet" ? "message" : command, data);
+                } catch(e) {
+                  sio.sockets.in(room).emit("device_log", {level: 'ERROR', message: (e.message + " (" + e.line + ":" + e.col + ")")});
+                }
               }
               if (fn) {
                 fn();
