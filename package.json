@@ -16,7 +16,9 @@
     "express": "~3.3.4",
     "watch": "~0.8.0",
     "lazystream": "~0.1.0",
-    "form-data": "~0.1.0"
+    "form-data": "~0.1.0",
+    "uglify-js": "~2.4.0",
+    "mocha": "~1.12.1"
   },
   "devDependencies": {},
   "optionalDependencies": {},
