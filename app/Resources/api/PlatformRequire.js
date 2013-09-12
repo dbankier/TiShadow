@@ -126,6 +126,9 @@ function densityFile(file) {
   return null;
 }
 exports.file = function(extension) {
+  if (typeof extension !== "string") {
+    return;
+  }
   var base = Ti.Filesystem.applicationDataDirectory + "/" + require("/api/TiShadow").currentApp + "/";
   var path = base + extension,
       platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
