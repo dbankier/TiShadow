@@ -31,7 +31,7 @@ function prepareArgs(args) {
 }
 
 var create = function(fn,args) {
-  arg = prepareArgs(args);
+  args = prepareArgs(args);
   // exitOnClose hampers the upgrade process so we will prevent it
   args.exitOnClose = false;
 
