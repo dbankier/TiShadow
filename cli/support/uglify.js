@@ -15,7 +15,8 @@ function couldBeAsset(name) {
 function doNotTouch(node) {
   return node instanceof UglifyJS.AST_Null || 
          node instanceof UglifyJS.AST_Undefined ||
-         node instanceof UglifyJS.AST_NaN;
+         node instanceof UglifyJS.AST_NaN ||
+         node instanceof UglifyJS.AST_Lambda;
 }
 
 var convert = new UglifyJS.TreeTransformer(null, function(node){
