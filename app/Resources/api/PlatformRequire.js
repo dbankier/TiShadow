@@ -127,7 +127,7 @@ function densityFile(file) {
 }
 exports.file = function(extension) {
   if (typeof extension !== "string") {
-    return;
+    return extension;
   }
   extension = extension.replace(/^\//, '');
   var base = Ti.Filesystem.applicationDataDirectory + "/" + require("/api/TiShadow").currentApp + "/";
