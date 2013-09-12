@@ -4,6 +4,8 @@ var win = __ui.createWindow({
     backgroundImage: __p.file("app.png")
 });
 
+var nav = __ui.createNavigationWindow();
+
 view.generateImage = function() {};
 
 params.image = null;

@@ -55,6 +55,11 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
           node.expression.expression.property === "UI") {
         return functionCall("__ui."+node.expression.end.value, node.args);
       }
+      if (node.expression.end.value === "createNavigationWindow" &&
+          node.expression.expression.property === "iOS") {
+        return functionCall("__ui.createNavigationWindow", node.args);
+      }
+
       //control global listener -- App
       if (node.expression.end.value.match("^(addEventListener|removeEventListener|fireEvent)$") &&
           node.expression.expression.property === "App") {
