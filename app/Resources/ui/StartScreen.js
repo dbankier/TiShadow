@@ -1,4 +1,3 @@
-/*globals, exports, require*/
 var LoginView = require('/ui/LoginView');
 var Activity = require('/ui/Activity');
 //Includes do not need to be included at runtime, just needed to trick
@@ -6,15 +5,11 @@ var Activity = require('/ui/Activity');
 var TiShadow = require('/api/TiShadow');
 var NavBar = require("/ui/NavBar");
 var Util = require("/api/Utils");
+var Styles = require("/ui/Styles");
 Titanium.App.idleTimerDisabled = true;
 
 exports.StartScreen = function() {
-  var win = Ti.UI.createWindow({
-    backgroundColor : 'white',
-    exitOnClose : true,
-    keepScreenOn: true,
-    title: "TiShadow"
-  });
+  var win = Ti.UI.createWindow(Styles.start.window);
   var app_list= new (require("/ui/AppList"))();
   app_list.addEventListener("launch", function(e) {
     activity.show();

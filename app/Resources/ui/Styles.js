@@ -93,7 +93,21 @@ exports.login = {
     title : "Connect"
   }
 };
+exports.isPre7 = (Ti.Platform.osname === "iphone" || Ti.Platform.osname === "ipad") &&
+	Ti.Platform.version.split(".")[0] < 7;
 
+exports.start = {
+	window: {
+    backgroundColor : 'white',
+    exitOnClose : true,
+    keepScreenOn: true,
+    title: "TiShadow"
+  }
+};
+if (!exports.isPre7) {
+	exports.start.window.top = 20;
+  Ti.UI.setBackgroundColor('#adbedd');
+}
 if(Ti.Platform.osname !== "android") {
 	exports.login.button.backgroundImage = 'none';
   exports.login.host.backgroundImage = 'none';
