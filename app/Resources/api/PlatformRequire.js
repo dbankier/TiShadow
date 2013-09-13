@@ -112,7 +112,7 @@ function densityFile(file) {
       return ret_file_name;
     }
   } else if (os === "android") {
-    var d_file_name = file.replace("android//images/", "android//images/%FOLDER%/"),
+    var d_file_name = file.replace("android/images/", "android/images/%FOLDER%/"),
         do_file_name,
         i;
     for (i in density_folders) {
