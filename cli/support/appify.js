@@ -59,6 +59,7 @@ exports.build = function(env) {
   var dest_fonts = path.join(dest_resources,"fonts");
   var dest_modules = path.join(dest,"modules");
   var dest_platform = path.join(dest,"platform");
+  var dest_i18n = path.join(dest,"i18n");
   var template_file = path.join(tishadow_app,"Resources","appify.js");
 
   //set to bundle mode
@@ -89,6 +90,10 @@ exports.build = function(env) {
           wrench.copyDirSyncRecursive(path.join(config.platform_path,platform),path.join(dest_platform,platform));
         }
       });
+      // copy i18n folder or Alloy's moment builtin will fall back on device locale
+      if(fs.existsSync(config.i18n_path)) {
+        wrench.copyDirSyncRecursive(config.i18n_path,dest_i18n);
+      }
       // copy tiapp.xml and inject modules
       var source_tiapp = fs.readFileSync(path.join(config.base,"tiapp.xml"),'utf8');
       required_modules.push("</modules>")
