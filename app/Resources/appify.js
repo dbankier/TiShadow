@@ -3,6 +3,8 @@
  * See the README.
  */
 
+Titanium.App.idleTimerDisabled = true;
+
 var TiShadow = require("/api/TiShadow");
 var Compression = require('ti.compression');
 
