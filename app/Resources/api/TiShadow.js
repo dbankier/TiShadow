@@ -223,21 +223,20 @@ function loadRemoteBundle(url) {
   }
 }
 
-var url = '';
-if (osname !== "android") {
-  var cmd = Ti.App.getArguments();
+function parseArguments() {
+  cmd = Ti.App.getArguments();
   if ( (typeof cmd == 'object') && cmd.hasOwnProperty('url') ) {
-    url = cmd.url;
-    loadRemoteBundle(url.replace("tishadow", "http"));
-  }
-
-  Ti.App.addEventListener( 'resumed', function(e) {
-    cmd = Ti.App.getArguments();
-    if ( (typeof cmd == 'object') && cmd.hasOwnProperty('url') ) {
-      if ( cmd.url !== url ) {
-        url = cmd.url;
+    if ( cmd.url !== url ) {
+      url = cmd.url;
+      if (url.substring(0, 8) === 'tishadow') {
         loadRemoteBundle(url.replace("tishadow", "http"));
       }
     }
-  });
+  }
+}
+
+var url = '';
+if (osname !== "android") {
+  parseArguments();
+  Ti.App.addEventListener( 'resumed', parseArguments);
 }
