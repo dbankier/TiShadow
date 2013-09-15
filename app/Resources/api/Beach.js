@@ -1,6 +1,7 @@
 this.__log = require('/api/Log');
 this.__p = require('/api/PlatformRequire');
 this.__ui = require('/api/UI');
+this.__app = require('/api/App');
 this.L = require('/api/Localisation').fetchString;
 this.assert = require('/api/Assert');
 this.closeApp =require('/api/TiShadow').closeApp;
