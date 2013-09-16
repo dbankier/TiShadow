@@ -21,7 +21,7 @@ function prepare(src, dst, callback) {
         + "__app = require('/api/App'), assert = require('/api/Assert'), L = require('/api/Localisation').fetchString, "
         + "addSpy = require('api/Beach').addSpy;\n"
         + "Ti.Shadow = true;\n"
-        + uglify.toString(fs.readFileSync(src).toString())
+        + uglify.toString(fs.readFileSync(src).toString(),src)
       if (src.match("_spec.js$")) {
         src_text =  "var __jasmine = require('/lib/jasmine');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
           +src_text;
