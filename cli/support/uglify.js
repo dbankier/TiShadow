@@ -1,4 +1,5 @@
-var UglifyJS = require("uglify-js");
+var UglifyJS = require("uglify-js"),
+    path = require("path");
 
 function functionCall(name, args) {
   return  new UglifyJS.AST_Call({
@@ -23,6 +24,13 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
     // redirect require function
     if (node.expression.name === "require") {
       node.expression.name = "__p.require";
+      if (typeof node.args[0].value === 'string' &&
+          node.args[0].value.match(/^\.{1,2}\//) &&
+          current_file)   {
+     
+        var full = path.join(path.dirname(current_file), node.args[0].value);
+        node.args[0].value = full.substring(full.indexOf("Resources/") + 10);
+      }
       return node;
     }
     if (node.expression.start.value === "console" &&
@@ -109,14 +117,15 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
     }
   }
 });
-
-exports.toAST = function(input) {
+var current_file;
+exports.toAST = function(input,file) {
+  current_file = file;
   var ast = UglifyJS.parse(input);
   return ast.transform(convert);
 };
 
-exports.toString = function(input) {
-  return exports.toAST(input).print_to_string({beautify: true});
+exports.toString = function(input, file) {
+  return exports.toAST(input, file).print_to_string({beautify: true});
 };
 
 

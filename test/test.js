@@ -41,5 +41,19 @@ describe("TiShadow conversions", function() {
     });
   });
 
+  describe("Relative require test", function() {
+    it("should rewrite to absolute", function() {
+      assert.equal(
+        tiugly.toString("require('../ui/Window')", "/my/root/path/project/Resources/lib/Library.js"),
+        "__p.require(\"ui/Window\");"
+        );
+      assert.equal(
+        tiugly.toString("require('./ui/Window')", "/my/root/path/project/Resources/lib/Library.js"),
+        "__p.require(\"lib/ui/Window\");"
+        );
+
+    });
+  });
+
 
 });
