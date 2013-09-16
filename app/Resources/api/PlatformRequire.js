@@ -3,42 +3,43 @@ var utils = require("/api/Utils");
 var os = Ti.Platform.osname;
 var tishadow_version = Ti.version.replace(/tishadow_?/,"").replace(/\./g,"");
 var _ = require("/lib/underscore");
+var global_keys;
 
 if (os === "android") {
   var density_orientation = (Ti.Gesture.orientation === Ti.UI.LANDSCAPE_LEFT) ? "land" : "port",
-      density_folders = (function () {
+  density_folders = (function () {
 
-        var folders = [],
-            ratio = ((Ti.Platform.displayCaps.platformWidth / Ti.Platform.displayCaps.platformHeight) < ((density_orientation === "land") ? (320 / 240) : (240 / 320))) ? "long" : "notlong",
-            logicalDensityFactor = Ti.Platform.displayCaps.logicalDensityFactor,
-            density;
+    var folders = [],
+    ratio = ((Ti.Platform.displayCaps.platformWidth / Ti.Platform.displayCaps.platformHeight) < ((density_orientation === "land") ? (320 / 240) : (240 / 320))) ? "long" : "notlong",
+    logicalDensityFactor = Ti.Platform.displayCaps.logicalDensityFactor,
+    density;
 
-        if (logicalDensityFactor <= 0.75) {
-          density = "ldpi";
-        } else if (logicalDensityFactor <= 1.0) {
-          density = "mdpi";
-        } else if (logicalDensityFactor <= 1.5) {
-          density = "hdpi";
-        } else {
-          density = "xhdpi";
-        }
+    if (logicalDensityFactor <= 0.75) {
+      density = "ldpi";
+    } else if (logicalDensityFactor <= 1.0) {
+      density = "mdpi";
+    } else if (logicalDensityFactor <= 1.5) {
+      density = "hdpi";
+    } else {
+      density = "xhdpi";
+    }
 
-        folders.push("res-" + ratio + "-%ORIENTATION%-" + density);
-        folders.push("res-%ORIENTATION%-" + density);
-        folders.push("res-" + density);
+    folders.push("res-" + ratio + "-%ORIENTATION%-" + density);
+    folders.push("res-%ORIENTATION%-" + density);
+    folders.push("res-" + density);
 
-        if (density === "ldpi") {
-          folders.push("low");
-        } else if (density === "mdpi") {
-          folders.push("medium");
-        } else if (density === "hdpi") {
-          folders.push("high");
-        }
+    if (density === "ldpi") {
+      folders.push("low");
+    } else if (density === "mdpi") {
+      folders.push("medium");
+    } else if (density === "hdpi") {
+      folders.push("high");
+    }
 
-        folders.push("res-mdpi");
-        folders.push("");
+    folders.push("res-mdpi");
+    folders.push("");
 
-        return folders;
+    return folders;
   })();
 
   Ti.Gesture.addEventListener("orientationchange", function (e) {
@@ -79,7 +80,7 @@ exports.require = function(extension) {
     log.error(utils.extractExceptionData(e));
   }
 };
-
+var global_context = this;
 exports.include = function(context) {
   try {
     // Full Path
@@ -87,7 +88,7 @@ exports.include = function(context) {
       var path = exports.file(arguments[i]);
       var ifile = Ti.Filesystem.getFile(path);
       var contents = ifile.read().text;
-      eval.call(context, contents);
+      eval.call(context || global_context, contents);
     }
   } catch(e) {
     log.error(utils.extractExceptionData(e));
@@ -113,8 +114,8 @@ function densityFile(file) {
     }
   } else if (os === "android") {
     var d_file_name = file.replace("android/images/", "android/images/%FOLDER%/"),
-        do_file_name,
-        i;
+    do_file_name,
+    i;
     for (i in density_folders) {
       do_file_name = d_file_name.replace("%FOLDER%", density_folders[i].replace('%ORIENTATION%', density_orientation));
       do9_file_name = injectSuffix(do_file_name, '.9');
@@ -130,9 +131,9 @@ exports.file = function(extension) {
     return extension;
   }
   extension = extension.replace(/^\//, '');
-  var base = Ti.Filesystem.applicationDataDirectory + "/" + require("/api/TiShadow").currentApp + "/";
+                                var base = Ti.Filesystem.applicationDataDirectory + "/" + require("/api/TiShadow").currentApp + "/";
   var path = base + extension,
-      platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
+  platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
   var extension_parts = extension.split("/");
   var needsJS = extension_parts[extension_parts.length-1].indexOf(".") === -1;
   var isPNG = extension.toLowerCase().match("\\.png$");
@@ -148,10 +149,10 @@ exports.file = function(extension) {
     }
   }
 
-	if (Ti.Filesystem.getFile(path + (needsJS ? ".js" : "")).exists()) {
-		return path;
-	}
-	return extension;
+  if (Ti.Filesystem.getFile(path + (needsJS ? ".js" : "")).exists()) {
+    return path;
+  }
+  return extension;
 };
 
 // if a list of files is provided it will selectively clear the cache
@@ -166,4 +167,12 @@ exports.clearCache = function (list) {
   } else {
     cache = {};
   }
+  for (var a in global_context) {
+    if (global_context.hasOwnProperty(a) && !_.contains(global_keys, a)) {
+      delete global_context[a];
+    }
+  }
 };
+
+
+global_keys = _.keys(global_context);
