@@ -1,5 +1,6 @@
 var _ = require("/lib/underscore");
 var TiShadow = require("/api/TiShadow");
+var log = require("/api/Log");
 
 var containers = {};
 
@@ -52,25 +53,49 @@ var createDumb = function(fn,a) {
   stack({source: o});
   return o;
 };
+var createHideable = function(fn, evt, a) {
+  var args = prepareArgs(a);
+  var o = fn(args);
+  o.__closeFn = 'hide';
+  stack({source: o});
 
-exports.createWindow = function(args) {
-  return create(Ti.UI.createWindow, args);
+  o.addEventListener(evt, function(e) {
+    unstack({ app: args.__tishadowApp, container: args.__tishadowContainer });
+  });
+  return o;
 };
 
-exports.createTabGroup= function(args) {
-  return create(Ti.UI.createTabGroup, args);
+['createWindow', 'createTabGroup'].forEach(function(cmd) {
+  exports[cmd]= function(args) {
+    return create(Ti.UI[cmd], args);
+  };
+});
+
+exports.createSplitWindow= function(args) {
+  return create(Ti.UI.iPad.createSplitWindow, args);
 };
+
 exports.createNavigationWindow = function(args) {
-	return create(Ti.UI.iOS.createNavigationWindow,args);
+	return createDumb(Ti.UI.iOS.createNavigationWindow,args);
 };
 
+['createAlertDialog', 'createOptionDialog'].forEach(function(cmd) {
+  exports[cmd]= function(args) {
+    return createHideable(Ti.UI[cmd], 'click', args);
+  };
+});
 
-exports.closeApp = function(app) {
+exports.createPopover= function(args) {
+  return createHideable(Ti.UI.iPad.createPopover, 'hide', args);
+};
+
+exports.closeApp = function(a) {
+  var app = a || "__REPL";
   if (app && containers[app]) {
     for (var c in containers[app]) {
       if (containers[app].hasOwnProperty(c)) {
-        containers[app][c].close();
-        if (containers[app].__tishadowDumb) {
+        containers[app][c][containers[app][c].__closeFn || 'close']();
+        if (containers[app][c].__tishadowDumb) {
           unstack({app:app, container:container});
         }
       }

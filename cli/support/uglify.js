@@ -51,7 +51,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       }
 
       //control localisation -- UI
-      if (node.expression.end.value.match("^(createWindow|createTabGroup)$") &&
+      if (node.expression.end.value.match("^(createWindow|createTabGroup|createAlertDialog|createOptionDialog)$") &&
           node.expression.expression.property === "UI") {
         return functionCall("__ui."+node.expression.end.value, node.args);
       }
@@ -59,6 +59,11 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
           node.expression.expression.property === "iOS") {
         return functionCall("__ui.createNavigationWindow", node.args);
       }
+      if (node.expression.end.value.match("^(createSplitWindow|createPopover)$") &&
+          node.expression.expression.property === "iPad") {
+        return functionCall("__ui."+node.expression.end.value, node.args);
+      }
+
 
       //control global listener -- App
       if (node.expression.end.value.match("^(addEventListener|removeEventListener|fireEvent)$") &&
