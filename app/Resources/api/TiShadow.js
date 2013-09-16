@@ -116,7 +116,7 @@ exports.launchApp = function(name) {
     }
     Ti.App.fireEvent("tishadow:refresh_list");
     exports.currentApp = name;
-    bundle = p.require("/app");
+    bundle = p.include(null, "/app.js");
     log.info(exports.currentApp.replace(/_/g," ") + " launched.");
   } catch(e) {
     log.error(utils.extractExceptionData(e));

@@ -79,7 +79,7 @@ exports.require = function(extension) {
     log.error(utils.extractExceptionData(e));
   }
 };
-
+var global_context = this;
 exports.include = function(context) {
   try {
     // Full Path
@@ -87,7 +87,7 @@ exports.include = function(context) {
       var path = exports.file(arguments[i]);
       var ifile = Ti.Filesystem.getFile(path);
       var contents = ifile.read().text;
-      eval.call(context, contents);
+      eval.call(context || global_context, contents);
     }
   } catch(e) {
     log.error(utils.extractExceptionData(e));
