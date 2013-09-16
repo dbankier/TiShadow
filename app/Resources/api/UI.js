@@ -19,19 +19,19 @@ function unstack(e) {
   return;
 }
 
-function prepareArgs(args) {
+function prepareArgs(a) {
   var container = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
   var app = TiShadow.currentApp || '__REPL';
 
-  args = args || {};
+  var args = a || {};
   args.__tishadowContainer = container;
   args.__tishadowApp = app;
 
   return args;
 }
 
-var create = function(fn,args) {
-  args = prepareArgs(args);
+var create = function(fn,a) {
+  var args = prepareArgs(a);
   // exitOnClose hampers the upgrade process so we will prevent it
   args.exitOnClose = false;
 
@@ -44,12 +44,9 @@ var create = function(fn,args) {
 };
 
 //Dumb objects are those we can't rely on any listeners for...
-var createDumb = function(fn,args) {
-  args = prepareArgs(args);
+var createDumb = function(fn,a) {
+  var args = prepareArgs(a);
   args.__tishadowDumb = true;
-
-  // exitOnClose hampers the upgrade process so we will prevent it
-  args.exitOnClose = false;
 
   var o = fn(args);
   stack({source: o});
