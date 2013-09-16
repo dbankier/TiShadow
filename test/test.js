@@ -30,7 +30,10 @@ describe("TiShadow conversions", function() {
   },{ describe: "Application Listener Redirects",
      it: "should redirect all listener to __app",
      file: "app.js"
-  }].forEach(function(test) {
+  },{ describe: "Random Bugs",
+     it: "shouldn't crash",
+     file: "bugs.js"
+	}].forEach(function(test) {
     describe(test.describe, function() {
       it(test.it, function() {
         loadTest(test.file);

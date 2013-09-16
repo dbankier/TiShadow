@@ -30,7 +30,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
         node.expression.expression.property === undefined) {
       return functionCall('__log.log', node.args)
     }
-    if (node.expression.start.value.match("^Ti(tanium)?$")){
+    if (node.expression.start.value.match && node.expression.start.value.match("^Ti(tanium)?$")){
       // redirect include
       if (node.expression.end.value === "include" && 
           node.expression.expression.property === undefined ) {
