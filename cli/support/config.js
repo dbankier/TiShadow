@@ -43,7 +43,6 @@ config.buildPaths = function(env, callback) {
     var app_name = config.app_name = result.name || "bundle";
     config.base              = base;
     config.tishadow_build    = path.join(config.build_path, 'tishadow');
-    config.last_updated_file = path.join(config.tishadow_build, 'last_updated');
     config.tishadow_src      = path.join(config.tishadow_build, 'src');
     config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
     config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
@@ -65,6 +64,7 @@ config.buildPaths = function(env, callback) {
         }
       });
     }
+    config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.plaform ? '_' + config.platform : ''));
     config.isPatch = env.patch;
     config.isUpdate = (env.update || env.patch) 
                     && fs.existsSync(config.tishadow_src)
