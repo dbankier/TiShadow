@@ -64,7 +64,7 @@ config.buildPaths = function(env, callback) {
         }
       });
     }
-    config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.plaform ? '_' + config.platform : ''));
+    config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.platform ? '_' + config.platform : ''));
     config.isPatch = env.patch;
     config.isUpdate = (env.update || env.patch) 
                     && fs.existsSync(config.tishadow_src)
