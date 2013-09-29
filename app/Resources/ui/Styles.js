@@ -93,8 +93,8 @@ exports.login = {
     title : "Connect"
   }
 };
-exports.isPre7 = (Ti.Platform.osname === "iphone" || Ti.Platform.osname === "ipad") &&
-	Ti.Platform.version.split(".")[0] < 7;
+exports.isPost7 = (Ti.Platform.osname === "iphone" || Ti.Platform.osname === "ipad") &&
+	Ti.Platform.version.split(".")[0] >= 7;
 
 exports.start = {
 	window: {
@@ -104,7 +104,7 @@ exports.start = {
     title: "TiShadow"
   }
 };
-if (!exports.isPre7) {
+if (exports.isPost7) {
 	exports.start.window.top = 20;
   Ti.UI.setBackgroundColor('#adbedd');
 }
