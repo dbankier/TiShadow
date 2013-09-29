@@ -8,6 +8,13 @@ function functionCall(name, args) {
   });
 }
 
+function addAppName(node) {
+  return new UglifyJS.AST_Binary({
+    left: node,
+    operator: "+",
+    right: new UglifyJS.AST_Symbol({name:'require("/api/TiShadow").currentApp + "/"'})
+  });
+}
 function couldBeAsset(name) {
   return typeof name === 'string' && name.toLowerCase().match("image$")  ||
     ["file", "sound", "icon", "url"].indexOf(name) !== -1;
@@ -54,7 +61,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       if (node.expression.end.value === "getResourcesDirectory" &&
           node.expression.expression.property === "Filesystem") {
         node.expression.property = "getApplicationDataDirectory";
-      return node;
+      return addAppName(node);
       }
       //control localisation -- LOCALE
       if (node.expression.end.value === "getString" &&
@@ -120,7 +127,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
          node.start.value.match("^Ti(tanium)?$") &&
          node.expression.property === "Filesystem") {
       node.property = "applicationDataDirectory";
-      return node;
+      return addAppName(node);
     }
   }
 });
