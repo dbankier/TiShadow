@@ -18,19 +18,23 @@ function doNotTouch(node) {
          node instanceof UglifyJS.AST_Lambda; //Functions, etc
 }
 
+function toFullPath(p) {
+ if (typeof p === 'string' &&
+      p.match(/^\.{1,2}\//) &&
+      current_file)   {
+    var full = path.join(path.dirname(current_file), p);
+    return full.substring(full.indexOf("Resources/") + 10);
+  }
+ return p;
+}
+
 var convert = new UglifyJS.TreeTransformer(null, function(node){
   //function call replacement
   if (node instanceof UglifyJS.AST_Call) {
     // redirect require function
     if (node.expression.name === "require") {
       node.expression.name = "__p.require";
-      if (typeof node.args[0].value === 'string' &&
-          node.args[0].value.match(/^\.{1,2}\//) &&
-          current_file)   {
-     
-        var full = path.join(path.dirname(current_file), node.args[0].value);
-        node.args[0].value = full.substring(full.indexOf("Resources/") + 10);
-      }
+      node.args[0].value = toFullPath(node.args[0].value);
       return node;
     }
     if (node.expression.start.value === "console" &&
@@ -87,6 +91,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
     if (node.expression.end.value.match("^set") &&
         !doNotTouch(node.args) &&
         couldBeAsset(node.expression.end.value.replace("set","").toLowerCase())) {
+      node.args[0].value = toFullPath(node.args[0].value);
       node.args = [functionCall("__p.file",node.args)];
       return node;
     }
@@ -96,6 +101,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       node.right = functionCall("L", [node.right]);
       return node;
     } else if (couldBeAsset(node.left.property)) {
+      node.right.value = toFullPath(node.right.value);
       node.right = functionCall("__p.file",[node.right]);
       return node;
     }
@@ -105,6 +111,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       node.value = functionCall("L", [node.value]);
       return node;
     } else if (couldBeAsset(node.key)) {
+      node.value.value = toFullPath(node.value.value);
       node.value = functionCall("__p.file",[node.value]);
       return node;
     }

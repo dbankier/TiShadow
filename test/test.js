@@ -54,6 +54,23 @@ describe("TiShadow conversions", function() {
 
     });
   });
+  describe("Relative assets test", function() {
+    it("should rewrite to absolute", function() {
+      assert.equal(
+        tiugly.toString("win.backgroundImage = '../ui/Window.png'", "/my/root/path/project/Resources/lib/Library.js"),
+        "win.backgroundImage = __p.file(\"ui/Window.png\");"
+        );
+      assert.equal(
+        tiugly.toString("view.setBackgroundImage('./ui/Window.png')", "/my/root/path/project/Resources/lib/Library.js"),
+        "view.setBackgroundImage(__p.file(\"lib/ui/Window.png\"));"
+        );
+      assert.equal(
+        tiugly.toString("new View({backgroundImage:'./ui/Window.png'})", "/my/root/path/project/Resources/lib/Library.js"),
+        "new View({\n    backgroundImage: __p.file(\"lib/ui/Window.png\")\n});"
+        );
+
+    });
+  });
 
 
 });
