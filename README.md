@@ -147,7 +147,6 @@ the following command:
 
 __Some notes and limitations__
 
- * CommonJS modules should be required with their full path.
  * `Ti.include` is partially supported and will work if included with the full path 
     i.e. slash leading.
  * Only files in the Resources directory will be sent to the device
@@ -156,7 +155,7 @@ __Some notes and limitations__
  * Native modules _can_ be supported if built into the TiShadow app
    first. (I.e., add them to the tiapp.xml of the TiShadow app.)
  * Custom fonts will be loaded if placed in the `Resources/fonts`
-   directory.
+   directory for iOS only.
  * If there any errors about a Titanium SDK command not being found, add
    them to the Includes.js files and clean and build the TiShadow app. (I
    will gradually be adding commands.)
