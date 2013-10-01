@@ -93,10 +93,11 @@ exports.closeApp = function(a) {
   if (app && containers[app]) {
     for (var c in containers[app]) {
       if (containers[app].hasOwnProperty(c)) {
-        if (containers[app][c].__tishadowDumb) {
-          unstack({app:app, container:container});
+        var current = containers[app][c];
+        if (current.__tishadowDumb) {
+          unstack({app:app, container:c});
         }
-        containers[app][c][containers[app][c].__closeFn || 'close']();
+        current[current.__closeFn || 'close']();
       }
     }
   }
