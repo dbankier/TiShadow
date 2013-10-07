@@ -147,6 +147,7 @@ exports.addSpy = function(name,spy) {
     var path_name = require('/api/TiShadow').currentApp.replace(/ /g,"_");
     require("/api/Spec").run(path_name, false);
   };
+  context.addSpy = exports.addSpy;
   context.getSpy = function(name) {
     return spys[name];
   };
