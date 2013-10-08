@@ -270,7 +270,8 @@ following [alloy.jmk](https://gist.github.com/dbankier/5648950) to
 automatically inject spies on the `$`object in your controllers, naming
 the spy with the file's name. 
 
-###Screenshots
+Screenshots
+-----------
 
 You can capture screenshots of all connected devices using the following command: 
 
