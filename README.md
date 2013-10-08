@@ -67,6 +67,7 @@ The following options are available:
     -p, --port <port>      server port
     -l, --long-polling     force long polling
     -i, --internal-ip <internal-ip>  internal ip to bind to
+    -s, --screenshot-path <screenshot-path>  path to save screenshot (defaults to /tmp)
     -z, --manage-versions  manage and automatically update bundles
 ```
 
@@ -161,11 +162,6 @@ __Some notes and limitations__
    will gradually be adding commands.)
  * Any Ti.API logs will be redirected to the server logs and webpage.
 
-
-### Keeping it Clean
-
-**NEW** - TiShadow now automatically cleans up Windows and TabGroups - thanks
-@FokkeZB
 
 Testing / Assertions
 --------------------
@@ -263,7 +259,7 @@ inside the TiShadow app.
 
 ###Spies
 
-**NEW:** You can add **spies** on objects so that you can modify them from
+You can add **spies** on objects so that you can modify them from
 the repl at run time. In your code add the following command:
 `addSpy(name, object)`. This can be included as a comment, eg:
 `//addSpy("mywindow",win)` which will be uncommented when pushed.
@@ -273,6 +269,17 @@ For Alloy, since comments are removed at compile time you can use the
 following [alloy.jmk](https://gist.github.com/dbankier/5648950) to
 automatically inject spies on the `$`object in your controllers, naming
 the spy with the file's name. 
+
+###Screenshots
+
+You can capture screenshots of all connected devices using the following command: 
+
+```
+  tishadow screenshot
+```
+
+The screenshots will be saved in `png` format in the `/tmp` directory or the path
+configured using the `--screenshot-path` flag when starting the server.
 
 
 Code Snippets Via Webpage

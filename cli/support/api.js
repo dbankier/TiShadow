@@ -51,6 +51,12 @@ exports.closeApp = function(env) {
   });
 };
 
+exports.screenshot = function(env) {
+  config.buildPaths(env, function() {
+    postToServer("screenshot", {platform: config.platform});
+  });
+};
+
 exports.newBundle = function(file_list) {
   var fn;
   if (config.host === "localhost") {

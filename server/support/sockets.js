@@ -2,6 +2,7 @@ var io = require('socket.io'),
     Logger = require('../logger'),
     rooms = require('./rooms'),
     path = require('path'),
+    fs = require('fs'),
     uglify = require('../../cli/support/uglify'),
     config = require('../../cli/support/config');
 
@@ -52,7 +53,7 @@ exports.listen = function(app) {
 
     // Host only commands
     // message event - for code snippets
-    ['snippet','clear','bundle','close'].forEach(function(command) {
+    ['snippet','clear','bundle','close', 'screenshot'].forEach(function(command) {
       socket.on(command, function(data,fn) {
         socket.get("host", function (err,host){
           socket.get("room", function(err, room) {
@@ -89,17 +90,25 @@ exports.listen = function(app) {
       });
     });
 
-    socket.on('log', function(data) {
-      socket.get("uuid", function(err, uuid) {
-        socket.get("room", function(err, room) {
-          if (uuid && room) {
-            var curr = rooms.getDevice(room, uuid); 
-            data.level = data.level || '';
-            data.name = curr.name;
-            data.message = data.message || '';
-            Logger.log(data.level, data.name, data.message);
-            sio.sockets.in(room).emit("device_log", data);
-          }
+    ['log', 'screenshot_taken'].forEach(function(command) {
+      socket.on(command, function(data) {
+        socket.get("uuid", function(err, uuid) {
+          socket.get("room", function(err, room) {
+            if (uuid && room) {
+              var curr = rooms.getDevice(room, uuid); 
+              if (command === "log") {
+                data.level = data.level || '';
+                data.name = curr.name;
+                data.message = data.message || '';
+                Logger.log(data.level, data.name, data.message);
+                sio.sockets.in(room).emit("device_log", data);
+              } else {
+                var img = path.join(config.screenshot_path, curr.name.replace(/[ ,]+/g, "_") + "_" + (new Date()).getTime() + ".png");
+                fs.writeFileSync(img, data.image, 'base64');
+                Logger.log("INFO", curr.name, "screenshot taken: " + img);
+              }
+            }
+          });
         });
       });
     });

@@ -77,6 +77,17 @@ exports.connect = function(o) {
     exports.closeApp();
   });
 
+  socket.on('screenshot', function(data) {
+    if (data.platform && data.platform !== osname && data.platform !== platform) {
+      return;
+    }
+    Ti.Media.takeScreenshot(function(o) {
+      var image = o.media;
+      var imgStr = Ti.Utils.base64encode(image).toString();
+      socket.emit("screenshot_taken", {image: imgStr});
+    });
+  });
+
   socket.on('disconnect', function() {
     if(o.disconnected) {
       o.disconnected();

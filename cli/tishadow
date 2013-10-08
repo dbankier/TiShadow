@@ -31,6 +31,7 @@ program.command('server')
   .option('-p, --port <port>', 'server port')
   .option('-l, --long-polling', 'force long polling')
   .option('-i, --internal-ip <internal-ip>', 'internal ip to bind to')
+  .option('-s, --screenshot-path <screenshot-path>', 'path to save screenshot (defaults to /tmp)')
   .option('-z, --manage-versions', 'manage and automatically update bundles')
   .action(function(env) {
     config.init(env);
@@ -103,6 +104,14 @@ program.command('repl')
   .option('-c, --ticaster', 'connect to ticaster')
   .option('-P, --platform <platform>', 'target platform')
   .action(api.sendSnippet);
+
+program.command('screenshot')
+  .description('close the running app on the device'.grey)
+  .option('-o, --host <host>', 'server host name / ip address')
+  .option('-p, --port <port>', 'server port')
+  .option('-r, --room <room>', 'server room')
+  .option('-P, --platform <platform>', 'target platform')
+  .action(api.screenshot);
   
 program.command('log')
   .description('tail server logs'.grey)
