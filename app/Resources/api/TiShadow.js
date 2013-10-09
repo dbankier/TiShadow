@@ -83,6 +83,11 @@ exports.connect = function(o) {
     }
     Ti.Media.takeScreenshot(function(o) {
       var image = o.media;
+      if (data.scale) {
+        var height = Ti.Platform.displayCaps.platformHeight * data.scale;
+        var width = Ti.Platform.displayCaps.platformWidth * data.scale;
+        image = image.imageAsResized(width, height);
+      }
       var imgStr = Ti.Utils.base64encode(image).toString();
       socket.emit("screenshot_taken", {image: imgStr});
     });

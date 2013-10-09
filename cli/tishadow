@@ -111,6 +111,7 @@ program.command('screenshot')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .option('-s, --screencast <interval>', 'screencast mode, interval in ms')
+  .option('-x, --scale <ratio>', 'ratio (as decimal) to scale screenshot')
   .option('-P, --platform <platform>', 'target platform')
   .action(api.screenshot);
   

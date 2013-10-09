@@ -287,10 +287,10 @@ configured using the `--screenshot-path` flag when starting the server.
 Instead of saving the screenshots you can stream them to the browser. Use the following command:
 
 ```
-  $ tishadow screenshot --screencast 1000
+  $ tishadow screenshot --screencast 1000 --scale 0.1
 ```
 
-In the above example a screenshot is sent every 1000ms. 
+In the above example a screenshot is sent every 1000ms and scales the images to 10% of their height/width.
 Go to: `http://localhost:3000/screencast` to view the screencast.
 
 
