@@ -110,6 +110,7 @@ program.command('screenshot')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-s, --screencast <interval>', 'screencast mode, interval in ms')
   .option('-P, --platform <platform>', 'target platform')
   .action(api.screenshot);
   

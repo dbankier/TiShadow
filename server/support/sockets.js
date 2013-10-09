@@ -72,6 +72,9 @@ exports.listen = function(app) {
                 }
               } else  {
                 Logger.info(command.toUpperCase() + " requested");
+                if (command === 'screenshot') {
+                  config.screencast = data.screencast;
+                }
                 try {
                   if (command === 'snippet' && data.code) {
                     data.code = uglify.toString(data.code);
@@ -103,9 +106,14 @@ exports.listen = function(app) {
                 Logger.log(data.level, data.name, data.message);
                 sio.sockets.in(room).emit("device_log", data);
               } else {
-                var img = path.join(config.screenshot_path, curr.name.replace(/[ ,]+/g, "_") + "_" + (new Date()).getTime() + ".png");
-                fs.writeFileSync(img, data.image, 'base64');
-                Logger.log("INFO", curr.name, "screenshot taken: " + img);
+                if (config.screencast) {
+                  data.name = curr.name;
+                  sio.sockets.in(room).emit("screenshot_display", data);
+                } else {
+                  var img = path.join(config.screenshot_path, curr.name.replace(/[ ,]+/g, "_") + "_" + (new Date()).getTime() + ".png");
+                  fs.writeFileSync(img, data.image, 'base64');
+                  Logger.log("INFO", curr.name, "screenshot taken: " + img);
+                }
               }
             }
           });

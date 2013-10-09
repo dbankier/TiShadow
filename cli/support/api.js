@@ -53,7 +53,13 @@ exports.closeApp = function(env) {
 
 exports.screenshot = function(env) {
   config.buildPaths(env, function() {
-    postToServer("screenshot", {platform: config.platform});
+    if (env.screencast) {
+      setInterval(function() {
+        postToServer("screenshot", {platform: config.platform, screencast: true});
+      },env.screencast);
+    } else {
+      postToServer("screenshot", {platform: config.platform, screencast: false});
+    }
   });
 };
 

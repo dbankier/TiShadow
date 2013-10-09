@@ -276,11 +276,22 @@ Screenshots
 You can capture screenshots of all connected devices using the following command: 
 
 ```
-  tishadow screenshot
+  $ tishadow screenshot
 ```
 
 The screenshots will be saved in `png` format in the `/tmp` directory or the path
 configured using the `--screenshot-path` flag when starting the server.
+
+###Screencast mode
+
+Instead of saving the screenshots you can stream them to the browser. Use the following command:
+
+```
+  $ tishadow screenshot --screencast 1000
+```
+
+In the above example a screenshot is sent every 1000ms. 
+Go to: `http://localhost:3000/screencast` to view the screencast.
 
 
 Code Snippets Via Webpage

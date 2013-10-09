@@ -41,6 +41,7 @@ if (config.port === undefined) {
 
 // HTTP Routes
 app.get('/', routes.index);
+app.get('/screencast', routes.screencast);
 app.get('/bundle/:room/:uuid?', routes.getBundle);
 app.post('/bundle', routes.postBundle);
 
