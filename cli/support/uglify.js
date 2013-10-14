@@ -8,6 +8,13 @@ function functionCall(name, args) {
   });
 }
 
+function functionCallByNode(node, args) {
+  return new UglifyJS.AST_Call({
+    expression: node,
+    args: args
+  });
+}
+
 function addAppName(node) {
   return new UglifyJS.AST_Binary({
     left: node,
@@ -91,7 +98,14 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       }
       //control localisation -- API
       if (node.expression.expression.property === "API") {
-        return functionCall("__log."+node.expression.end.value, node.args);
+        if (typeof node.expression.property === 'string') {
+          return functionCall("__log."+node.expression.end.value, node.args);
+        } else {
+          return functionCallByNode(new UglifyJS.AST_Sub({
+            expression: new UglifyJS.AST_SymbolRef({name:"__log"}),
+            property: node.expression.property
+          }) ,node.args);
+        }
       }
     }
     //assets
