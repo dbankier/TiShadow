@@ -68,7 +68,16 @@ describe("TiShadow conversions", function() {
         tiugly.toString("new View({backgroundImage:'./ui/Window.png'})", "/my/root/path/project/Resources/lib/Library.js"),
         "new View({\n    backgroundImage: __p.file(\"lib/ui/Window.png\")\n});"
         );
-
+    });
+  });
+  describe("Database source test", function() {
+    it("should reroute the database string source file", function() {
+      assert.equal(tiugly.toString("Ti.Database.install('mydatabase.sqlite','name')"), 
+        "Ti.Database.install(__p.file(\"mydatabase.sqlite\"), \"name\");");
+    });
+    it("should reroute the database expression source file", function() {
+      assert.equal(tiugly.toString("Ti.Database.install(a+b+c,'name')"), 
+        "Ti.Database.install(__p.file(a + b + c), \"name\");");
     });
   });
 

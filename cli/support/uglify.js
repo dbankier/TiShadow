@@ -107,6 +107,13 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
           }) ,node.args);
         }
       }
+      
+      //control database source - Database
+      if (node.expression.end.value === "install" &&
+          node.expression.expression.property === "Database") {
+        node.args[0] = functionCall("__p.file", [node.args[0]]);
+        return node;
+      }
     }
     //assets
     if (node.expression.end.value.match("^set") &&
