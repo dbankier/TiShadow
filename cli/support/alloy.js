@@ -44,7 +44,7 @@ exports.mapFiles = function(last_stat) {
 
       undouble = true;
 
-    } else if (file_path[0] === 'controllers') {
+    } else if (file_path[0] === 'controllers' && file_path[la].match(/\.js$/)) {
       file_path.unshift('alloy');
 
     } else if (file_path[0] === 'views' && file_path[la].match(/\.xml$/)) {
@@ -115,7 +115,7 @@ exports.mapFiles = function(last_stat) {
 
         undouble = true;
 
-      } else if (file_path[2] === 'controllers') {
+      } else if (file_path[2] === 'controllers' && file_path[la].match(/\.js$/)) {
         file_path.unshift('alloy');
 
       } else if (file_path[2] === 'views' && file_path[la].match(/\.xml$/)) {
