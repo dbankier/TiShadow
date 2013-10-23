@@ -24,7 +24,7 @@ function addAppName(node) {
 }
 function couldBeAsset(name) {
   return typeof name === 'string' && name.toLowerCase().match("image$")  ||
-    ["file", "sound", "icon", "url"].indexOf(name) !== -1;
+    ["file", "sound", "icon", "url", "leftButton", "rightButton"].indexOf(name) !== -1;
 }
 
 function doNotTouch(node) {
