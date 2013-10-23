@@ -14,7 +14,7 @@ var log = require("/api/Log"),
 function custom_require(file) {
   try {
     log.info("Requiring: " + file);
-    var rfile = Ti.Filesystem.getFile(file + ".js");
+    var rfile = Ti.Filesystem.getFile(file);
     var contents = rfile.read().text;
     return eval("(function(exports){var __OXP=exports;var module={'exports':exports};" + contents + ";if(module.exports !== __OXP){return module.exports;}return exports;})({})");
   } catch(e) { 
@@ -26,9 +26,9 @@ function custom_require(file) {
 exports.require = function(extension) {
   try {
     // Full Path
-    var path = exports.file(extension);
+    var path = exports.file(extension + ".js");
     // Assuming that it is a native module if the path does not exist
-    if (!Ti.Filesystem.getFile(path + ".js").exists()) {
+    if (!Ti.Filesystem.getFile(path).exists()) {
       log.debug("Native module:" + extension);
       return require(extension);
     }
@@ -69,14 +69,12 @@ exports.file = function(extension) {
     return extension;
   }
   extension = extension.replace(/^\//, '');
-                                var base = Ti.Filesystem.applicationDataDirectory + "/" + require("/api/TiShadow").currentApp + "/";
+  var base = Ti.Filesystem.applicationDataDirectory + "/" + require("/api/TiShadow").currentApp + "/";
   var path = base + extension,
   platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
-  var extension_parts = extension.split("/");
-  var needsJS = extension_parts[extension_parts.length-1].indexOf(".") === -1;
   var isImage = extension.toLowerCase().match("\\.(png|jpg)$");
   if (!isImage) {
-    var file = Ti.Filesystem.getFile(platform_path + (needsJS ? ".js" : ""));
+    var file = Ti.Filesystem.getFile(platform_path);
     if (file.exists()) {
       return platform_path;
     }
@@ -87,7 +85,7 @@ exports.file = function(extension) {
     }
   }
 
-  if (Ti.Filesystem.getFile(path + (needsJS ? ".js" : "")).exists()) {
+  if (Ti.Filesystem.getFile(path).exists()) {
     return path;
   }
   return extension;
