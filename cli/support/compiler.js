@@ -106,7 +106,9 @@ module.exports = function(env, callback) {
      fs.mkdirs(file_list.dirs, config.tishadow_src);
      fs.mkdirs(i18n_list.dirs, config.tishadow_src);
      if(spec_list.files.length > 0) {
-       fs.mkdirSync(config.tishadow_spec, 0755);
+       if (!fs.existsSync(config.tishadow_spec)) {
+         fs.mkdirSync(config.tishadow_spec, 0755);
+       }
        fs.mkdirs(spec_list.dirs, config.tishadow_spec);
        spec_list.files = spec_list.files.map(function(file) { return "spec/" + file;});
        spec_list.dirs = ["spec"].concat(spec_list.dirs.map(function(dir) {return "spec/" + dir;}));
