@@ -51,6 +51,9 @@ function finalise(file_list,callback) {
   var total = file_list.files.length;
   bundle.pack(file_list.files,function(written) { 
     logger.info(total+ " file(s) bundled."); 
+    if (config.isAlloy) {
+      alloy.writeMap();
+    }
     fs.touch(config.last_updated_file);
     if (config.isBundle) {
       logger.info("Bundle Ready: " + config.bundle_file);
@@ -77,6 +80,10 @@ module.exports = function(env, callback) {
 
     logger.info("Beginning Build Process");
     var file_list,i18n_list,spec_list;
+    // a js map of hashes must be built whether or not it is an update.
+    if (config.isAlloy) { 
+      alloy.buildMap();
+    }
     if( config.isUpdate) {
        var last_stat = fs.statSync(config.last_updated_file);
        file_list = config.isAlloy ? alloy.mapFiles(last_stat) : fs.getList(config.resources_path,last_stat.mtime);

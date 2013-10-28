@@ -35,17 +35,16 @@ config.platform_path     = path.join(base, 'platform');
 config.spec_path         = path.join(base, 'spec');
 config.i18n_path         = path.join(base, 'i18n');
 config.build_path        = path.join(base, 'build');
+config.tishadow_build    = path.join(config.build_path, 'tishadow');
+config.tishadow_src      = path.join(config.tishadow_build, 'src');
+config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
+config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
 
 //Config setup
 config.buildPaths = function(env, callback) {
   config.init(env);
   getAppName(function(result) {
     var app_name = config.app_name = result.name || "bundle";
-    config.base              = base;
-    config.tishadow_build    = path.join(config.build_path, 'tishadow');
-    config.tishadow_src      = path.join(config.tishadow_build, 'src');
-    config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
-    config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
     if (config.isTiCaster && result.ticaster_user && result.ticaster_app) {
@@ -69,9 +68,6 @@ config.buildPaths = function(env, callback) {
           - fs.statSync(path.join(config.resources_path, a,'alloy.js')).mtime.getTime()
         })[0];
       }
-
-      // alloy >= 1.3 uses platform folders for source code, i.e "PlatformAlloy"
-      config.isPlatformAlloy = fs.existsSync(path.join(config.resources_path, config.platform,'alloy.js'));
       config.platform = config.platform==="iphone" ? "ios": config.platform;
     }
     config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.platform ? '_' + config.platform : ''));
