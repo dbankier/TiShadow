@@ -16,8 +16,7 @@ exports.mapFiles = function(last_stat) {
   }
   var previous_map = require(previous_map_file);
   file_list.files = file_list.files.filter(function(file) {
-    return (!file.match("\.js$") && fs.statSync(path.join(config.resources_path,file)).mtime > last_stat)
-      || current_map[file] !== previous_map[file];
+      return current_map[file] !== previous_map[file];
   });
   return file_list;
 };
@@ -27,8 +26,7 @@ exports.buildMap = function() {
   file_list = fs.getList(config.resources_path);
 
   // create a map of hashes for js files
-  var js_files = file_list.files.filter(function(name) { return name.match("\.js$"); }); 
-  current_map = _.object(js_files, js_files.map(function(file) {
+  current_map = _.object(file_list.files,file_list.files.map(function(file) {
     return crypto.createHash('md5').update(fs.readFileSync(path.join(config.resources_path, file))).digest("hex");
   }));
 };
