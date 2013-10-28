@@ -142,6 +142,9 @@ exports.mapFiles = function(last_stat) {
       continue;
     }     
 
+    if (config.isPlatformAlloy) {
+      file_path.unshift(config.platform === "ios" ? "iphone" : config.platform)
+    }
     var file_path_join = file_path.join(path.sep);
     file_list.files.push(file_path_join);
   }

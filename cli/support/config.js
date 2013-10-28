@@ -57,12 +57,22 @@ config.buildPaths = function(env, callback) {
     }
     config.isAlloy = fs.existsSync(config.alloy_path);
     if (!config.platform && config.isAlloy) {
-      platforms.some(function(platform) {
-        if (fs.existsSync(path.join(config.resources_path, platform, 'alloy', 'CFG.js'))) {
-          config.platform = (platform === 'iphone') ? 'ios' : platform;
-          return true;
-        }
-      });
+      var platform_folders = platforms
+        .filter(function(platform) {
+          return fs.existsSync(path.join(config.resources_path, platform, 'alloy', 'CFG.js'));
+        })
+      if (platform_folders.length === 1) {
+        config.platform = platform_folders[0]
+      } else { // alloy >= 1.3 uses platform folders for source code
+        config.platform = platform_folders.sort(function(a,b) {
+          return fs.statSync(path.join(config.resources_path, b, 'alloy.js')).mtime.getTime()
+          - fs.statSync(path.join(config.resources_path, a,'alloy.js')).mtime.getTime()
+        })[0];
+      }
+
+      // alloy >= 1.3 uses platform folders for source code, i.e "PlatformAlloy"
+      config.isPlatformAlloy = fs.existsSync(path.join(config.resources_path, config.platform,'alloy.js'));
+      config.platform = config.platform==="iphone" ? "ios": config.platform;
     }
     config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.platform ? '_' + config.platform : ''));
     config.isPatch = env.patch;
