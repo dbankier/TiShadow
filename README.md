@@ -391,6 +391,30 @@ Copyright 2012 jordi domenech jordi@iamyellow.net Apache License, Version 2.0
 Now using ti.compression:
 [titanium_modules](https://github.com/appcelerator/titanium_modules)
 
+Contributors
+------------
+
+```
+ project  : Tishadow
+ repo age : 1 year, 7 months
+ active   : 153 days
+ commits  : 346
+ files    : 194
+ authors  :
+   262  David Bankier           75.7%
+    42  dbankier                12.1%
+    31  Fokke Zandbergen        9.0%
+     2  noughts                 0.6%
+     1  Clément Blanco         0.3%
+     1  Timan Rebel             0.3%
+     1  astronaughts            0.3%
+     1  iskugor                 0.3%
+     1  jsjant                  0.3%
+     1  Pedro Palmero           0.3%
+     1  Hugh Cannon             0.3%
+     1  Ivan Skugor             0.3%
+     1  Jeff Bonnes             0.3%
+```
 
 Feedback appreciated.
 
