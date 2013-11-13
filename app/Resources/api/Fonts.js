@@ -12,7 +12,7 @@ function loadAll(root) {
     if (file_name.toLowerCase().match(/\.otf$/) ||
        file_name.toLowerCase().match(/\.ttf$/) ) { // assume font
       log.debug("Registering Font: " + file_name);
-      var file = Ti.Filesystem.getFile(root + file_name);
+      var file = Ti.Filesystem.getFile(root, file_name);
       TiDynamicFont.registerFont(file);
     } 
   });
