@@ -121,9 +121,9 @@ module.exports = function(env, callback) {
        spec_list.dirs = ["spec"].concat(spec_list.dirs.map(function(dir) {return "spec/" + dir;}));
      }
 
-     // Just pump out localisation files
+     // using the slower sync read/write for localisation files 
      i18n_list.files.forEach(function(file, idx) {
-       fs.createReadStream(path.join(config.i18n_path,file)).pipe(fs.createWriteStream(path.join(config.tishadow_src, file)));
+       fs.writeFileSync(path.join(config.tishadow_src, file),fs.readFileSync(path.join(config.i18n_path,file)));
      });
 
      // Process Files
