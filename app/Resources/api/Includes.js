@@ -45,6 +45,7 @@ var includes = [
   Ti.Media.createVideoPlayer,
   Ti.Media.showCamera,
   Ti.Network.Socket.createTCP,
+  Ti.Calendar,
   Ti.Stream,
   Ti.Codec,
   Ti.Utils,
