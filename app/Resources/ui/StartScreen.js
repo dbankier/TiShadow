@@ -43,6 +43,8 @@ exports.StartScreen = function() {
   win.add(app_list);
   var login = new LoginView();
   login.zIndex = 10;
+  win.add(login);
+
   function connect() {
     TiShadow.connect({
       host: Ti.App.Properties.getString("tishadow:address", "localhost"),
@@ -77,10 +79,6 @@ exports.StartScreen = function() {
   login.addEventListener("connect", function(o) {
     activity.show();
     connect();
-  });
-
-  win.addEventListener('open', function() { 
-    login.open();
   });
 
   Ti.App.addEventListener("tishadow:refresh_list", function(o) {

@@ -2,15 +2,15 @@
 var Styles = require('/ui/Styles').login;
 
 function LoginView() {
-  var window = Ti.UI.createWindow();
+  var view = Ti.UI.createView();
   var black = Ti.UI.createView({
      backgroundColor: 'black',
      opacity: 0.4
   });
   black.addEventListener('click', function() {
-    window.hide();
+    view.hide();
   });
-  window.add(black);
+  view.add(black);
   
   //Container
   var container = Ti.UI.createView(Styles.container);
@@ -98,7 +98,7 @@ function LoginView() {
     } else if (Ti.App.Properties.getString("tishadow:address","").length === 0) {
       alert("IP Address Required");
     } else {
-      window.fireEvent("connect");
+      view.fireEvent("connect");
     }
   });
 
@@ -109,9 +109,9 @@ function LoginView() {
   container.add(port);
   container.add(room);
 
-  window.add(container);
+  view.add(container);
 
-  return window;
+  return view;
 };
 
 module.exports = LoginView;
