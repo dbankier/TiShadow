@@ -16,8 +16,12 @@ if (os === "android") {
       density = "mdpi";
     } else if (logicalDensityFactor <= 1.5) {
       density = "hdpi";
-    } else {
+    } else if (logicalDensityFactor <= 2.0) {
       density = "xhdpi";
+    } else if (logicalDensityFactor <= 3.0) {
+      density = "xxhdpi";
+    } else {
+      density = "xxxhdpi";
     }
 
     folders.push("res-" + ratio + "-%ORIENTATION%-" + density);
