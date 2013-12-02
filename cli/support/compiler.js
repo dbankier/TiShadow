@@ -67,11 +67,6 @@ function finalise(file_list,callback) {
 }
 
 module.exports = function(env, callback) {
-  if (!fs.existsSync(path.join(config.base,'tiapp.xml'))) {
-    logger.error("Script must be executed in the Titanium project's root directory");
-    process.exit();
-  }
-
   config.buildPaths(env, function() {
     if (env.jshint) {
       logger.info("Running JSHint");

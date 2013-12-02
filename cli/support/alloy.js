@@ -7,10 +7,11 @@ var fs     = require("fs"),
 
 var current_map, 
     file_list,
-    previous_map_file = path.join(config.tishadow_build, 'alloy_map.json');
+    previous_map_file;
 
 exports.mapFiles = function(last_stat) {
   // full build if the previous map doesn't exits
+  previous_map_file = path.join(config.tishadow_build, 'alloy_map.json');
   if (!fs.existsSync(previous_map_file)) {
     return file_list;
   }

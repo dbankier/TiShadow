@@ -1,23 +1,22 @@
 var path = require("path"),
     fs = require("fs"),
-    xml2js = require("xml2js"),
     colors = require("colors"),
     logger = require("../../server/logger"),
-    base = process.cwd(),
+    base,
     home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'],
     platforms = ['iphone','android','blackberry','mobileweb'],
+    tiapp = require("tiapp"),
     config = {};
 
 //get app name
 function getAppName(callback) {
-  var parser = new xml2js.Parser();
-  fs.readFile(path.join(base,'tiapp.xml'), function(err, data) {
-    if (err) callback({});
-    else {
-      parser.parseString(data, function (err, result) {
-        callback(result);
-      });
+  tiapp.find(process.cwd(),function(err,result) {
+    if (err) {
+      logger.error("Script must be run within a Titanium project.");
+      process.exit();
     }
+    base = result.path; 
+    callback(result.obj);
   });
 }
 
@@ -26,24 +25,25 @@ var config_path = path.join(home,'.tishadow.json');
 if (fs.existsSync(config_path)) {
   config = require(config_path);
 }
-config.base = base;
-config.alloy_path        = path.join(base, 'app');
-config.resources_path    = path.join(base, 'Resources');
-config.fonts_path        = path.join(config.resources_path, 'fonts');
-config.modules_path      = path.join(base, 'modules');
-config.platform_path     = path.join(base, 'platform');
-config.spec_path         = path.join(base, 'spec');
-config.i18n_path         = path.join(base, 'i18n');
-config.build_path        = path.join(base, 'build');
-config.tishadow_build    = path.join(config.build_path, 'tishadow');
-config.tishadow_src      = path.join(config.tishadow_build, 'src');
-config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
-config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
 
 //Config setup
 config.buildPaths = function(env, callback) {
   config.init(env);
   getAppName(function(result) {
+    config.base = base;
+    config.alloy_path        = path.join(base, 'app');
+    config.resources_path    = path.join(base, 'Resources');
+    config.fonts_path        = path.join(config.resources_path, 'fonts');
+    config.modules_path      = path.join(base, 'modules');
+    config.platform_path     = path.join(base, 'platform');
+    config.spec_path         = path.join(base, 'spec');
+    config.i18n_path         = path.join(base, 'i18n');
+    config.build_path        = path.join(base, 'build');
+    config.tishadow_build    = path.join(config.build_path, 'tishadow');
+    config.tishadow_src      = path.join(config.tishadow_build, 'src');
+    config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
+    config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
+
     var app_name = config.app_name = result.name || "bundle";
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
