@@ -11,8 +11,7 @@ var current_map,
 
 exports.mapFiles = function(last_stat) {
   // full build if the previous map doesn't exits
-  previous_map_file = path.join(config.tishadow_build, 'alloy_map.json');
-  if (!fs.existsSync(previous_map_file)) {
+  if (!fs.existsSync(config.alloy_map_path)) {
     return file_list;
   }
   var previous_map = require(previous_map_file);
@@ -33,5 +32,5 @@ exports.buildMap = function() {
 };
 
 exports.writeMap = function() {
-  fs.writeFileSync(previous_map_file, JSON.stringify(current_map));
+  fs.writeFileSync(config.alloy_map_path, JSON.stringify(current_map));
 }

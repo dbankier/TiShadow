@@ -16,7 +16,7 @@ function getAppName(callback) {
       process.exit();
     }
     base = result.path; 
-    callback(result.obj);
+    callback(result.obj['ti:app']);
   });
 }
 
@@ -43,12 +43,13 @@ config.buildPaths = function(env, callback) {
     config.tishadow_src      = path.join(config.tishadow_build, 'src');
     config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
     config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
+    config.alloy_map_path    = path.join(config.tishadow_build, 'alloy_map.json');
 
-    var app_name = config.app_name = result.name || "bundle";
+    var app_name = config.app_name = result.name[0] || "bundle";
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
-    if (config.isTiCaster && result.ticaster_user && result.ticaster_app) {
-      config.room = result.ticaster_user + ":" + result.ticaster_app;
+    if (config.isTiCaster && result.ticaster_user[0] && result.ticaster_app[0]) {
+      config.room = result.ticaster_user[0] + ":" + result.ticaster_app[0];
     }
     if (config.room === undefined) {
       logger.error("ticaster setting missing from tiapp.xml");
