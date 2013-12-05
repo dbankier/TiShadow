@@ -14,10 +14,12 @@ exports.mapFiles = function(last_stat) {
   if (!fs.existsSync(config.alloy_map_path)) {
     return file_list;
   }
-  var previous_map = require(previous_map_file);
-  file_list.files = file_list.files.filter(function(file) {
-      return current_map[file] !== previous_map[file];
-  });
+  if (previous_map_file) {
+    var previous_map = require(previous_map_file);
+    file_list.files = file_list.files.filter(function(file) {
+        return current_map[file] !== previous_map[file];
+    });
+  }
   return file_list;
 };
 
