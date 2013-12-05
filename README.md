@@ -31,6 +31,12 @@ TiShadow can be installed via npm using the following command:
   sudo npm install -g tishadow
 ```
 
+Or if you want to use the master version directly from GitHub:
+
+```
+  sudo npm install -g git+ssh://git@github.com/dbankier/TiShadow.git
+```
+
 ### TiShadow App
 
 To create a new titanium project use the following command:
