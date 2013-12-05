@@ -32,13 +32,16 @@ exports.copyCoreProject = function(env) {
   }
 
   if (env.upgrade) {
+    logger.info("Upgrading existing app....");
+
     if (!fs.existsSync(path.join(dest,'Resources'))) {
       logger.error("Could not find existing tishadow app");
       return false;
     }
     wrench.copyDirSyncRecursive(path.join(tishadow_app, 'Resources'), path.join(dest,'Resources'));
-    logger.info("TiShadow app upgraded");
   } else {
+    logger.info("Creating new app...");
+
     wrench.copyDirSyncRecursive(tishadow_app, dest);
 
     //inject new GUID
@@ -48,7 +51,6 @@ exports.copyCoreProject = function(env) {
            .replace("{{GUID}}", 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);})) // GUID one-liner: http://stackoverflow.com/a/2117523
            .replace("{{APPID}}", env.appid)
                     );
-    logger.info("TiShadow app ready");
   }
   return true;
 };
@@ -66,7 +68,7 @@ exports.build = function(env) {
   var compiler = require("./compiler");
   //bundle the source
   compiler(env,function() {
-    logger.info("Appying...");
+
     //copy tishadow src
     if (exports.copyCoreProject(env)) {
       // generate app.js
@@ -81,6 +83,10 @@ exports.build = function(env) {
       ['iphone', 'android'].forEach(function(platform) {
         if(fs.existsSync(path.join(config.resources_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.resources_path,platform),path.join(dest_resources,platform));
+          var appjs = path.join(dest_resources,platform,'app.js');
+          if (fs.existsSync(appjs)) {
+            fs.unlinkSync(appjs);
+          }
         }
         if(fs.existsSync(path.join(config.modules_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.modules_path,platform),path.join(dest_modules,platform),{preserve:true});
@@ -99,6 +105,8 @@ exports.build = function(env) {
                        .replace("</modules>",required_modules.join("\n")));
       // copy the bundle
       fs.writeFileSync(path.join(dest_resources, config.app_name.replace(/ /g,"_") + ".zip"),fs.readFileSync(config.bundle_file));
+
+      logger.info("TiShadow app ready");
     }
   });
 }
