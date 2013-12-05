@@ -6,15 +6,14 @@ var fs     = require("fs"),
     logger = require("../../server/logger.js");
 
 var current_map, 
-    file_list,
-    previous_map_file;
+    file_list;
 
 exports.mapFiles = function(last_stat) {
   // full build if the previous map doesn't exits
   if (!fs.existsSync(config.alloy_map_path)) {
     return file_list;
   }
-  var previous_map = require(previous_map_file);
+  var previous_map = require(config.alloy_map_path);
   file_list.files = file_list.files.filter(function(file) {
       return current_map[file] !== previous_map[file];
   });
