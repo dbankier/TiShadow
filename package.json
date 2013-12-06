@@ -32,7 +32,8 @@
     "url": "git://github.com/dbankier/TiShadow.git"
   },
   "bin": {
-    "tishadow": "./cli/tishadow"
+    "tishadow": "./cli/tishadow",
+    "ts": "./cli/tishadow"
   },
   "license": "Apache Public License v2",
   "framework": "none",
