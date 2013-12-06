@@ -82,11 +82,10 @@ exports.build = function(env) {
       //copy splash screen and icons
       ['iphone', 'android'].forEach(function(platform) {
         if(fs.existsSync(path.join(config.resources_path,platform))) {
-          wrench.copyDirSyncRecursive(path.join(config.resources_path,platform),path.join(dest_resources,platform));
-          var appjs = path.join(dest_resources,platform,'app.js');
-          if (fs.existsSync(appjs)) {
-            fs.unlinkSync(appjs);
-          }
+          wrench.copyDirSyncRecursive(path.join(config.resources_path,platform),path.join(dest_resources,platform),{
+            filter: new RegExp("(\.png|images|res-.*)$","i"),
+            whitelist: true
+          });
         }
         if(fs.existsSync(path.join(config.modules_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.modules_path,platform),path.join(dest_modules,platform),{preserve:true});
