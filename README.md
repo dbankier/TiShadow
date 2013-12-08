@@ -401,16 +401,17 @@ Contributors
 ------------
 
 ```
- project  : Tishadow
- repo age : 1 year, 7 months
- active   : 153 days
- commits  : 346
+ project  : TiShadow
+ repo age : 1 year, 9 months
+ active   : 167 days
+ commits  : 373
  files    : 194
  authors  :
-   262  David Bankier           75.7%
-    42  dbankier                12.1%
-    31  Fokke Zandbergen        9.0%
-     2  noughts                 0.6%
+   284  David Bankier           76.1%
+    42  dbankier                11.3%
+    35  Fokke Zandbergen        9.4%
+     2  noughts                 0.5%
+     1  Luis Cruz               0.3%
      1  Clément Blanco         0.3%
      1  Timan Rebel             0.3%
      1  astronaughts            0.3%
