@@ -7,7 +7,8 @@ var
     pkginfo  = require('pkginfo'),
     program  = require('commander'),
     fs       = require('fs'),
-    watch    = require('watch')
+    path     = require('path'),
+    gaze    = require('gaze')
     ;
 
 // check if watch enabled
@@ -166,15 +167,13 @@ function execute() {
 }
 
 if (config.isWatching) {
-  function watcher(f, curr, prev) {
-    if (curr || prev) {
-      execute();
-    }
-  }
-  watch.watchTree(config.resources_path,watcher);
-  if (fs.existsSync(config.spec_path)) {
-    watch.watchTree(config.spec_path,watcher);
-  }
+  config.buildPaths({},function() {
+    gaze([path.join(config.resources_path,"**"), path.join(config.spec_path, "**")],function(err, watcher){
+      this.on('all', function watcher(event, filepath) {
+          execute();
+      });
+    });
+  });
 } 
 
 execute();
