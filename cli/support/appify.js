@@ -99,7 +99,7 @@ exports.build = function(env) {
       required_modules.push("</modules>")
       fs.writeFileSync(path.join(dest,"tiapp.xml"), 
                        source_tiapp
-                       .replace(/<plugins>(.|\n)*<\/plugins>/,"")
+                       .replace(/<plugin[^>]*>ti\.alloy<\/plugin>/,"")
                        .replace("<modules/>","<modules></modules>")
                        .replace("</modules>",required_modules.join("\n")));
       // copy the bundle

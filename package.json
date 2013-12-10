@@ -1,6 +1,6 @@
 {
   "name": "tishadow",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "dependencies": {
     "jade": ">= 0.0.1",
     "socket.io": ">= 0.9.6",
@@ -13,12 +13,12 @@
     "underscore": "1.4.x",
     "archiver": "0.4.8",
     "express": "~3.3.4",
-    "watch": "~0.8.0",
     "lazystream": "~0.1.0",
     "form-data": "~0.1.0",
     "uglify-js": "~2.4.0",
     "mocha": "~1.12.1",
-    "tiapp": "~0.0.1"
+    "tiapp": "~0.0.1",
+    "gaze": "~0.4.3"
   },
   "devDependencies": {},
   "optionalDependencies": {},
@@ -32,7 +32,8 @@
     "url": "git://github.com/dbankier/TiShadow.git"
   },
   "bin": {
-    "tishadow": "./cli/tishadow"
+    "tishadow": "./cli/tishadow",
+    "ts": "./cli/tishadow"
   },
   "license": "Apache Public License v2",
   "framework": "none",
