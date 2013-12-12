@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var path   = require("path"),
     fs     = require("fs"),
+    exec   = require("exec-sync"),
     alloy  = require("./alloy"),
     api    = require("./api"),
     bundle = require("./bundle"),
@@ -77,6 +78,17 @@ module.exports = function(env, callback) {
     var file_list,i18n_list,spec_list;
     // a js map of hashes must be built whether or not it is an update.
     if (config.isAlloy) { 
+      logger.info("Compiling Alloy");
+      if (!config.platform) {
+        logger.error("You need to use the --platform (android|ios) flag with an alloy project.");
+        return;
+      }
+      try {
+        exec("alloy compile -b -l 1 --config platform="+config.platform);
+      } catch (e) {
+        logger.error(e);
+        return;
+      }
       alloy.buildMap();
     }
     if( config.isUpdate) {
@@ -87,7 +99,7 @@ module.exports = function(env, callback) {
 
        if (file_list.files.length === 0 && i18n_list.files.length === 0 && spec_list.files.length === 0) {
          logger.error("Nothing to update.");
-         process.exit();
+         return;
        }
      } else {
        if (!fs.existsSync(config.build_path)){
