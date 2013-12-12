@@ -86,7 +86,7 @@ module.exports = function(env, callback) {
       try {
         exec("alloy compile -b -l 1 --config platform="+config.platform);
       } catch (e) {
-        logger.error(e);
+        logger.error("Alloy Compile Error\n" + e.message);
         return;
       }
       alloy.buildMap();
