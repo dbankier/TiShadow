@@ -13,7 +13,8 @@ exports.mapFiles = function(last_stat) {
   if (!fs.existsSync(config.alloy_map_path)) {
     return file_list;
   }
-  var previous_map = require(config.alloy_map_path);
+  // Can't use require here as it caches the result (!!)
+  var previous_map = JSON.parse(fs.readFileSync(config.alloy_map_path));
   file_list.files = file_list.files.filter(function(file) {
       return current_map[file] !== previous_map[file];
   });
