@@ -99,7 +99,7 @@ module.exports = function(env, callback) {
 
        if (file_list.files.length === 0 && i18n_list.files.length === 0 && spec_list.files.length === 0) {
          logger.error("Nothing to update.");
-         process.exit();
+         return;
        }
      } else {
        if (!fs.existsSync(config.build_path)){
