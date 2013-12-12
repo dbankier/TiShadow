@@ -81,13 +81,13 @@ module.exports = function(env, callback) {
       logger.info("Compiling Alloy");
       if (!config.platform) {
         logger.error("You need to use the --platform (android|ios) flag with an alloy project.");
-        return;
+        process.exit();
       }
       try {
         exec("alloy compile -b -l 1 --config platform="+config.platform);
       } catch (e) {
         logger.error("Alloy Compile Error\n" + e.message);
-        return;
+        process.exit();
       }
       alloy.buildMap();
     }
