@@ -1,15 +1,14 @@
 #!/usr/bin/env node
-var
-    api      = require('./support/api'),
+var api      = require('./support/api'),
     compiler = require('./support/compiler'),
     colors   = require('colors'),
     config   = require('./support/config'),
+    logger = require("../server/logger.js"),
     pkginfo  = require('pkginfo'),
     program  = require('commander'),
     fs       = require('fs'),
     path     = require('path'),
-    gaze    = require('gaze')
-    ;
+    gaze    = require('gaze');
 
 // check if watch enabled
 var at_index = process.argv.indexOf("@");
@@ -168,12 +167,13 @@ function execute() {
 
 if (config.isWatching) {
   config.buildPaths({},function() {
-    gaze([
-      path.join(config.isAlloy ? config.alloy_path : config.resources_path ,"**"),
-      path.join(config.i18n_path,"**"),
-      path.join(config.spec_path, "**")],function(err, watcher){
+    var paths = [config.isAlloy ? "app" :"Resources", "i18n", "spec"].map(function(p) {
+      return path.join(p,"**/*");
+    });
+    gaze(paths ,function(err, watcher){
       this.on('all', function watcher(event, filepath) {
-          execute();
+        logger.debug(event + ": " + filepath);
+        execute();
       });
     });
   });
