@@ -26,7 +26,7 @@ function prepare(src, dst, callback) {
       fs.writeFile(dst,src_text, callback);
     } catch (e) {
       logger.error(e.message + "\nFile   : " + src + "\nLine   : " + e.line + "\nColumn : " + e.col);
-      process.exit(1);
+      config.isWatching || process.exit(1);
     }
   } else { // Non-JS file - just pump it
     var  is = fs.createReadStream(src);
