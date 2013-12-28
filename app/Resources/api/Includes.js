@@ -21,6 +21,7 @@ var includes = [
   Ti.UI.createPickerColumn,
   Ti.UI.createPickerRow,
   Ti.UI.createProgressBar,
+  Ti.UI.createRefreshControl,
   Ti.UI.createScrollView,
   Ti.UI.createScrollableView,
   Ti.UI.createSlider,
