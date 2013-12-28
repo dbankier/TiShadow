@@ -19,7 +19,7 @@
     "mocha": "~1.12.1",
     "tiapp": "~0.0.1",
     "gaze": "~0.4.3",
-    "exec-sync": "~0.1.6"
+    "execSync": "~1.0.1-pre"
   },
   "devDependencies": {},
   "optionalDependencies": {},

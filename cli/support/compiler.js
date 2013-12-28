@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var path   = require("path"),
     fs     = require("fs"),
-    exec   = require("exec-sync"),
+    exec   = require("execSync").exec,
     alloy  = require("./alloy"),
     api    = require("./api"),
     bundle = require("./bundle"),
@@ -83,10 +83,10 @@ module.exports = function(env, callback) {
         logger.error("You need to use the --platform (android|ios) flag with an alloy project.");
         process.exit();
       }
-      try {
-        exec("alloy compile -b -l 1 --config platform="+config.platform);
-      } catch (e) {
-        logger.error("Alloy Compile Error\n" + e.message);
+      var term = exec("alloy compile -b -l 1 --config platform="+config.platform);
+      process.stdout.write(term.stdout);
+      if (term.code > 0) {
+        logger.error("Alloy Compile Error\n");
         process.exit();
       }
       alloy.buildMap();
