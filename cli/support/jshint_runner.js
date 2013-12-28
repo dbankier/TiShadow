@@ -7,7 +7,7 @@ var jshint = require("jshint").JSHINT,
 exports.checkContent = function(filename, filecontent) {
   if (!jshint(filecontent)) {
     jshint.data().errors.forEach(function(error) {
-      logger.error(filename + " line: " + error.line + ", column:" + error.character + ", " + error.reason);
+      logger.error(filename + (error ? " line: " + error.line + ", column:" + error.character + ", " + error.reason : "") );
     });
   }
 };
