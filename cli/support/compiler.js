@@ -20,8 +20,16 @@ function prepare(src, dst, callback) {
     try {
       var src_text = uglify.toString(fs.readFileSync(src).toString(),src);
       if (src.match("_spec.js$")) {
-        src_text =  "var __jasmine = require('/lib/jasmine');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
-          +src_text;
+        if (config.specType === "jasmine") {
+          src_text =  "var __jasmine = require('/lib/jasmine');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
+            +src_text;
+        } else if (config.specType === "mocha-should") {
+          src_text =  "require('/lib/should');\n"
+            +src_text;
+        } else if (config.specType === "mocha-chai") {
+          src_text =  "var chai = require('/lib/chai'); var expect = chai.expect; var assert = chai.assert;\n"
+            +src_text;
+        }
       }
       fs.writeFile(dst,src_text, callback);
     } catch (e) {

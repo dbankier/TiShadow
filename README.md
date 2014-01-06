@@ -193,9 +193,13 @@ Here are a full list of options:
     -o, --host <host>      server host name / ip address
     -p, --port <port>      server port
     -r, --room <room>      server room
+    -t, --type <type>      testing library
     -j, --jshint           analyse code with JSHint
     -x, --junit-xml        output report as JUnit XML
 ```
+
+**NEW**: You can now select the testing library to use `jasmine`, `mocha-should` or `mocha-chai`. 
+The default library is `jasmine` to change that use, e.g. `tishadow config -t mocha-should`.
 
 The test results will be returned to the server/cli output:
 ![Spec Output](http://github.com/dbankier/TiShadow/raw/master/example/spec.png)
