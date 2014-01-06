@@ -1,15 +1,14 @@
 #!/usr/bin/env node
-var
-    api      = require('./support/api'),
+var api      = require('./support/api'),
     compiler = require('./support/compiler'),
     colors   = require('colors'),
     config   = require('./support/config'),
+    logger = require("../server/logger.js"),
     pkginfo  = require('pkginfo'),
     program  = require('commander'),
     fs       = require('fs'),
     path     = require('path'),
-    gaze    = require('gaze')
-    ;
+    gaze    = require('gaze');
 
 // check if watch enabled
 var at_index = process.argv.indexOf("@");
@@ -82,6 +81,7 @@ program.command('spec')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-t, --type <type>', 'testing library')
   .option('-c, --ticaster', 'connect to ticaster')
   .option('-j, --jshint', 'analyse code with JSHint')
   .option('-x, --junit-xml','output report as JUnit XML')
@@ -131,6 +131,7 @@ program.command('config')
   .option('-o, --host <host>', 'set default server host name / ip address')
   .option('-p, --port <port>', 'set default server port')
   .option('-r, --room <room>', 'set default server room')
+  .option('-t, --type <type>', 'default testing library')
   .action(config.write);
 
 program.command('app')
@@ -168,12 +169,13 @@ function execute() {
 
 if (config.isWatching) {
   config.buildPaths({},function() {
-    gaze([
-      path.join(config.isAlloy ? config.alloy_path : config.resources_path ,"**"),
-      path.join(config.i18n_path,"**"),
-      path.join(config.spec_path, "**")],function(err, watcher){
+    var paths = [config.isAlloy ? "app" :"Resources", "i18n", "spec"].map(function(p) {
+      return path.join(p,"**/*");
+    });
+    gaze(paths, {cwd:config.base}, function(err, watcher){
       this.on('all', function watcher(event, filepath) {
-          execute();
+        logger.debug(event + ": " + filepath);
+        execute();
       });
     });
   });

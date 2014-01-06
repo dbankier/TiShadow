@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var path   = require("path"),
     fs     = require("fs"),
-    exec   = require("exec-sync"),
+    exec   = require("execSync").exec,
     alloy  = require("./alloy"),
     api    = require("./api"),
     bundle = require("./bundle"),
@@ -20,13 +20,21 @@ function prepare(src, dst, callback) {
     try {
       var src_text = uglify.toString(fs.readFileSync(src).toString(),src);
       if (src.match("_spec.js$")) {
-        src_text =  "var __jasmine = require('/lib/jasmine');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
-          +src_text;
+        if (config.specType === "jasmine") {
+          src_text =  "var __jasmine = require('/lib/jasmine');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
+            +src_text;
+        } else if (config.specType === "mocha-should") {
+          src_text =  "require('/lib/should');\n"
+            +src_text;
+        } else if (config.specType === "mocha-chai") {
+          src_text =  "var chai = require('/lib/chai'); var expect = chai.expect; var assert = chai.assert;\n"
+            +src_text;
+        }
       }
       fs.writeFile(dst,src_text, callback);
     } catch (e) {
       logger.error(e.message + "\nFile   : " + src + "\nLine   : " + e.line + "\nColumn : " + e.col);
-      process.exit(1);
+      config.isWatching || process.exit(1);
     }
   } else { // Non-JS file - just pump it
     var  is = fs.createReadStream(src);
@@ -81,13 +89,13 @@ module.exports = function(env, callback) {
       logger.info("Compiling Alloy");
       if (!config.platform) {
         logger.error("You need to use the --platform (android|ios) flag with an alloy project.");
-        return;
+        process.exit();
       }
-      try {
-        exec("alloy compile -b -l 1 --config platform="+config.platform);
-      } catch (e) {
-        logger.error("Alloy Compile Error\n" + e.message);
-        return;
+      var term = exec("alloy compile -b -l 1 --config platform="+config.platform);
+      process.stdout.write(term.stdout);
+      if (term.code > 0) {
+        logger.error("Alloy Compile Error\n");
+        process.exit();
       }
       alloy.buildMap();
     }

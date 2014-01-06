@@ -74,7 +74,7 @@ exports.newBundle = function(file_list) {
   fn("bundle", {
     bundle:config.bundle_file,
     deployOnly: config.isDeploy || undefined,
-    spec: {run: config.isSpec, junitxml: config.isJUnit},
+    spec: {run: config.isSpec, junitxml: config.isJUnit, type: config.specType},
     locale: config.locale,
     platform: config.platform,
     patch : {run: config.isPatch, files: file_list}

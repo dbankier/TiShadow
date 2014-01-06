@@ -22,14 +22,18 @@ function loadSpecs(name, base, filter) {
   });
 }
 
-exports.run = function (name, junitxml) {
+exports.run = function (name, junitxml, type) {
   //For a new environment reset
-  jasmine.currentEnv_ = new jasmine.Env();
-  if (junitxml) {
-    jasmine.getEnv().addReporter(new JUnitXMLReporter());
-  } else {
-    jasmine.getEnv().addReporter(new TiShadowReporter());
+  type = type || "jasmine";
+  if (type === "jasmine") {
+    jasmine.currentEnv_ = new jasmine.Env();
+    if (junitxml) {
+      jasmine.getEnv().addReporter(new JUnitXMLReporter());
+    } else {
+      jasmine.getEnv().addReporter(new TiShadowReporter());
+    }
   }
+  
   var filter_file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + name + "/spec/specs"); 
   var filter = {};
   if (filter_file.exists()) {
@@ -40,7 +44,13 @@ exports.run = function (name, junitxml) {
   p.clearCache();
   require("/api/Localisation").clear();
   loadSpecs(name, "", filter);
-  jasmine.getEnv().execute();
+  if (type === "jasmine") {
+    jasmine.getEnv().execute();
+  } else {
+    mocha.run(function(){
+      log.test("Runner Finished");
+    });
+  }
 }
 
 
