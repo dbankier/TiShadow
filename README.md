@@ -37,6 +37,25 @@ Or if you want to use the master version directly from GitHub:
   sudo npm install -g git+ssh://git@github.com/dbankier/TiShadow.git
 ```
 
+### _NEW_ DUMMY'S PATH: TiShadow Express
+
+You can do _a lot_ with TiShadow. Keep reading this README to find out more.
+But if it is all too much at the moment and you just want to use it for
+live reload you can do the following.
+
+During install a titanium cli plugin was installed for you. From your project you can just use the following command:
+
+```
+  titanium shadow
+```
+
+This will launch your app in the simulator and reload with any code/style/localisation changes.
+
+Under the hood it:
+ 1. starts the tishadow server - `tishadow server`
+ 2. launches an appified version of your app - `tishadow appify` (with extra flags)
+ 3. watches your code and push on any changes - `tishadow @ run --update`
+
 ### TiShadow App
 
 To create a new titanium project use the following command:
@@ -406,22 +425,23 @@ Contributors
 
 ```
  project  : TiShadow
- repo age : 1 year, 9 months
- active   : 167 days
- commits  : 373
- files    : 194
+ repo age : 1 year, 10 months
+ active   : 176 days
+ commits  : 393
+ files    : 197
  authors  :
-   284  David Bankier           76.1%
-    42  dbankier                11.3%
-    35  Fokke Zandbergen        9.4%
+   303  David Bankier           77.1%
+    42  dbankier                10.7%
+    35  Fokke Zandbergen        8.9%
      2  noughts                 0.5%
-     1  Luis Cruz               0.3%
+     1  Lee, JongEun            0.3%
      1  Clément Blanco         0.3%
+     1  Pedro Palmero           0.3%
      1  Timan Rebel             0.3%
      1  astronaughts            0.3%
      1  iskugor                 0.3%
      1  jsjant                  0.3%
-     1  Pedro Palmero           0.3%
+     1  Luis Cruz               0.3%
      1  Hugh Cannon             0.3%
      1  Ivan Skugor             0.3%
      1  Jeff Bonnes             0.3%

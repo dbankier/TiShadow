@@ -7,6 +7,7 @@ Titanium.App.idleTimerDisabled = true;
 
 var TiShadow = require("/api/TiShadow");
 var Compression = require('ti.compression');
+require("/lib/ti-mocha");
 
 
 // Need to unpack the bundle on a first load;

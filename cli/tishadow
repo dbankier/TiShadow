@@ -8,6 +8,7 @@ var api      = require('./support/api'),
     program  = require('commander'),
     fs       = require('fs'),
     path     = require('path'),
+    exec     = require('execSync').exec;
     gaze    = require('gaze');
 
 // check if watch enabled
@@ -158,6 +159,14 @@ program.command('appify')
   .option('-r, --room <room>', 'set server room')
   .option('-c, --ticaster', 'connect to ticaster')
   .action(require('./support/appify').build);
+
+program.command('express')
+  .description('install a titanium cli command plugin `shadow` for simple tishadow development')
+  .action(function() {
+    var ret = exec('ti config -a paths.commands ' + path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','commands'));
+    console.log(ret.stdout);
+    logger.info("Titanium CLI hook installed. Now use the command `ti shadow` from your project for express tishadow development");
+  });
 
 function execute() {
   program.parse(process.argv);
