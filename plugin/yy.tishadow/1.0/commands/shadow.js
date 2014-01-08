@@ -31,6 +31,7 @@ exports.run = function(logger, config, cli) {
     exit();
   });
   children.push(server);
+  server.stdout.pipe(process.stdout);
 
   var tmp_dir = path.join(os.tmpDir(), Date.now().toString() + '-' + Math.random().toString().substring(2));
   fs.mkdirSync(tmp_dir);
@@ -48,12 +49,14 @@ exports.run = function(logger, config, cli) {
       }
     }); 
     children.push(build);
+    build.stdout.pipe(process.stdout);
     logger.info("Starting Watch...");
     var watch = exec("ts @ run -u -P " + platform, function(err, stdout, stderr){
       logger.error(stdout || stderr)
       exit();
     });
     children.push(watch);
+    watch.stdout.pipe(process.stdout);
 
   });
   
