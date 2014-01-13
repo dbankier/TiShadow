@@ -95,7 +95,7 @@ module.exports = function(env, callback) {
       process.stdout.write(term.stdout);
       if (term.code > 0) {
         logger.error("Alloy Compile Error\n");
-        process.exit();
+        return;
       }
       alloy.buildMap();
     }

@@ -1,5 +1,5 @@
-var sys = require('sys')
-var exec = require('child_process').exec;
+var sys = require('sys');
+var spawn = require('child_process').spawn;
 var os = require('os');
 var path = require('path');
 var fs = require('fs');
@@ -13,7 +13,7 @@ exports.extendedDesc = 'Requires tishadow: `[sudo] npm install -g tishadow`';
 exports.config = function (logger, config, cli) {
   return {
     noAuth: true
-  }
+  };
 };
 
 var children = [];
@@ -23,43 +23,65 @@ function exit() {
   });
   process.exit(1);
 }
-exports.run = function(logger, config, cli) {
-  var platform = cli.argv.platform || cli.argv.p || 'ios';
+function startServer(logger) {
   logger.info("Starting TiShadow server");
-  var server = exec("ts server", function(err, stdout, stderr){
-    logger.error("TiShadow Server exited.")
+  var server = spawn("ts", ["server"]);
+  server.stdout.pipe(process.stdout);
+  server.stderr.pipe(process.stderr);
+  server.on('exit', function(){
+    logger.error("TiShadow Server exited.");
     exit();
   });
+  server.on('error',function(err) {
+    logger.error(err);
+  });
   children.push(server);
-  server.stdout.pipe(process.stdout);
+}
 
+function startAppify(logger, platform) {
   var tmp_dir = path.join(os.tmpDir(), Date.now().toString() + '-' + Math.random().toString().substring(2));
   fs.mkdirSync(tmp_dir);
   logger.info("Preparing App...");
-  var appify = exec('ts appify -d "' + tmp_dir + '"', function(err, stdout, stderr) {
-    if (stdout.indexOf("ERROR") > -1) {
-      console.log(stdout);
-      exit();
-    }
-    logger.info("Building App...");
-    var build = exec('ti build --project-dir "' + tmp_dir + '" -p ' + platform, function(err, stdout, stderr) {
-      if (err || stderr) {
-        console.log(stderr || err);
-        logger.error("Titanium build exited.")
-        exit();
-      }
-    }); 
-    children.push(build);
-    build.stdout.pipe(process.stdout);
-    logger.info("Starting Watch...");
-    var watch = exec("ts @ run -u -P " + platform, function(err, stdout, stderr){
-      logger.error(stdout || stderr || err)
-      logger.error("TiShadow watch exited.")
-      exit();
-    });
-    children.push(watch);
-    watch.stdout.pipe(process.stdout);
-
+  var appify = spawn('ts', ['appify', '-d', tmp_dir]);
+  appify.stdout.pipe(process.stdout);
+  appify.stderr.pipe(process.stderr);
+  appify.on('error',function() {
+    logger.error("Appify Failed.");
+    exit();
   });
-  
+  appify.on('exit',function() {
+    buildApp(logger, tmp_dir, platform);
+    startWatch(logger, platform);
+  });
+  children.push(appify);
 }
+
+function buildApp(logger, tmp_dir, platform) {
+  logger.info("Building App...");
+  var build = spawn('ti', ['build', '--project-dir',tmp_dir, '-p', platform]);
+  build.stdout.pipe(process.stdout);
+  build.stderr.pipe(process.stderr);
+  build.on('error', function(err) {
+    logger.error(err);
+    logger.error("Titanium build exited.");
+    exit();
+  }); 
+  children.push(build);
+}
+
+function startWatch(logger, platform) {
+  logger.info("Starting Watch...");
+  var watch = spawn('ts', ['@', 'run', '-u', '-P', platform]);
+  watch.on('exit', function() {
+    logger.error("TiShadow watch exited.");
+    exit();
+  });
+  children.push(watch);
+  watch.stdout.pipe(process.stdout);
+}
+exports.run = function(logger, config, cli) {
+  var platform = cli.argv.platform || cli.argv.p || 'ios';
+
+  startServer(logger);
+  startAppify(logger, platform);
+};
