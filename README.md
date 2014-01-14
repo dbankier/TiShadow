@@ -43,10 +43,10 @@ You can do _a lot_ with TiShadow. Keep reading this README to find out more.
 But if it is all too much at the moment and you just want to use it for
 live reload you can do the following.
 
-During install a titanium cli plugin was installed for you. From your project you can just use the following command:
+During install a titanium cli plugin/hook was installed for you. From your project you can just use the following command:
 
 ```
-  titanium shadow
+  titanium build -p android -T device --shadow 
 ```
 
 This will launch your app in the simulator and reload with any code/style/localisation changes.
