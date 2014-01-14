@@ -57,16 +57,16 @@ exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address
     if (callback) {
       callback();
     } else {
-      exports.buildApp(logger, tmp_dir, platform);
+      exports.buildApp(logger,['build', '--project-dir',tmp_dir, '-p', platform]);
       exports.startWatch(logger, platform);
     }
   });
   children.push(appify);
 }
 
-exports.buildApp = function buildApp(logger, tmp_dir, platform) {
+exports.buildApp = function buildApp(logger, args) {
   logger.info("Building App...");
-  var build = spawn('ti', ['build', '--project-dir',tmp_dir, '-p', platform]);
+  var build = spawn('ti', args);
   build.stdout.pipe(process.stdout);
   build.stderr.pipe(process.stderr);
   build.on('error', function(err) {
