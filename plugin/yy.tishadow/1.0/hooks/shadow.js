@@ -93,6 +93,9 @@ function preCompileHook(build, finished) {
       }
       build.nativeLibModules.push(module_props);
     });
+    if (!build.moduleSearchPaths) {
+      build.moduleSearchPaths = [];
+    }
     build.moduleSearchPaths.push(path.join(new_project_dir,"modules"));
     finished();
     commands.startServer(logger);
