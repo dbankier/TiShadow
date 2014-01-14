@@ -25,7 +25,7 @@ exports.log = function(level, name, msg) {
   }
 }
 
-var levels = ['info','debug','error'];
+var levels = ['info','debug','error','warn'];
 levels.forEach(function(level) {
   exports[level] = function(msg) {
     exports.log(level.toUpperCase(),null,msg);
