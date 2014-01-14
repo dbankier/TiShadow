@@ -106,7 +106,7 @@ module.exports = function(env, callback) {
        spec_list = fs.getList(config.spec_path,last_stat.mtime);
 
        if (file_list.files.length === 0 && i18n_list.files.length === 0 && spec_list.files.length === 0) {
-         logger.error("Nothing to update.");
+         logger.warn("Nothing to update.");
          return;
        }
      } else {
