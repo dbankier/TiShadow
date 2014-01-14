@@ -165,7 +165,11 @@ program.command('express')
   .action(function() {
     var ret = exec('ti config -a paths.commands ' + path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','commands'));
     console.log(ret.stdout);
-    logger.info("Titanium CLI hook installed. Now use the command `ti shadow` from your project for express tishadow development");
+    logger.info("Titanium CLI command (DEPRECTATED) installed. Now use the command `ti shadow` from your project for express tishadow development");
+
+    var ret = exec('ti config -a paths.hooks ' + path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','hooks'));
+    console.log(ret.stdout);
+    logger.info("Titanium CLI hook installed. Now use the `--shadow` flag when buliding your project for express tishadow development");
   });
 
 function execute() {
