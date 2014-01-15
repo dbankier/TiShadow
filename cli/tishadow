@@ -8,6 +8,7 @@ var api      = require('./support/api'),
     program  = require('commander'),
     fs       = require('fs'),
     path     = require('path'),
+    exec     = require('execSync').exec;
     gaze    = require('gaze');
 
 // check if watch enabled
@@ -81,6 +82,7 @@ program.command('spec')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-t, --type <type>', 'testing library')
   .option('-c, --ticaster', 'connect to ticaster')
   .option('-j, --jshint', 'analyse code with JSHint')
   .option('-x, --junit-xml','output report as JUnit XML')
@@ -130,6 +132,7 @@ program.command('config')
   .option('-o, --host <host>', 'set default server host name / ip address')
   .option('-p, --port <port>', 'set default server port')
   .option('-r, --room <room>', 'set default server room')
+  .option('-t, --type <type>', 'default testing library')
   .action(config.write);
 
 program.command('app')
@@ -156,6 +159,18 @@ program.command('appify')
   .option('-r, --room <room>', 'set server room')
   .option('-c, --ticaster', 'connect to ticaster')
   .action(require('./support/appify').build);
+
+program.command('express')
+  .description('install a titanium cli command plugin `shadow` for simple tishadow development')
+  .action(function() {
+    var ret = exec('ti config -a paths.commands ' + path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','commands'));
+    console.log(ret.stdout);
+    logger.info("Titanium CLI command (DEPRECTATED) installed. Now use the command `ti shadow` from your project for express tishadow development");
+
+    var ret = exec('ti config -a paths.hooks ' + path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','hooks'));
+    console.log(ret.stdout);
+    logger.info("Titanium CLI hook installed. Now use the `--shadow` flag when buliding your project for express tishadow development");
+  });
 
 function execute() {
   program.parse(process.argv);

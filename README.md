@@ -37,6 +37,25 @@ Or if you want to use the master version directly from GitHub:
   sudo npm install -g git+ssh://git@github.com/dbankier/TiShadow.git
 ```
 
+### _NEW_ DUMMY'S PATH: TiShadow Express
+
+You can do _a lot_ with TiShadow. Keep reading this README to find out more.
+But if it is all too much at the moment and you just want to use it for
+live reload you can do the following.
+
+During install a titanium cli plugin/hook was installed for you. From your project you can just use the following command:
+
+```
+  titanium build -p android -T device --shadow 
+```
+
+This will launch your app in the simulator and reload with any code/style/localisation changes.
+
+Under the hood it:
+ 1. starts the tishadow server - `tishadow server`
+ 2. launches an appified version of your app - `tishadow appify` (with extra flags)
+ 3. watches your code and push on any changes - `tishadow @ run --update`
+
 ### TiShadow App
 
 To create a new titanium project use the following command:
@@ -193,9 +212,13 @@ Here are a full list of options:
     -o, --host <host>      server host name / ip address
     -p, --port <port>      server port
     -r, --room <room>      server room
+    -t, --type <type>      testing library
     -j, --jshint           analyse code with JSHint
     -x, --junit-xml        output report as JUnit XML
 ```
+
+**NEW**: You can now select the testing library to use `jasmine`, `mocha-should` or `mocha-chai`. 
+The default library is `jasmine` to change that use, e.g. `tishadow config -t mocha-should`.
 
 The test results will be returned to the server/cli output:
 ![Spec Output](http://github.com/dbankier/TiShadow/raw/master/example/spec.png)
@@ -402,22 +425,23 @@ Contributors
 
 ```
  project  : TiShadow
- repo age : 1 year, 9 months
- active   : 167 days
- commits  : 373
- files    : 194
+ repo age : 1 year, 10 months
+ active   : 176 days
+ commits  : 393
+ files    : 197
  authors  :
-   284  David Bankier           76.1%
-    42  dbankier                11.3%
-    35  Fokke Zandbergen        9.4%
+   303  David Bankier           77.1%
+    42  dbankier                10.7%
+    35  Fokke Zandbergen        8.9%
      2  noughts                 0.5%
-     1  Luis Cruz               0.3%
+     1  Lee, JongEun            0.3%
      1  Clément Blanco         0.3%
+     1  Pedro Palmero           0.3%
      1  Timan Rebel             0.3%
      1  astronaughts            0.3%
      1  iskugor                 0.3%
      1  jsjant                  0.3%
-     1  Pedro Palmero           0.3%
+     1  Luis Cruz               0.3%
      1  Hugh Cannon             0.3%
      1  Ivan Skugor             0.3%
      1  Jeff Bonnes             0.3%
