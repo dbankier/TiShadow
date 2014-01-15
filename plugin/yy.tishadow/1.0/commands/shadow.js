@@ -42,7 +42,7 @@ exports.startServer = function startServer(logger) {
 exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address, callback) {
   fs.existsSync(tmp_dir) ||  fs.mkdirSync(tmp_dir);
   logger.info("Preparing App...");
-  var args = ['appify', '-d', tmp_dir];
+  var args = ['appify', '-d', tmp_dir, "-P", platform];
   if (ip_address) {
     args = args.concat(['-o', ip_address]);
   }
