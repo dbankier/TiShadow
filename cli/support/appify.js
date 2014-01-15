@@ -83,7 +83,7 @@ exports.build = function(env) {
       ['iphone', 'android'].forEach(function(platform) {
         if(fs.existsSync(path.join(config.resources_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.resources_path,platform),path.join(dest_resources,platform),{
-            filter: new RegExp("(\.png|images|res-.*)$","i"),
+            filter: new RegExp("(\.png|images|res-.*|fonts|\.otf|\.ttf)$","i"),
             whitelist: true
           });
         }
