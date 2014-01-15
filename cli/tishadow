@@ -157,6 +157,7 @@ program.command('appify')
   .option('-o, --host <host>', 'set server host name / ip address')
   .option('-p, --port <port>', 'set server port')
   .option('-r, --room <room>', 'set server room')
+  .option('-P, --platform <platform>', 'target platform')
   .option('-c, --ticaster', 'connect to ticaster')
   .action(require('./support/appify').build);
 
