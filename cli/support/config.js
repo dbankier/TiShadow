@@ -4,7 +4,7 @@ var path = require("path"),
     logger = require("../../server/logger"),
     base,
     home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'],
-    platforms = ['iphone','android','blackberry','mobileweb'],
+    platforms = ['iphone','android','blackberry','mobileweb','tizen'],
     tiapp = require("tiapp"),
     config = {};
 
@@ -56,22 +56,23 @@ config.buildPaths = function(env, callback) {
       process.exit();
     }
     config.isAlloy = fs.existsSync(config.alloy_path);
-    if (!config.platform && config.isAlloy) {
-      var platform_folders = platforms
-        .filter(function(platform) {
-          return fs.existsSync(path.join(config.resources_path, platform, 'alloy', 'CFG.js'));
-        })
-      if (platform_folders.length === 1) {
-        config.platform = platform_folders[0]
-      } else { // alloy >= 1.3 uses platform folders for source code
-        config.platform = platform_folders.sort(function(a,b) {
-          return fs.statSync(path.join(config.resources_path, b, 'alloy.js')).mtime.getTime()
-          - fs.statSync(path.join(config.resources_path, a,'alloy.js')).mtime.getTime()
-        })[0];
-      }
-      config.platform = config.platform==="iphone" ? "ios": config.platform;
+    if (config.platform.length === 0 && config.isAlloy) {
+      var deploymentTargets = [];
+      result['deployment-targets'][0].target.forEach(function(t) {
+        if (t['_'] === 'true') {
+          var platform = t['$'].device;
+          if (platform === 'ipad' || platform === 'iphone') {
+            if (deploymentTargets.indexOf('ios') !== -1) {
+              return;
+            }
+            platform = 'ios';
+          }
+          deploymentTargets.push(platform);
+        }
+      });
+      config.platform = deploymentTargets;
     }
-    config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.platform ? '_' + config.platform : ''));
+    config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.platform ? '_' + config.platform.join('_') : ''));
     config.isPatch = env.patch;
     config.isUpdate = (env.update || env.patch) 
                     && fs.existsSync(config.tishadow_src)
@@ -107,7 +108,7 @@ config.init = function(env) {
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.isManageVersions = env.manageVersions;
-  config.platform = env.platform;
+  config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : [];
 };
 
 config.write = function(env) {

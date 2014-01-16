@@ -80,7 +80,7 @@ exports.build = function(env) {
         wrench.copyDirSyncRecursive(config.fonts_path,dest_fonts);
       }
       //copy splash screen and icons
-      ['iphone', 'android'].forEach(function(platform) {
+      ['iphone','android','blackberry','mobileweb','tizen'].forEach(function(platform) {
         if(fs.existsSync(path.join(config.resources_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.resources_path,platform),path.join(dest_resources,platform),{
             filter: new RegExp("(\.png|images|res-.*|fonts|\.otf|\.ttf)$","i"),
