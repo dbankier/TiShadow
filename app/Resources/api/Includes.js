@@ -67,6 +67,7 @@ if (Ti.Platform.osname !== "android"){
     Titanium.UI.iPhone.AnimationStyle,
     Titanium.UI.iPhone.ListViewCellSelectionStyle,
     Titanium.UI.iPhone.ListViewScrollPosition,
+    Titanium.UI.iPhone.ListViewSeparatorStyle,
     Titanium.UI.iPhone.ListViewStyle,
     Titanium.UI.iPhone.NavigationGroup,
     Titanium.UI.iPhone.ProgressBarStyle,
