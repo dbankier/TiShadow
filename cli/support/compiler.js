@@ -91,21 +91,18 @@ module.exports = function(env, callback) {
         logger.error("You need to use the --platform (android|ios) flag or have deployment-targets in tiapp.xml with an alloy project.");
         process.exit();
       }
-      var error = false;
-      config.platform.every(function(platform) {
+      if (!config.platform.every(function(platform) {
         logger.info("Compiling Alloy for " + platform);
         var term = exec("alloy compile -b -l 1 --platform "+platform);
         process.stdout.write(term.stdout);
         if (term.code > 0) {
           logger.error("Alloy Compile Error\n");
-          error = true;
           return false;
         }
         //Make sure everything is in platform folders
         wrench.copyDirSyncRecursive(path.join(config.resources_path,'alloy'),path.join(config.resources_path,(platform === 'ios' ? 'iphone' : platform),'alloy'),{preserve:true});
         return true;
-      });
-      if (error) {
+      })) {
         return;
       }
       //Remove non-specific
