@@ -81,7 +81,7 @@ exports.StartScreen = function() {
     connect();
   });
 
-  Ti.App.addEventListener("tishadow:refresh_list", function(o) {
+  Ti.App.addEventListener("tishadow:refresh", function(o) {
     app_list.refreshList();
   });
 

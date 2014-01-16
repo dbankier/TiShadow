@@ -129,7 +129,7 @@ exports.launchApp = function(name) {
     if (osname === "ipad" || osname === "iphone") {
       require("/api/Fonts").loadCustomFonts(name);
     }
-    Ti.App.fireEvent("tishadow:refresh_list");
+    Ti.App.fireEvent("tishadow:refresh");
     exports.currentApp = name;
     bundle = p.include(null, "/app.js");
     log.info(exports.currentApp.replace(/_/g," ") + " launched.");
@@ -173,7 +173,7 @@ exports.clearCache = function() {
         }
       });
     });
-    Ti.App.fireEvent("tishadow:refresh_list");
+    Ti.App.fireEvent("tishadow:refresh");
   } catch (e) {
     log.error(utils.extractExceptionData(e));
   }
