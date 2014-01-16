@@ -37,7 +37,7 @@
     "ts": "./cli/tishadow"
   },
   "scripts": {
-    "postinstall": "./cli/tishadow express" 
+    "postinstall": "tishadow express" 
   },
   "license": "Apache Public License v2",
   "framework": "none",
