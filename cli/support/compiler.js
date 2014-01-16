@@ -9,6 +9,7 @@ var path   = require("path"),
     uglify = require("./uglify"),
     logger = require("../../server/logger.js"),
     jshint = require("./jshint_runner"),
+    wrench = require("wrench"),
     _      = require("underscore");
 
     require("./fs_extension");
@@ -85,17 +86,27 @@ module.exports = function(env, callback) {
     logger.info("Beginning Build Process");
     var file_list,i18n_list,spec_list;
     // a js map of hashes must be built whether or not it is an update.
-    if (config.isAlloy) { 
-      logger.info("Compiling Alloy");
-      if (!config.platform) {
-        logger.error("You need to use the --platform (android|ios) flag with an alloy project.");
+    if (config.isAlloy) {
+      if (config.platform.length === 0) {
+        logger.error("You need to use the --platform (android|ios) flag or have deployment-targets in tiapp.xml with an alloy project.");
         process.exit();
       }
-      var term = exec("alloy compile -b -l 1 --config platform="+config.platform);
-      process.stdout.write(term.stdout);
-      if (term.code > 0) {
-        logger.error("Alloy Compile Error\n");
-        return;
+      config.platform.forEach(function(platform) {
+        logger.info("Compiling Alloy for " + platform);
+        var term = exec("alloy compile -b -l 1 --platform "+platform);
+        process.stdout.write(term.stdout);
+        if (term.code > 0) {
+          logger.error("Alloy Compile Error\n");
+          return;
+        }
+        //Make sure everything is in platform folders
+        wrench.copyDirSyncRecursive(path.join(config.resources_path,'alloy'),path.join(config.resources_path,(platform === 'ios' ? 'iphone' : platform),'alloy'),{preserve:true});
+      });
+      //Remove non-specific
+      fs.rm_rf(path.join(config.resources_path,'alloy'));
+      var appjs_path = path.join(config.resources_path,'app.js');
+      if (fs.existsSync(appjs_path)) { // doesn't always?
+        fs.unlinkSync(appjs_path);
       }
       alloy.buildMap();
     }
@@ -149,5 +160,4 @@ module.exports = function(env, callback) {
        });
      });
   });
-}
-
+};

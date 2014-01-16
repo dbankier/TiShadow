@@ -47,14 +47,14 @@ exports.connect = function(o) {
   
   // REPL messages
   socket.on('message', function(data) {
-    if (data.platform && data.platform !== osname && data.platform !== platform) {
+    if (!isTarget(data)) {
       return;
     }
     require('/api/PlatformRequire').eval(data);
   });
   
   socket.on('bundle', function(data) {
-    if (data.platform && data.platform !== osname && data.platform !== platform) {
+    if (!isTarget(data)) {
       return;
     }
     if(data.locale) {
@@ -64,21 +64,21 @@ exports.connect = function(o) {
   });
 
   socket.on('clear', function(data) {
-    if (data.platform && data.platform !== osname && data.platform !== platform) {
+    if (!isTarget(data)) {
       return;
     }
     exports.clearCache();
   });
 
   socket.on('close', function(data) {
-    if (data.platform && data.platform !== osname && data.platform !== platform) {
+    if (!isTarget(data)) {
       return;
     }
     exports.closeApp();
   });
 
   socket.on('screenshot', function(data) {
-    if (data.platform && data.platform !== osname && data.platform !== platform) {
+    if (!isTarget(data)) {
       return;
     }
     Ti.Media.takeScreenshot(function(o) {
@@ -225,7 +225,9 @@ function loadRemoteZip(name, url, data, version_property) {
   xhr.send();
 }
 
-
+function isTarget(data) {
+  return (!data.platform || data.platform.indexOf(osname) !== -1 || data.platform.indexOf(platform) !== -1);
+}
 
 // FOR URL SCHEME - tishadow://
 function loadRemoteBundle(url) {
