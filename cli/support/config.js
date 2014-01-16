@@ -2,10 +2,12 @@ var path = require("path"),
     fs = require("fs"),
     colors = require("colors"),
     logger = require("../../server/logger"),
+    _ = require("underscore"),
     base,
     home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'],
     platforms = ['iphone','android','blackberry','mobileweb','tizen'],
     tiapp = require("tiapp"),
+    glob = require("glob"),
     config = {};
 
 //get app name
@@ -85,6 +87,9 @@ config.buildPaths = function(env, callback) {
                     && fs.existsSync(config.tishadow_src)
                     && fs.existsSync(config.last_updated_file);
 
+    if (config.isSpec) {
+      config.specCount = _.uniq(glob.sync(config.spec_path +"/**/*_spec.js").concat(glob.sync(config.resources_path + "/**/*_spec.js"))).length;
+    }
     callback();
   });
 };

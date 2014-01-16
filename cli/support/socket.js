@@ -15,18 +15,18 @@ exports.connect = function(onconnect) {
     }
   });
   socket.on('device_connect', function(e){
-    running++;
+    running = running + config.specCount;
     logger.log("INFO", e.name, "Connected");
   });
   socket.on('device_disconnect', function(e){
-    running--;
+    running = running - config.specCount;;
     logger.log("WARN", e.name,"Disconnected");
   });
   socket.on('device_log', function(data) {
     if (config.isSpec && data.message.match("Runner Finished$")) {
       socket.disconnect();
     } else if (config.isJUnit && data.level === "TEST") {
-      var target_file = path.join(config.tishadow_build, data.name.replace(/(, |\.)/g, "_") + "_result.xml");
+      var target_file = path.join(config.tishadow_build, data.name.replace(/(, |\.)/g, "_") + "_" +  Date.now() + "_result.xml");
       fs.writeFileSync(target_file,data.message);
       running--;
       if (running <= 0) {

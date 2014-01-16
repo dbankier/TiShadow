@@ -19,7 +19,8 @@
     "mocha": "~1.12.1",
     "tiapp": "0.0.2",
     "gaze": "~0.4.3",
-    "execSync": "~1.0.1-pre"
+    "execSync": "~1.0.1-pre",
+    "glob": "~3.2.8"
   },
   "devDependencies": {},
   "optionalDependencies": {},
@@ -37,7 +38,7 @@
     "ts": "./cli/tishadow"
   },
   "scripts": {
-    "postinstall": "tishadow express" 
+    "postinstall": "tishadow express"
   },
   "license": "Apache Public License v2",
   "framework": "none",
