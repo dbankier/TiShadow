@@ -34,7 +34,7 @@ TiShadow can be installed via npm using the following command:
 Or if you want to use the master version directly from GitHub:
 
 ```
-  sudo npm install -g git+ssh://git@github.com/dbankier/TiShadow.git
+  sudo npm install -g dbankier/TiShadow
 ```
 
 ### _NEW_ DUMMY'S PATH: TiShadow Express
