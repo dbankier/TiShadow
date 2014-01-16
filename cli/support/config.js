@@ -16,6 +16,11 @@ function getAppName(callback) {
       process.exit();
     }
     base = result.path; 
+    var local_regex = /<key>CFBundleDevelopmentRegion<\/key>(\s|\n)*<string>(\w*)<\/string>/g
+    var matches = local_regex.exec(result.str);
+    if (matches) {
+      config.locale = matches[2].split("_")[0];
+    }
     callback(result.obj['ti:app']);
   });
 }
@@ -30,7 +35,9 @@ if (fs.existsSync(config_path)) {
 config.buildPaths = function(env, callback) {
   config.init(env);
   getAppName(function(result) {
-    config.base = base;
+    config.locale     = env.locale || config.locale;
+
+    config.base              = base;
     config.alloy_path        = path.join(base, 'app');
     config.resources_path    = path.join(base, 'Resources');
     config.fonts_path        = path.join(config.resources_path, 'fonts');
@@ -93,7 +100,6 @@ config.init = function(env) {
   }
   config.isDeploy   = env._name === "deploy";
   config.isTailing  = env.tailLogs || config.isSpec;
-  config.locale     = env.locale;
   config.isJUnit    = env.junitXml;
   config.isREPL     = env._name === "repl";
   config.isBundle   = env._name === "bundle";
