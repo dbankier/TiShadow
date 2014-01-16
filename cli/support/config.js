@@ -85,6 +85,7 @@ config.buildPaths = function(env, callback) {
 config.init = function(env) {
   config.isSpec     = env._name === "spec";
   config.specType   = env.type || config.type  || "jasmine"
+  config.watchInterval = config.watchInterval || 100;
   if (['jasmine','mocha-chai','mocha-should'].indexOf(config.specType) === -1) {
     logger.error("Invalid test library, please choose from: jasmine, mocha-should or mocha-chai");
     process.exit(-1);
@@ -116,7 +117,7 @@ config.write = function(env) {
   if (fs.existsSync(config_path)) {
     new_config = require(config_path);
   }
-  ['host','port','room', 'type'].forEach(function(param) {
+  ['host','port','room', 'type', 'watchInterval'].forEach(function(param) {
     if (env[param] !== undefined) {
       new_config[param] = env[param];
     }

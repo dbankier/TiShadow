@@ -133,6 +133,7 @@ program.command('config')
   .option('-p, --port <port>', 'set default server port')
   .option('-r, --room <room>', 'set default server room')
   .option('-t, --type <type>', 'default testing library')
+  .option('-w, --watch-interval <millis>', 'time to wait between checking files for changes (default: 100ms)')
   .action(config.write);
 
 program.command('app')
@@ -186,7 +187,7 @@ if (config.isWatching) {
     var paths = [config.isAlloy ? "app" :"Resources", "i18n", "spec"].map(function(p) {
       return path.join(p,"**/*");
     });
-    gaze(paths, {cwd:config.base}, function(err, watcher){
+    gaze(paths, {cwd:config.base, interval: config.watchInterval}, function(err, watcher){
       this.on('all', function watcher(event, filepath) {
         logger.debug(event + ": " + filepath);
         execute();
