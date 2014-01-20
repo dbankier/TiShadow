@@ -226,7 +226,7 @@ function loadRemoteZip(name, url, data, version_property) {
 }
 
 function isTarget(data) {
-  return (!data.platform || data.platform.length === 0 || data.platform.indexOf(osname) !== -1 || data.platform.indexOf(platform) !== -1);
+  return (!data.platform || data.platform.indexOf(osname) !== -1 || data.platform.indexOf(platform) !== -1);
 }
 
 // FOR URL SCHEME - tishadow://

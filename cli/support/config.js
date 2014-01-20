@@ -65,7 +65,7 @@ config.buildPaths = function(env, callback) {
       process.exit();
     }
     config.isAlloy = fs.existsSync(config.alloy_path);
-    if (config.platform.length === 0 && config.isAlloy) {
+    if (!config.platform && config.isAlloy) {
       var deploymentTargets = [];
       result['deployment-targets'][0].target.forEach(function(t) {
         if (t['_'] === 'true') {
@@ -121,7 +121,7 @@ config.init = function(env) {
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.isManageVersions = env.manageVersions;
-  config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : [];
+  config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : undefined;
 };
 
 config.write = function(env) {
