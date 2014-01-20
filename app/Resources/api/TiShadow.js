@@ -121,6 +121,7 @@ exports.closeApp = function(name) {
 };
 exports.launchApp = function(name) {
   try {
+    Ti.App.fireEvent("tishadow:refresh");
     var p = require('/api/PlatformRequire');
     exports.closeApp();
     p.clearCache();
@@ -129,7 +130,6 @@ exports.launchApp = function(name) {
     if (osname === "ipad" || osname === "iphone") {
       require("/api/Fonts").loadCustomFonts(name);
     }
-    Ti.App.fireEvent("tishadow:refresh");
     exports.currentApp = name;
     bundle = p.include(null, "/app.js");
     log.info(exports.currentApp.replace(/_/g," ") + " launched.");
