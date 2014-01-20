@@ -37,6 +37,9 @@ Or if you want to use the master version directly from GitHub:
   sudo npm install -g dbankier/TiShadow
 ```
 
+**NOTE**: for Windows users, requires Python and Visual Studio 2012 (express) installed,
+see the [node-gyp](https://github.com/TooTallNate/node-gyp#installation) installation notes.
+
 ### _NEW_ DUMMY'S PATH: TiShadow Express
 
 You can do _a lot_ with TiShadow. Keep reading this README to find out more.
