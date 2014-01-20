@@ -26,7 +26,7 @@ exports.connect = function(onconnect) {
     if (config.isSpec && data.message.match("Runner Finished$")) {
       socket.disconnect();
     } else if (config.isJUnit && data.level === "TEST") {
-      var target_file = path.join(config.tishadow_build, data.name.replace(/(, |\.)/g, "_") + "_" +  Date.now() + "_result.xml");
+      var target_file = path.join(config.tishadow_build, data.name.replace(/(, |\.)/g, "_") + "_" + Math.random().toString(36).substring(7) +  "_" +  Date.now() + "_result.xml");
       fs.writeFileSync(target_file,data.message);
       running--;
       if (running <= 0) {
