@@ -149,7 +149,7 @@ exports.addSpy = function(name,spy) {
   context.getSpy = function(name) {
     return spys[name];
   };
-  Ti.Shadow = true;
+  context.Ti.Shadow = true;
 })(global_context);
 
 global_keys = _.keys(global_context);
