@@ -44,7 +44,7 @@ exports.connect = function(o) {
       o.onerror(e);
     }
   });
-  
+
   // REPL messages
   socket.on('message', function(data) {
     if (!isTarget(data)) {
@@ -52,7 +52,7 @@ exports.connect = function(o) {
     }
     require('/api/PlatformRequire').eval(data);
   });
-  
+
   socket.on('bundle', function(data) {
     if (!isTarget(data)) {
       return;
@@ -114,24 +114,22 @@ exports.disconnect = function() {
 };
 
 var bundle;
-exports.closeApp = function(name) {
-  require("/api/UI").closeApp(name || exports.currentApp);
-  require("/api/App").clearAll();
-  log.info("Previous bundle closed.");
+exports.closeApp = function() {
+  exports.disconnect();
+  Ti.App.Properties.setString("tishadow::currentApp","" );
+  Ti.App.Properties.setBool("tishadow::reconnect",true );
+  Ti.App._restart();
 };
 exports.launchApp = function(name) {
   try {
-    Ti.App.fireEvent("tishadow:refresh");
     var p = require('/api/PlatformRequire');
-    exports.closeApp();
-    p.clearCache();
-    require("/api/Localisation").clear();
     // Custom Fonts
     if (osname === "ipad" || osname === "iphone") {
       require("/api/Fonts").loadCustomFonts(name);
     }
     exports.currentApp = name;
     bundle = p.include(null, "/app.js");
+    Ti.App.Properties.setString("tishadow::currentApp", "");
     log.info(exports.currentApp.replace(/_/g," ") + " launched.");
   } catch(e) {
     log.error(utils.extractExceptionData(e));
@@ -139,8 +137,6 @@ exports.launchApp = function(name) {
 };
 
 exports.clearCache = function() {
-  require("/api/UI").closeAll();
-  
   Ti.App.Properties.listProperties().forEach(function(property) {
     if (!property.match("^tishadow:")) {
       Ti.App.Properties.removeProperty(property);
@@ -173,11 +169,11 @@ exports.clearCache = function() {
         }
       });
     });
-    Ti.App.fireEvent("tishadow:refresh");
   } catch (e) {
     log.error(utils.extractExceptionData(e));
   }
   log.info("Cache cleared");
+  Ti.App._restart();
 };
 
 
@@ -212,7 +208,9 @@ function loadRemoteZip(name, url, data, version_property) {
       } else if (data && data.patch && data.patch.run) {
         require('/api/PlatformRequire').clearCache(data.patch.files);
       } else  {
-        exports.launchApp(path_name);
+        exports.disconnect();
+        Ti.App.Properties.setString("tishadow::currentApp", path_name);
+        Ti.App._restart();
       }
     } catch (e) {
       log.error(utils.extractExceptionData(e));

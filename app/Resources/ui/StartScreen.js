@@ -80,10 +80,10 @@ exports.StartScreen = function() {
     activity.show();
     connect();
   });
-
-  Ti.App.addEventListener("tishadow:refresh", function(o) {
-    app_list.refreshList();
-  });
+  if (Ti.App.Properties.getBool("tishadow::reconnect", true)) {
+    login.fireEvent("connect");
+    Ti.App.Properties.setBool("tishadow::reconnect",false );
+  }
 
   return win;
 };
