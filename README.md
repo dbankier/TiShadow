@@ -37,10 +37,6 @@ Or if you want to use the master version directly from GitHub:
   sudo npm install -g dbankier/TiShadow
 ```
 
-**WINDOWS**: Requires Python and Visual Studio 2012 (express) installed,
-see the [node-gyp](https://github.com/TooTallNate/node-gyp#installation) installation notes.
-
-**MAC**: If you get the error `EMFILE: Too many opened files.`, this is because of your system's max opened file limit. For OSX the default is very low (256). Increase your limit temporarily with `ulimit -n 8192`, the number being the new max limit.
 
 ### _NEW_ DUMMY'S PATH: TiShadow Express
 
@@ -60,6 +56,8 @@ Under the hood it:
  1. starts the tishadow server - `tishadow server`
  2. launches an appified version of your app - `tishadow appify` (with extra flags)
  3. watches your code and push on any changes - `tishadow @ run --update`
+
+**MAC**: If you get the error `EMFILE: Too many opened files.`, this is because of your system's max opened file limit. For OSX the default is very low (256). Increase your limit temporarily with `ulimit -n 8192`, the number being the new max limit.
 
 ### TiShadow App
 
