@@ -13,8 +13,8 @@ exports.extendedDesc = 'Requires tishadow: `[sudo] npm install -g tishadow`';
 
 var simple_spawn = function(cmd,args) {
   if (process.platform === 'win32') {
-    args = [path.join(__dirname, "..", "..","..","..","cli","tishadow")].concat(args);
-    cmd = 'node';
+    args = ['/c',cmd].concat(args);
+    cmd = process.env.comspec;
   }
   return spawn(cmd,args);
 }
