@@ -42,6 +42,7 @@ config.buildPaths = function(env, callback) {
     config.base              = base;
     config.alloy_path        = path.join(base, 'app');
     config.resources_path    = path.join(base, 'Resources');
+    config.res_alloy_path    = path.join(base, 'Resources', 'alloy');
     config.fonts_path        = path.join(config.resources_path, 'fonts');
     config.modules_path      = path.join(base, 'modules');
     config.platform_path     = path.join(base, 'platform');

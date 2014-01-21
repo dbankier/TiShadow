@@ -100,13 +100,21 @@ module.exports = function(env, callback) {
           return false;
         }
         //Make sure everything is in platform folders
-        wrench.copyDirSyncRecursive(path.join(config.resources_path,'alloy'),path.join(config.resources_path,(platform === 'ios' ? 'iphone' : platform),'alloy'),{preserve:true});
+	if (fs.existsSync(config.res_alloy_path)) {
+          wrench.copyDirSyncRecursive(
+	    config.res_alloy_path,
+	    path.join(config.resources_path,(platform === 'ios' ? 'iphone' : platform),'alloy'),
+	    {preserve:true}
+	  );
+	}
         return true;
       })) {
         return;
       }
       //Remove non-specific
-      fs.rm_rf(path.join(config.resources_path,'alloy'));
+      if (fs.existsSync(config.res_alloy_path)) {
+        fs.rm_rf(config.res_alloy_path);
+      }
       var appjs_path = path.join(config.resources_path,'app.js');
       if (fs.existsSync(appjs_path)) { // doesn't always?
         fs.unlinkSync(appjs_path);
