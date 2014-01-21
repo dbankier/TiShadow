@@ -1,5 +1,6 @@
 var path = require("path"),
     fs = require("fs"),
+    os = require("os"),
     colors = require("colors"),
     logger = require("../../server/logger"),
     _ = require("underscore"),
@@ -118,7 +119,7 @@ config.init = function(env) {
     config.host     = "www.ticaster.io";
     config.port     = 443;
   }
-  config.screenshot_path = env.screenshotPath || "/tmp";
+  config.screenshot_path = env.screenshotPath || os.tmpdir();
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.isManageVersions = env.manageVersions;
