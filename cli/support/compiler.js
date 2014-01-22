@@ -89,7 +89,12 @@ module.exports = function(env, callback) {
       async.detectSeries(config.platform, function(platform, callback) {
         logger.info("Compiling Alloy for " + platform);
         var alloy_command = spawn('alloy', ['compile', '-b','-l', '1', '--platform', platform]);
-        alloy_command.on("exit", function() {
+        alloy_command.stderr.pipe(process.stderr);
+        alloy_command.on("exit", function(code) {
+          if (code !== 0) {
+            logger.error("Alloy Compile Error\n");
+            callback(true);
+          }
           if (fs.existsSync(config.res_alloy_path)) {
             wrench.copyDirSyncRecursive(
               config.res_alloy_path,
