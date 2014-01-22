@@ -168,10 +168,14 @@ program.command('express')
   .action(function() {
     var commands = spawn('ti', ['config','-a','paths.commands',path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','commands')]);
     commands.stderr.pipe(process.stderr);
-    logger.info("Titanium CLI command (DEPRECTATED) installed. Now use the command `ti shadow` from your project for express tishadow development");
+    commands.on("exit", function(code) {
+      code === 0 && logger.info("Titanium CLI command (DEPRECTATED) installed. Now use the command `ti shadow` from your project for express tishadow development");
+    });
     var hooks = spawn('ti', ['config','-a','paths.hooks',path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','hooks')]);
     hooks.stderr.pipe(process.stderr);
-    logger.info("Titanium CLI hook installed. Now use the `--shadow` flag when buliding your project for express tishadow development");
+    hooks.on("exit", function(code) {
+      code === 0 && logger.info("Titanium CLI hook installed. Now use the `--shadow` flag when buliding your project for express tishadow development");
+    });
   });
 
 function execute() {
