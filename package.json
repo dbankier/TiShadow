@@ -19,8 +19,8 @@
     "mocha": "~1.12.1",
     "tiapp": "0.0.2",
     "gaze": "~0.4.3",
-    "execSync": "~1.0.1-pre",
-    "glob": "~3.2.8"
+    "glob": "~3.2.8",
+    "async": "~0.2.9"
   },
   "devDependencies": {},
   "optionalDependencies": {},

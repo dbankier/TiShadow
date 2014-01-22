@@ -1,5 +1,5 @@
 var sys = require('sys');
-var spawn = require('child_process').spawn;
+var spawn = require('../../../../cli/support/spawn');
 var os = require('os');
 var path = require('path');
 var fs = require('fs');
@@ -11,13 +11,6 @@ exports.title = 'TiShadow Express';
 exports.desc  = 'For very basic and quick tishadow usage';
 exports.extendedDesc = 'Requires tishadow: `[sudo] npm install -g tishadow`';
 
-var simple_spawn = function(cmd,args) {
-  if (process.platform === 'win32') {
-    args = [path.join(__dirname, "..", "..","..","..","cli","tishadow")].concat(args);
-    cmd = 'node';
-  }
-  return spawn(cmd,args);
-}
 exports.config = function (logger, config, cli) {
   return {
     noAuth: true
@@ -33,7 +26,7 @@ function exit() {
 }
 exports.startServer = function startServer(logger) {
   logger.info("Starting TiShadow server");
-  var server = simple_spawn("ts", ["server"]);
+  var server = spawn("ts", ["server"]);
   server.stdout.pipe(process.stdout);
   server.stderr.pipe(process.stderr);
   server.on('exit', function(){
@@ -53,7 +46,7 @@ exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address
   if (ip_address) {
     args = args.concat(['-o', ip_address]);
   }
-  var appify = simple_spawn('ts', args);
+  var appify = spawn('ts', args);
   appify.stdout.pipe(process.stdout);
   appify.stderr.pipe(process.stderr);
   appify.on('error',function() {
@@ -73,7 +66,7 @@ exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address
 
 exports.buildApp = function buildApp(logger, args) {
   logger.info("Building App...");
-  var build = simple_spawn('ti', args);
+  var build = spawn('ti', args);
   build.stdout.pipe(process.stdout);
   build.stderr.pipe(process.stderr);
   build.on('error', function(err) {
@@ -91,7 +84,7 @@ exports.startWatch = function startWatch(logger, platform, ip_address) {
     args = args.concat(['-o', ip_address]);
   }
 
-  var watch = simple_spawn('ts', args);
+  var watch = spawn('ts', args);
   watch.on('exit', function() {
     logger.error("TiShadow watch exited.");
     exit();

@@ -1,5 +1,6 @@
 var path = require("path"),
     fs = require("fs"),
+    os = require("os"),
     colors = require("colors"),
     logger = require("../../server/logger"),
     _ = require("underscore"),
@@ -42,6 +43,7 @@ config.buildPaths = function(env, callback) {
     config.base              = base;
     config.alloy_path        = path.join(base, 'app');
     config.resources_path    = path.join(base, 'Resources');
+    config.res_alloy_path    = path.join(base, 'Resources', 'alloy');
     config.fonts_path        = path.join(config.resources_path, 'fonts');
     config.modules_path      = path.join(base, 'modules');
     config.platform_path     = path.join(base, 'platform');
@@ -117,7 +119,7 @@ config.init = function(env) {
     config.host     = "www.ticaster.io";
     config.port     = 443;
   }
-  config.screenshot_path = env.screenshotPath || "/tmp";
+  config.screenshot_path = env.screenshotPath || os.tmpdir();
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.isManageVersions = env.manageVersions;

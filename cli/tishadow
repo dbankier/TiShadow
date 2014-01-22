@@ -3,13 +3,13 @@ var api      = require('./support/api'),
     compiler = require('./support/compiler'),
     colors   = require('colors'),
     config   = require('./support/config'),
-    logger = require("../server/logger.js"),
+    logger   = require("../server/logger.js"),
     pkginfo  = require('pkginfo'),
     program  = require('commander'),
     fs       = require('fs'),
     path     = require('path'),
-    exec     = require('execSync').exec;
-    gaze    = require('gaze');
+    spawn    = require('./support/spawn'),
+    gaze     = require('gaze');
 
 // check if watch enabled
 var at_index = process.argv.indexOf("@");
@@ -166,13 +166,16 @@ program.command('appify')
 program.command('express')
   .description('install a titanium cli command plugin `shadow` for simple tishadow development')
   .action(function() {
-    var ret = exec('ti config -a paths.commands ' + path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','commands'));
-    console.log(ret.stdout);
-    logger.info("Titanium CLI command (DEPRECTATED) installed. Now use the command `ti shadow` from your project for express tishadow development");
-
-    var ret = exec('ti config -a paths.hooks ' + path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','hooks'));
-    console.log(ret.stdout);
-    logger.info("Titanium CLI hook installed. Now use the `--shadow` flag when buliding your project for express tishadow development");
+    var commands = spawn('ti', ['config','-a','paths.commands',path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','commands')]);
+    commands.stderr.pipe(process.stderr);
+    commands.on("exit", function(code) {
+      code === 0 && logger.info("Titanium CLI command (DEPRECTATED) installed. Now use the command `ti shadow` from your project for express tishadow development");
+    });
+    var hooks = spawn('ti', ['config','-a','paths.hooks',path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','hooks')]);
+    hooks.stderr.pipe(process.stderr);
+    hooks.on("exit", function(code) {
+      code === 0 && logger.info("Titanium CLI hook installed. Now use the `--shadow` flag when buliding your project for express tishadow development");
+    });
   });
 
 function execute() {
