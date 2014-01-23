@@ -65,7 +65,9 @@ exports.include = function(context) {
  * Asset Redirection
  */
 exports.file = function(extension) {
-  if (typeof extension !== "string") {
+  if (_.isArray(extension)) {
+    return extension.map(exports.file);
+  } else if (typeof extension !== "string") {
     return extension;
   }
   extension = extension.replace(/^\//, '');
