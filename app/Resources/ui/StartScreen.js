@@ -80,7 +80,7 @@ exports.StartScreen = function() {
     activity.show();
     connect();
   });
-  if (Ti.App.Properties.getBool("tishadow::reconnect", true)) {
+  if (Ti.App.Properties.getBool("tishadow::reconnect", false)) {
     login.hide();
     login.fireEvent("connect");
     Ti.App.Properties.setBool("tishadow::reconnect",false );
