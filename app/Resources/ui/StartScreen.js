@@ -43,7 +43,6 @@ exports.StartScreen = function() {
   win.add(app_list);
   var login = new LoginView();
   login.zIndex = 10;
-  win.add(login);
 
   function connect() {
     TiShadow.connect({
@@ -71,7 +70,10 @@ exports.StartScreen = function() {
       },
       disconnected:  function(o) {
         label.text = "Not Connected";
-        win.add(login);
+        if (!Ti.App.Properties.getBool("tishadow::reconnectOnly", false) &&
+             Ti.App.Properties.getString("tishadow::currentApp", "") === "") {
+          win.add(login);
+        }
         NavBar.setConnectEnabled(true);
       }
     });
@@ -80,9 +82,11 @@ exports.StartScreen = function() {
     activity.show();
     connect();
   });
-  if (Ti.App.Properties.getBool("tishadow::reconnect", false)) {
+  if (Ti.App.Properties.getBool("tishadow::reconnectOnly", false)) {
     login.fireEvent("connect");
-    Ti.App.Properties.setBool("tishadow::reconnect",false );
+    Ti.App.Properties.setBool("tishadow::reconnectOnly",false );
+  } else {
+    win.add(login);
   }
 
   return win;

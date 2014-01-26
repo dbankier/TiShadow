@@ -117,9 +117,15 @@ var bundle;
 exports.closeApp = function() {
   exports.disconnect();
   Ti.App.Properties.setString("tishadow::currentApp","" );
-  Ti.App.Properties.setBool("tishadow::reconnect",true );
+  Ti.App.Properties.setBool("tishadow::reconnectOnly",true );
   Ti.App._restart();
 };
+exports.nextApp = function(name) {
+  Ti.App.Properties.setString("tishadow::currentApp", name ? name.replace(/ /g,"_") : exports.currentApp);
+  Ti.App.Properties.setBool("tishadow::reconnectOnly",false );
+  exports.disconnect();
+  Ti.App._restart();
+}
 exports.launchApp = function(name) {
   try {
     var p = require('/api/PlatformRequire');
@@ -133,8 +139,8 @@ exports.launchApp = function(name) {
 
     exports.currentApp = name;
     bundle = p.include(null, "/app.js");
-    Ti.App.Properties.setString("tishadow::currentApp", "");
     log.info(exports.currentApp.replace(/_/g," ") + " launched.");
+    Ti.App.Properties.setString("tishadow::currentApp", "");
   } catch(e) {
     log.error(utils.extractExceptionData(e));
   }
@@ -176,9 +182,8 @@ exports.clearCache = function() {
   } catch (e) {
     log.error(utils.extractExceptionData(e));
   }
-  Ti.App.Properties.setBool("tishadow::reconnect",true );
   log.info("Cache cleared");
-  Ti.App._restart();
+  exports.closeApp();
 };
 
 
@@ -213,9 +218,7 @@ function loadRemoteZip(name, url, data, version_property) {
       } else if (data && data.patch && data.patch.run) {
         require('/api/PlatformRequire').clearCache(data.patch.files);
       } else  {
-        exports.disconnect();
-        Ti.App.Properties.setString("tishadow::currentApp", path_name);
-        Ti.App._restart();
+        exports.nextApp(path_name);
       }
     } catch (e) {
       log.error(utils.extractExceptionData(e));

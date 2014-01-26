@@ -8,7 +8,7 @@ function LoginView() {
      opacity: 0.4
   });
   black.addEventListener('click', function() {
-    view.hide();
+    view.parent.remove(view);
   });
   view.add(black);
   
