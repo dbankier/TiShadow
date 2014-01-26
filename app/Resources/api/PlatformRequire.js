@@ -136,12 +136,10 @@ exports.addSpy = function(name,spy) {
 (function(context) {
   context.__log = require('/api/Log');
   context.__p = exports;
-  context.__ui = require('/api/UI');
-  context.__app = require('/api/App');
   context.L = require('/api/Localisation').fetchString;
   context.assert = require('/api/Assert');
   context.closeApp =require('/api/TiShadow').closeApp;
-  context.launchApp = require('/api/TiShadow').launchApp;
+  context.launchApp = require('/api/TiShadow').nextApp;
   context.clearCache = require('/api/TiShadow').clearCache;
   context.runSpec = function() {
     var path_name = require('/api/TiShadow').currentApp.replace(/ /g,"_");

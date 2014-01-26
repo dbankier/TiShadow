@@ -20,7 +20,7 @@ exports.StartScreen = function() {
   NavBar.add({
     win:win,
     connect: function() {
-      login.show();
+      win.add(login);
     }
   });
   var activity = new Activity("Connecting...");
@@ -43,7 +43,6 @@ exports.StartScreen = function() {
   win.add(app_list);
   var login = new LoginView();
   login.zIndex = 10;
-  win.add(login);
 
   function connect() {
     TiShadow.connect({
@@ -54,7 +53,7 @@ exports.StartScreen = function() {
       callback: function(o) {
         activity.hide();
         label.text = "Connected";
-        login.hide();
+        win.remove(login);
         NavBar.setConnectEnabled(false);
       },
       onerror: function(o) {
@@ -65,13 +64,16 @@ exports.StartScreen = function() {
           alert("Connect Failed\n\n" + Util.extractExceptionData(o));
         }
         if (!isReconnectAlert) {
-          login.show();
+          win.add(login);
           NavBar.setConnectEnabled(true);
         }
       },
       disconnected:  function(o) {
         label.text = "Not Connected";
-        login.show();
+        if (!Ti.App.Properties.getBool("tishadow::reconnectOnly", false) &&
+             Ti.App.Properties.getString("tishadow::currentApp", "") === "") {
+          win.add(login);
+        }
         NavBar.setConnectEnabled(true);
       }
     });
@@ -80,10 +82,12 @@ exports.StartScreen = function() {
     activity.show();
     connect();
   });
-
-  Ti.App.addEventListener("tishadow:refresh", function(o) {
-    app_list.refreshList();
-  });
+  if (Ti.App.Properties.getBool("tishadow::reconnectOnly", false)) {
+    login.fireEvent("connect");
+    Ti.App.Properties.setBool("tishadow::reconnectOnly",false );
+  } else {
+    win.add(login);
+  }
 
   return win;
 };

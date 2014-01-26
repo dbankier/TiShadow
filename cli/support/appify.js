@@ -100,6 +100,7 @@ exports.build = function(env) {
       fs.writeFileSync(path.join(dest,"tiapp.xml"), 
                        source_tiapp
                        .replace(/<plugin[^>]*>ti\.alloy<\/plugin>/,"")
+                       .replace(/<property[^>]+ti\.android\.bug2373\.finishfalseroot[^>]+>true<\/property>/,'<property name="ti.android.bug2373.finishfalseroot" type="bool">false</property>')
                        .replace("<modules/>","<modules></modules>")
                        .replace("</modules>",required_modules.join("\n")));
       // copy the bundle
