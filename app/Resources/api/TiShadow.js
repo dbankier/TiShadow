@@ -127,6 +127,10 @@ exports.launchApp = function(name) {
     if (osname === "ipad" || osname === "iphone") {
       require("/api/Fonts").loadCustomFonts(name);
     }
+    // still requires cache clean on restart
+    p.clearCache();
+    require("/api/Localisation").clear();
+
     exports.currentApp = name;
     bundle = p.include(null, "/app.js");
     Ti.App.Properties.setString("tishadow::currentApp", "");
@@ -172,6 +176,7 @@ exports.clearCache = function() {
   } catch (e) {
     log.error(utils.extractExceptionData(e));
   }
+  Ti.App.Properties.setBool("tishadow::reconnect",true );
   log.info("Cache cleared");
   Ti.App._restart();
 };
