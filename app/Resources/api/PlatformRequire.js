@@ -151,5 +151,6 @@ exports.addSpy = function(name,spy) {
   };
   context.Ti.Shadow = true;
 })(global_context);
-
+//Needed for Android
+Ti.Shadow = true;
 global_keys = _.keys(global_context);
