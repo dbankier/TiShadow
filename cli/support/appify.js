@@ -17,6 +17,11 @@ _.templateSettings = {
         '<module platform="iphone" version="1.0.2">ti.compression</module>',
         '<module platform="android" version="2.0.3">ti.compression</module>'
  ];
+ 
+ var required_properties = [
+    '<property name="ti.android.bug2373.finishfalseroot" type="bool">false</property>',
+    '<property name="cli.includeAllTiModules" type="bool">true</property>'
+ ]
 
 
 
@@ -97,12 +102,13 @@ exports.build = function(env) {
       // copy tiapp.xml and inject modules
       var source_tiapp = fs.readFileSync(path.join(config.base,"tiapp.xml"),'utf8');
       required_modules.push("</modules>")
+      var injected_xml = required_modules.concat(required_properties);
       fs.writeFileSync(path.join(dest,"tiapp.xml"), 
                        source_tiapp
                        .replace(/<plugin[^>]*>ti\.alloy<\/plugin>/,"")
-                       .replace(/<property[^>]+ti\.android\.bug2373\.finishfalseroot[^>]+>true<\/property>/,'<property name="ti.android.bug2373.finishfalseroot" type="bool">false</property>')
+                       .replace(/<property[^>]+ti\.android\.bug2373\.finishfalseroot[^>]+>true<\/property>/,'')
                        .replace("<modules/>","<modules></modules>")
-                       .replace("</modules>",required_modules.join("\n")));
+                       .replace("</modules>",injected_xml.join("\n")));
       // copy the bundle
       fs.writeFileSync(path.join(dest_resources, config.app_name.replace(/ /g,"_") + ".zip"),fs.readFileSync(config.bundle_file));
 
