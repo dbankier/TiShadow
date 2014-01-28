@@ -88,7 +88,7 @@ module.exports = function(env, callback) {
       }
       async.detectSeries(config.platform, function(platform, callback) {
         logger.info("Compiling Alloy for " + platform);
-        var alloy_command = spawn('alloy', ['compile', '-b','-l', '1', '--platform', platform]);
+        var alloy_command = spawn('alloy', ['compile', '-b','-l', '1', '--platform', platform, '--config', 'sourcemap=false']);
         alloy_command.stderr.pipe(process.stderr);
         alloy_command.on("exit", function(code) {
           if (code !== 0) {
