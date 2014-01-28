@@ -7,6 +7,9 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
+    <plugins>
+        <plugin version="1.0">ti.shadow</plugin>
+    </plugins>
     <sdk-version>3.2.0.GA</sdk-version>
     <id>{{APPID}}</id>
     <name>TiShadow</name>
