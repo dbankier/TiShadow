@@ -108,6 +108,7 @@ exports.build = function(env) {
                        source_tiapp
                        .replace(/<plugin[^>]*>ti\.alloy<\/plugin>/,"")
                        .replace(/<property[^>]+ti\.android\.bug2373\.finishfalseroot[^>]+>true<\/property>/,'')
+                       .replace('android:launchMode="singleTop"','')
                        .replace("<modules/>","<modules></modules>")
                        .replace("</modules>",injected_xml.join("\n")));
       // copy the bundle
