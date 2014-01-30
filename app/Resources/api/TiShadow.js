@@ -137,11 +137,12 @@ exports.launchApp = function(name) {
     p.clearCache();
     require("/api/Localisation").clear();
 
+    Ti.App.Properties.setString("tishadow::currentApp", "");
+    Ti.App.Properties.setBool("tishadow::reconnectOnly", false);
+
     exports.currentApp = name;
     bundle = p.include(null, "/app.js");
     log.info(exports.currentApp.replace(/_/g," ") + " launched.");
-    Ti.App.Properties.setString("tishadow::currentApp", "");
-    Ti.App.Properties.setBool("tishadow::reconnectOnly", false);
   } catch(e) {
     log.error(utils.extractExceptionData(e));
   }
