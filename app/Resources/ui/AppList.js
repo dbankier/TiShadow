@@ -63,6 +63,7 @@ function AppList() {
       //test application directory
       if (file_name.indexOf(".") == -1) {
       	var platform = Ti.Platform.name;
+      	platform = platform.toLowerCase().indexOf("iphone") != -1 ? "iphone" : platform; //ios is "iPhone OS" for some reason
         var app_js = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + "/" + file_name + "/" + platform, 'app.js');
         if (app_js.exists()) { // APPLICATION DIRECTORY
           var icon_path = Ti.Filesystem.applicationDataDirectory + file_name + "/" + platform + "/appicon.png";
