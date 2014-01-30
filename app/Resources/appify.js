@@ -6,6 +6,7 @@
 Titanium.App.idleTimerDisabled = true;
 
 var TiShadow = require("/api/TiShadow");
+TiShadow.Appify = "{{app_name}}";
 var Compression = require('ti.compression');
 require("/lib/ti-mocha");
 
