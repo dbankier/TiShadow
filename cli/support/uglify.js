@@ -51,10 +51,15 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       node.args[0].value = toFullPath(node.args[0].value);
       return node;
     }
-    if (node.expression.start.value === "console" &&
-        node.expression.end.value === "log" &&
-        node.expression.expression.property === undefined) {
-      return functionCall('__log.log', node.args)
+    if (node.expression.start.value === "console") {
+      if (typeof node.expression.property === 'string') {
+        return functionCall("__log."+node.expression.end.value, node.args);
+      } else {
+        return functionCallByNode(new UglifyJS.AST_Sub({
+          expression: new UglifyJS.AST_SymbolRef({name:"__log"}),
+          property: node.expression.property
+        }) ,node.args);
+      }
     }
     if (node.expression.start.value.match && node.expression.start.value.match("^Ti(tanium)?$")){
       // redirect include
