@@ -125,7 +125,8 @@ program.command('log')
   .option('-r, --room <room>', 'server room')
   .option('-c, --ticaster', 'connect to ticaster')
   .action(function(env) {
-    config.buildPaths(env, require('./support/socket').connect);
+    config.init(env);
+    require('./support/socket').connect();
   });
 
 program.command('config')

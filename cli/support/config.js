@@ -14,9 +14,14 @@ var path = require("path"),
 //get app name
 function getAppName(callback) {
   tiapp.find(process.cwd(),function(err,result) {
-    if (err) {
-      logger.error("Script must be run within a Titanium project.");
-      process.exit();
+    if (err ) {
+      if (!config.globalCmd) {
+        logger.error("Script must be run within a Titanium project.");
+        process.exit();
+      } else {
+        callback(null);
+        return;
+      }
     }
     base = result.path; 
     var local_regex = /<key>CFBundleDevelopmentRegion<\/key>(\s|\n)*<string>(\w*)<\/string>/g
@@ -38,6 +43,10 @@ if (fs.existsSync(config_path)) {
 config.buildPaths = function(env, callback) {
   config.init(env);
   getAppName(function(result) {
+    if (!result) { // this is for the non-project specific commands
+      callback();
+      return;
+    }
     config.locale     = env.locale || config.locale;
 
     config.base              = base;
@@ -99,6 +108,8 @@ config.buildPaths = function(env, callback) {
 config.init = function(env) {
   config.isSpec     = env._name === "spec";
   config.specType   = env.type || config.type  || "jasmine"
+  // commands that go through buildPath/init but done mandate a being in the project path
+  config.globalCmd  = _.contains(['clear','close','screenshot','repl'], env._name);
   config.watchInterval = config.watchInterval || 100;
   config.watchDelay    = config.watchDelay || 0;
   if (['jasmine','mocha-chai','mocha-should'].indexOf(config.specType) === -1) {
