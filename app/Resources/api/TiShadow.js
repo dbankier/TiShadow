@@ -115,15 +115,15 @@ exports.disconnect = function() {
 
 var bundle;
 exports.closeApp = function() {
-  exports.disconnect();
   Ti.App.Properties.setString("tishadow::currentApp","" );
   Ti.App.Properties.setBool("tishadow::reconnectOnly",true );
+  //exports.disconnect();
   Ti.App._restart();
 };
 exports.nextApp = function(name) {
   Ti.App.Properties.setString("tishadow::currentApp", name ? name.replace(/ /g,"_") : exports.currentApp);
   Ti.App.Properties.setBool("tishadow::reconnectOnly",false );
-  exports.disconnect();
+  //exports.disconnect();
   Ti.App._restart();
 }
 exports.launchApp = function(name) {
@@ -141,6 +141,7 @@ exports.launchApp = function(name) {
     bundle = p.include(null, "/app.js");
     log.info(exports.currentApp.replace(/_/g," ") + " launched.");
     Ti.App.Properties.setString("tishadow::currentApp", "");
+    Ti.App.Properties.setBool("tishadow::reconnectOnly", false);
   } catch(e) {
     log.error(utils.extractExceptionData(e));
   }
