@@ -2,7 +2,7 @@
   "name": "tishadow",
   "version": "2.5.1",
   "dependencies": {
-    "ticonfig": ">= 0.2.3",
+    "ticonfig": ">= 0.2.4",
     "jade": ">= 0.0.1",
     "socket.io": ">= 0.9.6",
     "socket.io-client": ">=0.9.11",
