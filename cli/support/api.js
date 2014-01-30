@@ -83,16 +83,27 @@ exports.newBundle = function(file_list) {
 
 exports.sendSnippet = function(env) {
   config.buildPaths(env, function() {
-    var socket = require("./socket").connect();
-    console.log("TiShadow REPL\n\nlaunchApp(appName), closeApp(), runSpec() and clearCache() methods available.\nrequire(), Ti.include() and assests are relative the running app.\n\n".grey);
-    repl.start({
-      eval: function(command, context, filename, callback) {
-        if (command.trim() !== "(\n)") {
-          socket.emit('snippet',{code: command.substring(1,command.length -2), platform: config.platform}, function(e) {
-            callback("".blue);
-          });
+    if (config.isPipe) {
+      var stdin = process.openStdin();
+      var data = "";
+      stdin.on('data', function(chunk) {
+        data += chunk;
+      });
+      stdin.on('end', function() {
+        postToServer("snippet",{code: data, platform: config.platform});
+      });
+    } else {
+      var socket = require("./socket").connect();
+      console.log("TiShadow REPL\n\nlaunchApp(appName), closeApp(), runSpec() and clearCache() methods available.\nrequire(), Ti.include() and assests are relative the running app.\n\n".grey);
+      repl.start({
+        eval: function(command, context, filename, callback) {
+          if (command.trim() !== "(\n)") {
+            socket.emit('snippet',{code: command.substring(1,command.length -2), platform: config.platform}, function(e) {
+              callback("".blue);
+            });
+          }
         }
-      }
-    });
+      });
+    }
   });
 };

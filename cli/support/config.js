@@ -109,6 +109,7 @@ config.init = function(env) {
   config.isTailing  = env.tailLogs || config.isSpec;
   config.isJUnit    = env.junitXml;
   config.isREPL     = env._name === "repl";
+  config.isPipe     = env.pipe;
   config.isBundle   = env._name === "bundle";
   config.isTiCaster = env.ticaster;
   if (!env.ticaster) {

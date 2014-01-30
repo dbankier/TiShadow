@@ -103,6 +103,7 @@ program.command('repl')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-i, --pipe', 'pipe to repl')
   .option('-c, --ticaster', 'connect to ticaster')
   .option('-P, --platform <platform>', 'target platform')
   .action(api.sendSnippet);
