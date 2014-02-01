@@ -113,10 +113,7 @@ module.exports = function(env, callback) {
         if (fs.existsSync(config.res_alloy_path)) {
           fs.rm_rf(config.res_alloy_path);
         }
-        var appjs_path = path.join(config.resources_path,'app.js');
-        if (fs.existsSync(appjs_path)) { // doesn't always?
-          fs.unlinkSync(appjs_path);
-        }
+        fs.touch(path.join(config.resources_path,'app.js'));
         alloy.buildMap();
         beginCompile(callback);
       });;
