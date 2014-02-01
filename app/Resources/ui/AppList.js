@@ -61,16 +61,13 @@ function AppList() {
     var files = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory).getDirectoryListing();
     files.forEach(function(file_name) {
       //test application directory
-      if (file_name.indexOf(".") === -1) {
-        var app_js = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,file_name,'app.js');
+      if (file_name.indexOf(".") == -1) {
+      	var platform = Ti.Platform.name;
+      	platform = platform.toLowerCase().indexOf("iphone") != -1 ? "iphone" : platform; //ios is "iPhone OS" for some reason
+        var app_js = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + "/" + file_name + "/" + platform, 'app.js');
         if (app_js.exists()) { // APPLICATION DIRECTORY
-          var icon_path = Ti.Filesystem.applicationDataDirectory + file_name + '/iphone/appicon.png';
-          var icon = Ti.Filesystem.getFile(icon_path);
-          if (!icon.exists()) {
-            icon_path =  Ti.Filesystem.applicationDataDirectory + file_name + '/android/appicon.png';
-          } 
+          var icon_path = Ti.Filesystem.applicationDataDirectory + file_name + "/" + platform + "/appicon.png";
           view.add(createIcon({title: file_name.replace(/_/g, " "), image: icon_path, color: 'black', app: file_name}, count++));
-          //data.push( {title: file_name.replace(/_/g, " "), image: icon_path, color: 'black', app: file_name});
         }
       }
     });
