@@ -44,6 +44,17 @@ exports.copyCoreProject = function(env) {
       logger.error("Could not find existing tishadow app");
       return false;
     }
+    var target_tiapp = fs.readFileSync(path.join(dest,"tiapp.xml"),'utf8');
+    var write_tiapp = target_tiapp
+           .replace(/<property[^>]+ti\.android\.bug2373\.finishfalseroot[^>]+>true<\/property>/,'')
+           .replace('android:launchMode="singleTop"','')
+           .replace("<modules/>","<modules></modules>");
+    required_properties.forEach(function(prop) {
+      if (write_tiapp.indexOf(prop) === -1) {
+        write_tiapp = write_tiapp.replace("</modules>", "</modules>\n  " +prop);
+      }
+    });
+    fs.writeFileSync(path.join(dest,"tiapp.xml"), write_tiapp);
     wrench.copyDirSyncRecursive(path.join(tishadow_app, 'Resources'), path.join(dest,'Resources'));
   } else {
     logger.info("Creating new app...");
