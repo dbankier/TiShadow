@@ -15,22 +15,18 @@ require("/lib/ti-mocha");
 var path_name = "{{app_name}}".replace(/ /g,"_");
 var target = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, path_name);
 if (!target.exists()) {
-	target.createDirectory();
-	Compression.unzip(Ti.Filesystem.applicationDataDirectory + "/" + path_name, Ti.Filesystem.resourcesDirectory + "/" + path_name + '.zip',true);
+  target.createDirectory();
+  Compression.unzip(Ti.Filesystem.applicationDataDirectory + "/" + path_name, Ti.Filesystem.resourcesDirectory + "/" + path_name + '.zip',true);
 }
 
-
-//Call home and connect only if not restarted...
-if (!Ti.App.Properties.getBool("tishadow::reconnectOnly", false) &&
-		Ti.App.Properties.getString("tishadow::currentApp", "") === "") {
-	TiShadow.connect({
-		proto: "{{proto}}",
-		host : "{{host}}",
-		port : "{{port}}",
-		room : "{{room}}",
-		name : Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address
-	});
-}
+//Call Home
+TiShadow.connect({
+  proto: "{{proto}}",
+  host : "{{host}}",
+  port : "{{port}}",
+  room : "{{room}}",
+  name : Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address
+});
 
 //Launch the app
 TiShadow.launchApp(path_name);

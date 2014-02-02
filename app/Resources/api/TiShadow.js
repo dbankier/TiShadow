@@ -117,13 +117,13 @@ var bundle;
 exports.closeApp = function() {
   Ti.App.Properties.setString("tishadow::currentApp","" );
   Ti.App.Properties.setBool("tishadow::reconnectOnly",true );
-  //exports.disconnect();
+  exports.disconnect();
   Ti.App._restart();
 };
 exports.nextApp = function(name) {
   Ti.App.Properties.setString("tishadow::currentApp", name ? name.replace(/ /g,"_") : exports.currentApp);
   Ti.App.Properties.setBool("tishadow::reconnectOnly",false );
-  //exports.disconnect();
+  exports.disconnect();
   Ti.App._restart();
 }
 exports.launchApp = function(name) {

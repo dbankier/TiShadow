@@ -83,7 +83,7 @@ exports.StartScreen = function() {
     connect();
   });
   if (Ti.App.Properties.getBool("tishadow::reconnectOnly", false)) {
-    //login.fireEvent("connect");
+    login.fireEvent("connect");
     Ti.App.Properties.setBool("tishadow::reconnectOnly",false );
   } else {
     win.add(login);
