@@ -6,6 +6,7 @@ var io = require('/lib/socket.io');
 var osname = Ti.Platform.osname;
 var platform = (osname === 'ipad' || osname === 'iphone') ? 'ios' : osname;
 var socket, room;
+var logs = [];
 
 if (!Ti.App.Properties.hasProperty("tishadow:uuid")) {
   Ti.App.Properties.setString("tishadow:uuid",Ti.Platform.createUUID());
@@ -29,17 +30,24 @@ exports.connect = function(o) {
       room : o.room,
       version: Ti.App.Properties.getString(version_property) || undefined
     });
+    
+    logs && logs.forEach(function(log) {
+      socket.emit("log", log);
+    });
+    logs = false;
 
     if(o.callback) {
       o.callback();
     }
   });
   socket.on("error", function(e) {
+    logs = false; // not sure if needed here
     if (o.onerror) {
       o.onerror(e);
     }
   });
   socket.on("connect_failed", function(e) {
+    logs = false;
     if(o.onerror) {
       o.onerror(e);
     }
@@ -102,8 +110,10 @@ exports.connect = function(o) {
 };
 
 exports.emitLog = function(e) {
-  if (socket) {
+  if (socket && !logs) {
     socket.emit("log", e);
+  } else {
+    logs.push(e);
   }
 };
 
@@ -125,7 +135,7 @@ exports.nextApp = function(name) {
   Ti.App.Properties.setBool("tishadow::reconnectOnly",false );
   exports.disconnect();
   Ti.App._restart();
-}
+};
 exports.launchApp = function(name) {
   try {
     var p = require('/api/PlatformRequire');
