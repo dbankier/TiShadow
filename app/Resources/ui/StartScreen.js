@@ -70,8 +70,7 @@ exports.StartScreen = function() {
       },
       disconnected:  function(o) {
         label.text = "Not Connected";
-        if (!Ti.App.Properties.getBool("tishadow::reconnectOnly", false) &&
-             Ti.App.Properties.getString("tishadow::currentApp", "") === "") {
+        if (!Ti.App.Properties.getBool("tishadow::reconnect", false)) {
           win.add(login);
         }
         NavBar.setConnectEnabled(true);
@@ -82,9 +81,9 @@ exports.StartScreen = function() {
     activity.show();
     connect();
   });
-  if (Ti.App.Properties.getBool("tishadow::reconnectOnly", false)) {
+  if (Ti.App.Properties.getBool("tishadow::reconnect", false)) {
     login.fireEvent("connect");
-    Ti.App.Properties.setBool("tishadow::reconnectOnly",false );
+    Ti.App.Properties.setBool("tishadow::reconnect",false );
   } else {
     win.add(login);
   }

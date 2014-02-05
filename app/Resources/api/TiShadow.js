@@ -124,19 +124,19 @@ exports.disconnect = function() {
 };
 
 var bundle;
+function restart() {
+  Ti.App.Properties.setBool("tishadow::reconnect",true );
+  Ti.App.fireEvent('tishadow:close');
+  exports.disconnect();
+  Ti.App._restart();
+}
 exports.closeApp = function() {
   Ti.App.Properties.setString("tishadow::currentApp","" );
-  Ti.App.Properties.setBool("tishadow::reconnectOnly",true );
-  exports.disconnect();
-  Ti.App.fireEvent('tishadow:close');
-  Ti.App._restart();
+  restart();
 };
 exports.nextApp = function(name) {
   Ti.App.Properties.setString("tishadow::currentApp", name ? name.replace(/ /g,"_") : exports.currentApp);
-  Ti.App.Properties.setBool("tishadow::reconnectOnly",false );
-  exports.disconnect();
-  Ti.App.fireEvent('tishadow:close');
-  Ti.App._restart();
+  restart();
 };
 exports.launchApp = function(name) {
   try {
@@ -150,7 +150,7 @@ exports.launchApp = function(name) {
     require("/api/Localisation").clear();
 
     Ti.App.Properties.setString("tishadow::currentApp", "");
-    Ti.App.Properties.setBool("tishadow::reconnectOnly", false);
+    Ti.App.Properties.setBool("tishadow::reconnect", false);
 
     exports.currentApp = name;
     bundle = p.include(null, "/app.js");
