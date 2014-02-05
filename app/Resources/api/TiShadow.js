@@ -125,6 +125,7 @@ exports.disconnect = function() {
 
 var bundle;
 function restart() {
+  require("/api/UI").closeAll();
   Ti.App.Properties.setBool("tishadow::reconnect",true );
   Ti.App.fireEvent('tishadow:close');
   exports.disconnect();

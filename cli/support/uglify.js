@@ -81,6 +81,19 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
         return functionCall("L", node.args);
       }
 
+      //control localisation -- UI
+      if (node.expression.end.value.match("^(createWindow|createTabGroup|createAlertDialog|createOptionDialog)$") &&
+          node.expression.expression.property === "UI") {
+        return functionCall("__ui."+node.expression.end.value, node.args);
+      }
+      if (node.expression.end.value === "createNavigationWindow" &&
+          node.expression.expression.property === "iOS") {
+        return functionCall("__ui.createNavigationWindow", node.args);
+      }
+      /*if (node.expression.end.value.match("^(createSplitWindow|createPopover)$") &&
+          node.expression.expression.property === "iPad") {
+        return functionCall("__ui."+node.expression.end.value, node.args);
+      }*/
       //control localisation -- API
       if (node.expression.expression.property === "API") {
         if (typeof node.expression.property === 'string') {
