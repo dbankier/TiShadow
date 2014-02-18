@@ -28,13 +28,20 @@ TiShadow is built on [node.js](http://nodejs.org/) and is required.
 TiShadow can be installed via npm using the following command:
 
 ```
-  sudo npm install -g tishadow
+$  npm install -g tishadow
+```
+
+**PLEASE NOTE:** The package installs titanium hooks in the post install. 
+If you install with `sudo` and get the error `Unable to write config file...` use the following command:
+
+```
+$ sudo npm install -g tishadow --unsafe-perm
 ```
 
 Or if you want to use the master version directly from GitHub:
 
 ```
-  sudo npm install -g dbankier/TiShadow
+  npm install -g dbankier/TiShadow
 ```
 
 
