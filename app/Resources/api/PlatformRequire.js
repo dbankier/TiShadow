@@ -71,7 +71,10 @@ exports.file = function(extension) {
     return extension;
   }
   extension = extension.replace(/^\//, '');
-  var base = Ti.Filesystem.applicationDataDirectory + "/" + require("/api/TiShadow").currentApp + "/";
+  var base = Ti.Filesystem.applicationDataDirectory + require("/api/TiShadow").currentApp + "/";
+  if (extension.indexOf(base) !== -1) { 
+    extension = extension.replace(base,"");
+  }
   var path = base + extension,
   platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
   var isImage = extension.toLowerCase().match("\\.(png|jpg)$");

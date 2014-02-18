@@ -1,4 +1,5 @@
 var UglifyJS = require("uglify-js"),
+    _ = require("underscore");
     path = require("path");
 
 function functionCall(name, args) {
@@ -15,12 +16,27 @@ function functionCallByNode(node, args) {
   });
 }
 
-function addAppName(node) {
+function binaryAdd(left, right) {
   return new UglifyJS.AST_Binary({
-    left: node,
+    left: left,
     operator: "+",
-    right: new UglifyJS.AST_Symbol({name:'require("/api/TiShadow").currentApp + "/"'})
+    right: right 
   });
+}
+function symbol(s) {
+	return new UglifyJS.AST_Symbol({name:s});
+}
+
+function addAppName(node) {
+  return binaryAdd(node, symbol('require("/api/TiShadow").currentApp + "/"'));
+}
+
+function argsToPath(args) {
+	if (args.length > 1)  {
+		return binaryAdd(args[0],/*binaryAdd(args[0], symbol('"/"')),*/ argsToPath(_.tail(args)));
+	} else {
+		return args[0];
+	}
 }
 function couldBeAsset(name) {
   return typeof name === 'string' && name.toLowerCase().match("image$")  ||
@@ -75,6 +91,12 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
         node.expression.property = "getApplicationDataDirectory";
       return addAppName(node);
       }
+      if (node.expression.end.value === "getFile" &&
+          node.expression.expression.property === "Filesystem") {
+				node.args = [functionCall("__p.file", [argsToPath(node.args)])];
+				return node;
+      }
+
       //control localisation -- LOCALE
       if (node.expression.end.value === "getString" &&
           node.expression.expression.property === "Locale") {
