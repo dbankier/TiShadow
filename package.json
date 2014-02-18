@@ -2,7 +2,7 @@
   "name": "tishadow",
   "version": "2.5.2",
   "dependencies": {
-    "ticonfig": ">= 0.2.4",
+    "ticonfig": ">= 0.2.5",
     "jade": ">= 0.0.1",
     "socket.io": ">= 0.9.6",
     "socket.io-client": ">=0.9.11",
@@ -43,6 +43,5 @@
   },
   "license": "Apache Public License v2",
   "framework": "none",
-  "private": "true",
   "main": "server/app.js"
 }
