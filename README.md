@@ -296,6 +296,9 @@ to interact with apps cached in the TiShadow app.
 `require()`, `Ti.include()` and assets are relative the running app
 inside the TiShadow app.
 
+**note**: you can now also pipe to the tishadow repl using the `--pipe` flag. have a look 
+at this [screencast](http://www.youtube.com/watch?v=f9ZLAtzJdGY)
+
 ###Spies
 
 You can add **spies** on objects so that you can modify them from
