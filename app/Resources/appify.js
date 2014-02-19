@@ -10,6 +10,12 @@ TiShadow.Appify = "{{app_name}}";
 var Compression = require('ti.compression');
 require("/lib/ti-mocha");
 
+// If new install clear cache
+if (Ti.App.Properties.getString("tishadow::container_version",0) !== "{{date}}") {
+  TiShadow.clearCache(true);
+  Ti.App.Properties.setString("tishadow::container_version","{{date}}"); 
+}
+
 
 // Need to unpack the bundle on a first load;
 var path_name = "{{app_name}}".replace(/ /g,"_");

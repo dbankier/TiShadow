@@ -161,7 +161,7 @@ exports.launchApp = function(name) {
   }
 };
 
-exports.clearCache = function() {
+exports.clearCache = function(no_restart) {
   Ti.App.Properties.listProperties().forEach(function(property) {
     if (!property.match("^tishadow:")) {
       Ti.App.Properties.removeProperty(property);
@@ -198,7 +198,9 @@ exports.clearCache = function() {
     log.error(utils.extractExceptionData(e));
   }
   log.info("Cache cleared");
-  exports.closeApp();
+  if (!no_restart) {
+    exports.closeApp();
+  }
 };
 
 
