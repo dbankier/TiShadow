@@ -1,4 +1,4 @@
-var connect_button = Ti.UI.createButton({title:'Connect', top: '5dp', width: "60dp", height: "30dp", left: "10dp"});
+var connect_button = Ti.UI.createButton({title:'Connect', top: '5dp', left: "10dp"});
 
 module.exports = {
   add: function(o) {
