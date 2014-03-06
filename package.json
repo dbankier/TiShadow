@@ -21,7 +21,8 @@
     "tiapp": "0.0.2",
     "gaze": "~0.4.3",
     "glob": "~3.2.8",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "mkdirp": "~0.3.5"
   },
   "devDependencies": {},
   "optionalDependencies": {},
