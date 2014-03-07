@@ -5,8 +5,9 @@ var textField = {
   top : "50dp",
   height : "40dp",
   color: 'black',
-  borderRadius: 5,
   backgroundColor : 'white',
+  borderWidth: '1dp',
+  borderColor: '#f0f0f0',
   textAlign : 'center',
   font : {
     fontSize : "18dp"
@@ -21,7 +22,7 @@ var tab = {
   bottom: 0,
   color: 'black',
   width: '50%',
-  height: '30dp'
+  height: '40dp'
 };
 
 
@@ -29,8 +30,7 @@ exports.login = {
 	container : {
 		height : "190dp",
 		width : "300dp",
-		borderRadius : "20",
-		backgroundColor : "#d6e0f0"
+		backgroundColor : "white"
 	},
 	header : {
 		top : "10dp",
@@ -56,6 +56,7 @@ exports.login = {
     visible: false
   }, textField),
   colon : _.defaults({
+    borderColor: 'transparent',
     left: "215dp",
     width : "10dp",
     text : ":",
@@ -75,20 +76,19 @@ exports.login = {
   }, tab),
   rightTab: _.defaults({
     text: 'Advanced',
-    backgroundColor: "#4377d2",
+    backgroundColor: "#f8f8f8",
     right: 0
   },tab),
   button : {
     height : '40dp',
     width : '280dp',
-    color : 'white',
-    backgroundColor : "#4377d2",
+    color : '#157efb',
+    backgroundColor : "#f8f8f8",
 
     font : {
       fontSize : '16dp',
       fontWeight : 'bold'
     },
-    borderRadius : '10',
     bottom : '50dp',
     title : "Connect"
   }
@@ -106,7 +106,7 @@ exports.start = {
 };
 if (exports.isPost7) {
 	exports.start.window.top = 20;
-  Ti.UI.setBackgroundColor('#adbedd');
+  Ti.UI.setBackgroundColor('#f8f8f8');
 }
 if(Ti.Platform.osname !== "android") {
 	exports.login.button.backgroundImage = 'none';
