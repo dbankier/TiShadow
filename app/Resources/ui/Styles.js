@@ -18,7 +18,6 @@ var textField = {
 
 var tab = {
   textAlign: 'center',
-  font: {fontWeight: 'bold', fontSize: '14dp'},
   bottom: 0,
   color: 'black',
   width: '50%',
@@ -72,17 +71,19 @@ exports.login = {
 	}, textField),
   leftTab: _.defaults({
     text: 'Standard',
+    font: {fontWeight: 'bold', fontSize: '14dp'},
     left: 0
   }, tab),
   rightTab: _.defaults({
     text: 'Advanced',
+    font: {fontSize: '14dp'},
     backgroundColor: "#f8f8f8",
     right: 0
   },tab),
   button : {
     height : '40dp',
     width : '280dp',
-    color : '#157efb',
+    color : '#2192E3',
     backgroundColor : "#f8f8f8",
 
     font : {
@@ -100,6 +101,7 @@ exports.start = {
 	window: {
     backgroundColor : 'white',
     exitOnClose : true,
+    navBarHidden: true,
     keepScreenOn: true,
     title: "TiShadow"
   }

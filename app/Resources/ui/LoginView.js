@@ -33,7 +33,9 @@ function LoginView() {
 
   leftTab.addEventListener('click', function() {
     leftTab.backgroundColor = 'transparent';
+    leftTab.font = {fontWeight: 'bold'};
     rightTab.backgroundColor = '#f8f8f8';
+    rightTab.font = {fontWeight: 'normal'};
     port.visible = colon.visible = room.visible = false;
     host.width = "280dp";
     container.height = "190dp";
@@ -43,7 +45,9 @@ function LoginView() {
     host.width = "205dp";
     container.height = "230dp";
     rightTab.backgroundColor = 'transparent';
+    rightTab.font = {fontWeight: 'bold'};
     leftTab.backgroundColor = '#f8f8f8';
+    leftTab.font = {fontWeight: 'normal'};
     port.visible = colon.visible = room.visible = true;
   });
 
