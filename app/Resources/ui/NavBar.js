@@ -1,4 +1,4 @@
-var connect_button = Ti.UI.createButton({title:'Connect', top: '5dp', left: "10dp"});
+var connect_button = Ti.UI.createButton({title:'Connect', color: '#157efb', top: '5dp', left: "10dp"});
 
 module.exports = {
   add: function(o) {
@@ -11,17 +11,16 @@ module.exports = {
 
       var title = Ti.UI.createLabel({
         text:"TiShadow",
-        color:'white',
         font:{
           fontSize:18,
-          fontWeight:'bold' 
+          fontWeight:'bold'
         }
       });
 
       var bar = Ti.UI.iOS.createToolbar({
         items:[connect_button,flexSpace, title, flexSpace],
         top:0,
-        barColor:'#adbedd',
+        barColor:'#f8f8f8',
         height:40
       });
 
@@ -31,10 +30,9 @@ module.exports = {
         height: "40dp",
         width: Ti.UI.FILL,
         top: 0,
-        backgroundColor: '#adbedd'
+        backgroundColor: '#f8f8f8'
       });
-      connect_button.backgroundColor = '#adbedd';
-      connect_button.borderRadius = 5;
+      connect_button.backgroundColor = '#f8f8f8';
       connect_button.borderColor = 'black';
       connect_button.borderWidth = 1;
       connect_button.width = "90dp";

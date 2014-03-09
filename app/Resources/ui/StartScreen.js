@@ -40,7 +40,7 @@ exports.StartScreen = function() {
     textAlign: 'center',
     width: Ti.UI.FILL,
     color: "black",
-    backgroundColor: "#adbedd"
+    backgroundColor: "#f8f8f8"
   });
 
   win.add(label);
