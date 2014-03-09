@@ -19,8 +19,12 @@ exports.StartScreen = function() {
 
   NavBar.add({
     win:win,
-    connect: function() {
-      win.add(login);
+    connect: function(e) {
+      if (e.source.connected) {
+        TiShadow.disconnect();
+      } else {
+        win.add(login);
+      }
     }
   });
   var activity = new Activity("Connecting...");
@@ -54,7 +58,7 @@ exports.StartScreen = function() {
         activity.hide();
         label.text = "Connected";
         win.remove(login);
-        NavBar.setConnectEnabled(false);
+        NavBar.setConnected(true);
       },
       onerror: function(o) {
         activity.hide();
@@ -65,7 +69,7 @@ exports.StartScreen = function() {
         }
         if (!isReconnectAlert) {
           win.add(login);
-          NavBar.setConnectEnabled(true);
+          NavBar.setConnected(false);
         }
       },
       disconnected:  function(o) {
@@ -73,7 +77,7 @@ exports.StartScreen = function() {
         if (!Ti.App.Properties.getBool("tishadow::reconnect", false)) {
           win.add(login);
         }
-        NavBar.setConnectEnabled(true);
+        NavBar.setConnected(false);
       }
     });
   }

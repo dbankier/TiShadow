@@ -42,11 +42,9 @@ module.exports = {
       o.win.add(view);
     }
   },
-  setConnectEnabled: function(val) {
-    connect_button.enabled = val;
+  setConnected: function(val) {
+    connect_button.connected = val;
+    connect_button.title = val ? "Disconnect" : "Connect";
   }
-  //Tooling not allowing getters/setters on object literals. see issue #32
-  //get connectEnabled() { return connect_button.enabled; },
-  //set connectEnabled(val) { connect_button.enabled = val;}
 }
 
