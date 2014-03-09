@@ -12,9 +12,7 @@ exports.StartScreen = function() {
   var win = Ti.UI.createWindow(Styles.start.window);
   var app_list= new (require("/ui/AppList"))();
   app_list.addEventListener("launch", function(e) {
-    activity.show();
     TiShadow.launchApp(e.app);
-    activity.hide();
   });
 
   NavBar.add({
