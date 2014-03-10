@@ -174,7 +174,7 @@ function beginCompile(callback) {
   var process_tasks = file_list.files.map(function(file) {
     return _.bind(prepare, null, path.join(config.resources_path,file), path.join(config.tishadow_src,file));
   }).concat(assets_list.files.map(function(file) {
-  	return _.bind(prepare, null, path.join(config.assets_path,file), path.join(config.tishadow_src, "com.mfoundry.mb.cca", file));
+  	return _.bind(prepare, null, path.join(config.assets_path,file), path.join(config.tishadow_src, config.module_name, file));
   })).concat(spec_list.files.map(function(file) {
     return _.bind(prepare, null, path.join(config.base,file), path.join(config.tishadow_src,file));
   }));
