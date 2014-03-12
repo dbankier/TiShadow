@@ -1,4 +1,5 @@
 var path = require("path"),
+    config = require("./config"),
     fs = require("fs");
 
 
@@ -14,7 +15,7 @@ function getList(start, last_update, _path) {
     var coll = filenames.reduce(function (acc, name) {
       var abspath = path.join(start, name);
       var file_stat = fs.statSync(abspath);
-      if (name.match(/^\./)) {
+      if (name.match(/^\./) && !config.includeDotFiles) {
         // IGNORING HIDDEN FILES
       } else if (file_stat.isDirectory()) {
         acc.dirs.push(name);

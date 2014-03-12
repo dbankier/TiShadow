@@ -122,6 +122,7 @@ config.init = function(env) {
   config.isREPL     = env._name === "repl";
   config.isPipe     = env.pipe;
   config.isBundle   = env._name === "bundle";
+  config.includeDotFiles = env.includeDotFiles;
   config.isTiCaster = env.ticaster;
   if (!env.ticaster) {
     config.host     = env.host || config.host || "localhost";
