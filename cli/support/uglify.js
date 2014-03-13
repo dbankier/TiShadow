@@ -81,9 +81,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       // redirect include
       if (node.expression.end.value === "include" && 
           node.expression.expression.property === undefined ) {
-        node.expression.expression.name = "__p";
-      node.args.unshift(new UglifyJS.AST_This());
-      return node;
+        return functionCall("eval", [functionCall("__p.fileContent", node.args)]);
       }
       //reroute resources directory -- FILESYSTEM
       if (node.expression.end.value === "getResourcesDirectory" &&
