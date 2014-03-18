@@ -62,7 +62,7 @@ exports.connect = function(o) {
   });
 
   socket.on('bundle', function(data) {
-    if (!isTarget(data) || (exports.Appify && exports.Appify !== data.name)) {
+    if (!isTarget(data) /*|| (exports.Appify && exports.Appify !== data.name)*/) {
       return;
     }
     if(data.locale) {
