@@ -135,6 +135,7 @@ config.init = function(env) {
   config.screenshot_path = env.screenshotPath || os.tmpdir();
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
+  config.skipAlloyCompile = env.skipAlloyCompile;
   config.isManageVersions = env.manageVersions;
   config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : undefined;
 };
