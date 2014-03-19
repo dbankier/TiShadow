@@ -1,11 +1,11 @@
 {
   "name": "tishadow",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "dependencies": {
     "ticonfig": ">= 0.2.5",
     "jade": ">= 0.0.1",
     "socket.io": ">= 0.9.6",
-    "socket.io-client": ">=0.9.11",
+    "socket.io-client": "0.9.x",
     "colors": ">=0.6.0-1",
     "commander": "1.0.x",
     "pkginfo": "0.2.3",
