@@ -45,20 +45,29 @@ exports.require = function(extension) {
 };
 
 /*
- * Ti.include() override
+ * Ti.include() override (only used once in /api/TiShadow.js));
  */
-exports.include = function(context) {
+exports.include = function(context, file) {
   try {
-    // Full Path
-    for (var i = 1, length = arguments.length; i< length; i++) {
-      var path = exports.file(arguments[i]);
-      var ifile = Ti.Filesystem.getFile(path);
-      var contents = ifile.read().text;
-      eval.call(context || global_context, contents);
-    }
+    var path = exports.file(file);
+    var ifile = Ti.Filesystem.getFile(path);
+    var contents = ifile.read().text;
+    eval.call(context || global_context, contents);
   } catch(e) {
     log.error(utils.extractExceptionData(e));
   }
+};
+/*
+ * Read all file content
+ */
+exports.fileContent = function(context) {
+  var contents="";
+  for (var i = 0, length = arguments.length; i< length; i++) {
+    var path = exports.file(arguments[i]);
+    var ifile = Ti.Filesystem.getFile(path);
+    contents += ifile.read().text + "\n";
+  }
+  return contents;
 };
 
 /*

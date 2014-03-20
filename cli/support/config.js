@@ -146,6 +146,7 @@ config.init = function(env) {
   config.isREPL     = env._name === "repl";
   config.isPipe     = env.pipe;
   config.isBundle   = env._name === "bundle";
+  config.includeDotFiles = env.includeDotFiles;
   config.isTiCaster = env.ticaster;
   if (!env.ticaster) {
     config.host     = env.host || config.host || "localhost";
@@ -158,6 +159,7 @@ config.init = function(env) {
   config.screenshot_path = env.screenshotPath || os.tmpdir();
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
+  config.skipAlloyCompile = env.skipAlloyCompile;
   config.isManageVersions = env.manageVersions;
   config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : undefined;
 };

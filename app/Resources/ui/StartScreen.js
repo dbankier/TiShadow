@@ -12,15 +12,17 @@ exports.StartScreen = function() {
   var win = Ti.UI.createWindow(Styles.start.window);
   var app_list= new (require("/ui/AppList"))();
   app_list.addEventListener("launch", function(e) {
-    activity.show();
     TiShadow.launchApp(e.app);
-    activity.hide();
   });
 
   NavBar.add({
     win:win,
-    connect: function() {
-      win.add(login);
+    connect: function(e) {
+      if (e.source.connected) {
+        TiShadow.disconnect();
+      } else {
+        win.add(login);
+      }
     }
   });
   var activity = new Activity("Connecting...");
@@ -36,7 +38,7 @@ exports.StartScreen = function() {
     textAlign: 'center',
     width: Ti.UI.FILL,
     color: "black",
-    backgroundColor: "#adbedd"
+    backgroundColor: "#f8f8f8"
   });
 
   win.add(label);
@@ -54,7 +56,7 @@ exports.StartScreen = function() {
         activity.hide();
         label.text = "Connected";
         win.remove(login);
-        NavBar.setConnectEnabled(false);
+        NavBar.setConnected(true);
       },
       onerror: function(o) {
         activity.hide();
@@ -65,7 +67,7 @@ exports.StartScreen = function() {
         }
         if (!isReconnectAlert) {
           win.add(login);
-          NavBar.setConnectEnabled(true);
+          NavBar.setConnected(false);
         }
       },
       disconnected:  function(o) {
@@ -73,7 +75,7 @@ exports.StartScreen = function() {
         if (!Ti.App.Properties.getBool("tishadow::reconnect", false)) {
           win.add(login);
         }
-        NavBar.setConnectEnabled(true);
+        NavBar.setConnected(false);
       }
     });
   }

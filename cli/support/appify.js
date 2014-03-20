@@ -1,5 +1,6 @@
 var logger = require("../../server/logger.js"),
     fs = require("fs"),
+    mkdirp = require('mkdirp'),
     wrench = require("wrench"),
     path = require("path"),
     tishadow_app = path.join(__dirname, "../..","app"),
@@ -29,8 +30,10 @@ _.templateSettings = {
 exports.copyCoreProject = function(env) {
   var dest = env.destination || ".";
   if (!fs.existsSync(dest) || !fs.lstatSync(dest).isDirectory()) {
-    logger.error("Destination folder does not exist.");
-    return false;
+    mkdirp(dest, function(err) {
+      logger.error("Could not create destination directory. Error: " + err);
+      return false;
+    });
   }
   if (dest === ".") {
     logger.error("You really don't want to write to the current directory.");

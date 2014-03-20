@@ -1,15 +1,12 @@
 var log = require("/api/Log");
 
-var width = Ti.Platform.displayCaps.platformWidth / 4;
-var icon_width = width - 20;
-icon_width = icon_width  / (Ti.Platform.osname === "android" ? Ti.Platform.displayCaps.logicalDensityFactor : 1) > 72 ? 72 : icon_width;
+var width = '80dp';
+var icon_width = '60dp';
 
 function createIcon(o, idx) {
   var view = Ti.UI.createView({
     width: width,
-    height: width + 30,
-    left: width * (idx % 4),
-    top: (width + 30) * (Math.floor(idx / 4)) + 20,
+    height:"110dp",
     app: o.app
   });
 
@@ -18,12 +15,12 @@ function createIcon(o, idx) {
     backgroundImage: o.image,
     borderRadius: 10,
     top: "10dp",
-    width: icon_width + "dp",
-    height: icon_width + "dp"
+    width: icon_width,
+    height: icon_width
   }));
 
   view.add(Ti.UI.createLabel({
-    top: icon_width + 10 + "dp",
+    top: "70dp",
     font: {
       fontSize: '10dp',
       fontWeight: 'bold'
@@ -40,19 +37,25 @@ function createIcon(o, idx) {
 
 function AppList() {
   var view = Ti.UI.createScrollView({
-    top: "40dp", 
+    top: "50dp", 
     bottom: "20dp",
     left: 0,
     right: 0,
     contentHeight: 'auto'
   });
+  var container = Ti.UI.createView({
+    top: 0,
+    height: Ti.UI.SIZE,
+    layout: 'horizontal'
+  });
+  view.add(container);
 
 
   function refreshList() {
     //Remove the children
-    if(view.children != null && view.children.length > 0) {
-      view.children.forEach(function(child) {
-        view.remove(child);
+    if(container.children != null && container.children.length > 0) {
+      container.children.forEach(function(child) {
+        container.remove(child);
       });
     }
     // Troll Cache
@@ -69,12 +72,11 @@ function AppList() {
           if (!icon.exists()) {
             icon_path =  Ti.Filesystem.applicationDataDirectory + file_name + '/android/appicon.png';
           } 
-          view.add(createIcon({title: file_name.replace(/_/g, " "), image: icon_path, color: 'black', app: file_name}, count++));
+          container.add(createIcon({title: file_name.replace(/_/g, " "), image: icon_path, color: 'black', app: file_name}, count++));
           //data.push( {title: file_name.replace(/_/g, " "), image: icon_path, color: 'black', app: file_name});
         }
       }
     });
-    //view.data = data.length > 0 ? data : [{title: "No apps cached"}];
   }
   refreshList();
   view.addEventListener('click', function(e) {

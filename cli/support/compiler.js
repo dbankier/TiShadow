@@ -81,7 +81,7 @@ module.exports = function(env, callback) {
 
     logger.info("Beginning Build Process");
     // a js map of hashes must be built whether or not it is an update.
-    if (config.isAlloy) {
+    if (config.isAlloy && !config.skipAlloyCompile) {
       if (config.platform === undefined) {
         logger.error("You need to use the --platform (android|ios) flag or have deployment-targets in tiapp.xml with an alloy project.");
         process.exit();

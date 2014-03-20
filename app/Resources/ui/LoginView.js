@@ -11,17 +11,17 @@ function LoginView() {
     view.parent.remove(view);
   });
   view.add(black);
-  
+
   //Container
   var container = Ti.UI.createView(Styles.container);
-  
+
   // "Tabs"
   var leftTab = Ti.UI.createLabel(Styles.leftTab);
   var rightTab = Ti.UI.createLabel(Styles.rightTab);
   container.add(rightTab);
   container.add(leftTab);
 
-  
+
   //views
   var header = Ti.UI.createLabel(Styles.header);
 
@@ -33,7 +33,9 @@ function LoginView() {
 
   leftTab.addEventListener('click', function() {
     leftTab.backgroundColor = 'transparent';
-    rightTab.backgroundColor = '#4377d2';
+    leftTab.font = {fontWeight: 'bold'};
+    rightTab.backgroundColor = '#f8f8f8';
+    rightTab.font = {fontWeight: 'normal'};
     port.visible = colon.visible = room.visible = false;
     host.width = "280dp";
     container.height = "190dp";
@@ -43,7 +45,9 @@ function LoginView() {
     host.width = "205dp";
     container.height = "230dp";
     rightTab.backgroundColor = 'transparent';
-    leftTab.backgroundColor = '#4377d2';
+    rightTab.font = {fontWeight: 'bold'};
+    leftTab.backgroundColor = '#f8f8f8';
+    leftTab.font = {fontWeight: 'normal'};
     port.visible = colon.visible = room.visible = true;
   });
 

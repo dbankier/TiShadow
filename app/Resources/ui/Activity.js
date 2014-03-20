@@ -17,7 +17,6 @@ function Activity(message) {
 		height : 90,
 		backgroundColor : '#000',
 		borderWidth : 2,
-		borderRadius : 10,
 		borderColor : '#999'
 	});
 

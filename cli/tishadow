@@ -59,7 +59,9 @@ program.command('run')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .option('-c, --ticaster', 'connect to ticaster')
+  .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
   .option('-P, --platform <platform>', 'target platform')
+  .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
   .action(compiler);
 
 program.command('deploy')
@@ -67,11 +69,15 @@ program.command('deploy')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
+  .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
+  .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
   .option('-c, --ticaster', 'connect to ticaster')
   .action(compiler);
 
 program.command('bundle')
   .description('prepare a TiShadow bundle without deploying it'.grey)
+  .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
+  .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
   .option('-j, --jshint', 'analyse code with JSHint')
   .action(compiler);
 
@@ -87,6 +93,8 @@ program.command('spec')
   .option('-j, --jshint', 'analyse code with JSHint')
   .option('-x, --junit-xml','output report as JUnit XML')
   .option('-P, --platform <platform>', 'target platform')
+  .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
+  .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
   .action(compiler);
 
 program.command('close')
