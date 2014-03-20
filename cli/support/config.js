@@ -87,10 +87,11 @@ config.buildPaths = function(env, callback) {
     config.isModule = fs.existsSync(config.assets_path) && result.isModule;
     if (config.isModule) {
       config.module_name = app_name;
-      config.module_path = path.join(config.tishadow_src, app_name);
+      config.module_path = path.join(config.tishadow_src, config.module_name);
     }
     
-    config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
+    config.bundle_name       = config.bundle_name || app_name;
+    config.bundle_file       = path.join(config.tishadow_dist, config.bundle_name + ".zip");
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
     if (config.isTiCaster && result.ticaster_user[0] && result.ticaster_app[0]) {
       config.room = result.ticaster_user[0] + ":" + result.ticaster_app[0];
@@ -161,6 +162,7 @@ config.init = function(env) {
   config.isLongPolling = env.longPolling;
   config.skipAlloyCompile = env.skipAlloyCompile;
   config.isManageVersions = env.manageVersions;
+  config.bundle_name = env.target;
   config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : undefined;
 };
 

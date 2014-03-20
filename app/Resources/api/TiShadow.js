@@ -62,7 +62,11 @@ exports.connect = function(o) {
   });
 
   socket.on('bundle', function(data) {
-    if (!isTarget(data) /*|| (exports.Appify && exports.Appify !== data.name)*/) {
+    if (!isTarget(data)) {
+      return;
+    }
+    if (exports.Appify && exports.Appify !== data.name) {
+      log.info("App Bundle " + data.name + " is not for this app: " + exports.Appify);
       return;
     }
     if(data.locale) {
