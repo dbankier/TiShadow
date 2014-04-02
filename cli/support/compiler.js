@@ -18,7 +18,7 @@ require("./fs_extension");
 // Copies all Resource files and prepares JS files
 function prepare(src, dst, callback) {
   var app_name = config.app_name;
-  if (src.match("js$")){ 
+  if (src.match("js$")){
     try {
       var src_text = uglify.toString(fs.readFileSync(src).toString(),src);
       if (src.match("_spec.js$")) {
@@ -26,7 +26,7 @@ function prepare(src, dst, callback) {
           src_text =  "var __jasmine = require('/lib/jasmine');var methods = ['spyOn','it','xit','expect','runs','waits','waitsFor','beforeEach','afterEach','describe','xdescribe','jasmine'];methods.forEach(function(method) {this[method] = __jasmine[method];});"
           +src_text;
         } else if (config.specType === "mocha-should") {
-          src_text =  "require('/lib/should');\n"
+          src_text =  "var should = require('/lib/should');\n"
           +src_text;
         } else if (config.specType === "mocha-chai") {
           src_text =  "var chai = require('/lib/chai'); var expect = chai.expect; var assert = chai.assert;\n"
@@ -55,8 +55,8 @@ function copyI18n(file, callback) {
 function finalise(file_list,callback) {
   // Bundle up to go
   var total = file_list.files.length;
-  bundle.pack(file_list.files,function(written) { 
-    logger.info(total+ " file(s) bundled."); 
+  bundle.pack(file_list.files,function(written) {
+    logger.info(total+ " file(s) bundled.");
     if (config.isAlloy) {
       alloy.writeMap();
     }
