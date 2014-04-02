@@ -14,6 +14,8 @@ exports.extendedDesc = 'Requires tishadow: `[sudo] npm install -g tishadow`';
 exports.init = init;
 var logger;
 function init(_logger, config, cli) {
+  // users who are on the wrong SDK without this being set... TiShadow would just fail to work at all
+  cli.config.cli.failOnWrongSDK = true;
   if (process.argv.indexOf('--shadow') !== -1 || process.argv.indexOf('--tishadow') !== -1) {
     cli.addHook('build.pre.compile', preCompileHook(true));
   } else if (process.argv.indexOf('--appify') !== -1) {
