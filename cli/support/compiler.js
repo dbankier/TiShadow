@@ -27,9 +27,11 @@ function prepare(src, dst, callback) {
           +src_text;
         } else if (config.specType === "mocha-should") {
           src_text =  "var should = require('/lib/should');\n"
+            + "var sinon = require('/lib/sinon');\n"
           +src_text;
         } else if (config.specType === "mocha-chai") {
           src_text =  "var chai = require('/lib/chai'); var expect = chai.expect; var assert = chai.assert;\n"
+            + "var sinon = require('/lib/sinon');\n"
           +src_text;
         }
       }
