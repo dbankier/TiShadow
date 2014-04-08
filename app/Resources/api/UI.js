@@ -91,16 +91,17 @@ exports.createPopover= function(args) {
 exports.closeApp = function(a) {
   var app = a || "__REPL";
   if (app && containers[app]) {
-    for (var c in containers[app]) {
+    _.keys(containers[app]).reverse().forEach(function(c) {
       if (containers[app].hasOwnProperty(c)) {
         var current = containers[app][c];
         if (current.__tishadowDumb) {
           unstack({app:app, container:c});
         }
         log.debug("CLOSING: " + c);
+        log.debug(current.apiName);
         current[current.__closeFn || 'close']({animated:false});
       }
-    }
+    });
   }
   return;
 };
