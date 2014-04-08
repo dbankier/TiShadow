@@ -27,6 +27,9 @@ describe("TiShadow conversions", function() {
   },{ describe: "Logging Redirects",
      it: "api rewrites",
      file: "api.js"
+  },{ describe: "Application Listener Redirects",
+     it: "should redirect all listener to __app",
+     file: "app.js"
   },{ describe: "Random Bugs",
      it: "shouldn't crash",
      file: "bugs.js"

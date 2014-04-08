@@ -149,6 +149,7 @@ exports.addSpy = function(name,spy) {
   context.__log = require('/api/Log');
   context.__p = exports;
   context.__ui = require('/api/UI');
+  context.__app = require('/api/App');
   context.L = require('/api/Localisation').fetchString;
   context.assert = require('/api/Assert');
   context.closeApp =require('/api/TiShadow').closeApp;

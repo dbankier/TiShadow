@@ -114,6 +114,11 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
           node.expression.expression.property === "iPad") {
         return functionCall("__ui."+node.expression.end.value, node.args);
       }*/
+      //control global listener -- App
+      if (node.expression.end.value.match("^(addEventListener|removeEventListener|fireEvent)$") &&
+          node.expression.expression.property === "App") {
+        return functionCall("__app."+node.expression.end.value, node.args);
+      }
       //control localisation -- API
       if (node.expression.expression.property === "API") {
         if (typeof node.expression.property === 'string') {
