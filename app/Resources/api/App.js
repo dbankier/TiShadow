@@ -1,31 +1,36 @@
 var _ = require("/lib/underscore");
 var events = {};
 module.exports = {
-  addEventListener: function(name, fn) {
-    Ti.App.addEventListener(name, fn);
-    if (events[name]) {
-      events[name].push(fn);
+  addEventListener: function(api, name, fn) {
+    Ti[api].addEventListener(name, fn);
+    if (events[api]) {
+      if (events[api][name]) {
+        events[api][name].push(fn);
+      } else {
+        events[api][name] = [fn];
+      }
     } else {
-      events[name] = [fn];
+      events[api] = {};
+      events[api][name] = [fn];
     }
   },
-  removeEventListener: function(name, fn) {
-    Ti.App.removeEventListener(name, fn);
-    if (events[name]) {
-      events[name] = _.without(events[name], fn);
+  removeEventListener: function(api, name, fn) {
+    Ti[api].removeEventListener(name, fn);
+    if (events[api] && events[api][name]) {
+      events[api][name] = _.without(events[api][name], fn);
     }
   },
-  fireEvent: function(name, o) {
-    Ti.App.fireEvent(name, o);
+  fireEvent: function(api, name, o) {
+    Ti[api].fireEvent(name, o);
   },
   clearAll: function() {
-    for (var name in events) {
-      if (events.hasOwnProperty(name)) {
-        events[name].forEach(function(fn) {
-          Ti.App.removeEventListener(name, fn);
+    _.keys(events).forEach(function(api) {
+      _.keys(events[api]).forEach(function(name) {
+        events[api][name].forEach(function(fn) {
+          Ti[api].removeEventListener(name, fn);
         });
-      }
-    }
+      });
+    });
     events = {};
   }
 };

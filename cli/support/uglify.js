@@ -116,8 +116,11 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       }*/
       //control global listener -- App
       if (node.expression.end.value.match("^(addEventListener|removeEventListener|fireEvent)$") &&
-          node.expression.expression.property === "App") {
-        return functionCall("__app."+node.expression.end.value, node.args);
+          ["App","Gesture","Geolocation"].indexOf(node.expression.expression.property) > -1) {
+        return functionCall("__app."+node.expression.end.value, 
+                            [new UglifyJS.AST_String({
+                              value: node.expression.expression.property
+                            })].concat(node.args));
       }
       //control localisation -- API
       if (node.expression.expression.property === "API") {
