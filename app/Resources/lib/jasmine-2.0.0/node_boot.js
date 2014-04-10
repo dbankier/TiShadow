@@ -20,11 +20,12 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-module.exports = function(jasmineRequire) {
+module.exports = function(jasmineRequire, globalObject, consoleFns) {
   var jasmine = jasmineRequire.core(jasmineRequire);
 
-  var consoleFns = require('../console/console.js');
-  consoleFns.console(consoleFns, jasmine);
+  if (consoleFns && typeof consoleFns.console === 'function') {
+    consoleFns.console(consoleFns, jasmine);
+  }
 
   var env = jasmine.getEnv();
 
@@ -69,7 +70,8 @@ module.exports = function(jasmineRequire) {
     jasmine: jasmine
   };
 
-  extend(global, jasmineInterface);
+  var destObj = ((typeof global === 'undefined' || global !== globalObject) ? globalObject : global) || {};
+  extend(destObj, jasmineInterface);
 
   jasmine.addCustomEqualityTester = function(tester) {
     env.addCustomEqualityTester(tester);
