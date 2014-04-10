@@ -810,7 +810,7 @@ getJasmineRequireObj().Any = function() {
     if (this.expectedObject == Object) {
       return typeof other == 'object';
     }
-    
+
     if (this.expectedObject == Boolean) {
       return typeof other == 'boolean';
     }
@@ -1678,6 +1678,9 @@ getJasmineRequireObj().Suite = function() {
 
   Suite.prototype.execute = function(onComplete) {
     var self = this;
+
+    this.onStart(this);
+
     if (this.disabled) {
       complete();
       return;
@@ -1688,8 +1691,6 @@ getJasmineRequireObj().Suite = function() {
     for (var i = 0; i < this.children.length; i++) {
       allFns.push(wrapChildAsAsync(this.children[i]));
     }
-
-    this.onStart(this);
 
     this.queueRunner({
       fns: allFns,

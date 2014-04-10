@@ -35,14 +35,17 @@ exports.run = function (name, junitxml, type) {
       jasmine.getEnv().addReporter(new TiShadowReporter());
     }
   } else if (type === 'jasmine2') {
-    var jasmineBoot = require('/lib/jasmine-2.0.0/node-boot');
-    var jasmineRequire = require('/lib/jasmine-2.0.0/jasmine');
-    var consoleFns = require('/lib/jasmine-2.0.0/console');
-    (function() {
-      jasmine = jasmineBoot(jasmineRequire, this, consoleFns);
+    jasmine = (function() {
+      this.should = require('/lib/should');
+      var jasmineRequire = require('/lib/jasmine-2.0.0/jasmine');
+      var jasmineBoot = require('/lib/jasmine-2.0.0/node-boot');
+      return jasmineBoot(jasmineRequire, this);
     })();
-    jasmine.getEnv().addReporter(new jasmine.ConsoleReporter({
-      print: log.test,
+    var TiShadowReporter2 = require('/api/TiShadowReporter2');
+    jasmine.getEnv().addReporter(new TiShadowReporter2({
+      log: log.test,
+      showColors: true,
+      timer: new jasmine.Timer(),
       onComplete: function() {
         log.test('Runner Finished');
       }
