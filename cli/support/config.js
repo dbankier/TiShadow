@@ -23,7 +23,7 @@ function getAppName(callback) {
         return;
       }
     }
-    base = result.path; 
+    base = result.path;
     var local_regex = /<key>CFBundleDevelopmentRegion<\/key>(\s|\n)*<string>(\w*)<\/string>/g
     var matches = local_regex.exec(result.str);
     if (matches) {
@@ -94,7 +94,7 @@ config.buildPaths = function(env, callback) {
     }
     config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.platform ? '_' + config.platform.join('_') : ''));
     config.isPatch = env.patch;
-    config.isUpdate = (env.update || env.patch) 
+    config.isUpdate = (env.update || env.patch)
                     && fs.existsSync(config.tishadow_src)
                     && fs.existsSync(config.last_updated_file);
 
@@ -112,7 +112,7 @@ config.init = function(env) {
   config.globalCmd  = _.contains(['clear','close','screenshot','repl'], env._name);
   config.watchInterval = config.watchInterval || 100;
   config.watchDelay    = config.watchDelay || 0;
-  if (['jasmine','mocha-chai','mocha-should'].indexOf(config.specType) === -1) {
+  if (['jasmine','mocha-chai','mocha-should','jasmine2'].indexOf(config.specType) === -1) {
     logger.error("Invalid test library, please choose from: jasmine, mocha-should or mocha-chai");
     process.exit(-1);
   }
