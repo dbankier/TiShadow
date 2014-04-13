@@ -1,10 +1,14 @@
-__log.log("hi");
+__log.log("info", "hi");
+
+__log.log("info", "hello", "world");
 
 __log.debug(variable);
 
 __log.error("asdf" + "asdfas" + "asdfasdf");
 
 __log[type]("error" + content);
+
+__log.log("info", "Ti.API.log()");
 
 __log.info(variable);
 
