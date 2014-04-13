@@ -69,6 +69,10 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
     }
     if (node.expression.start.value === "console") {
       if (typeof node.expression.property === 'string') {
+        // console.log(...) => __log.log('info', ...)
+        if (node.expression.property === 'log') {
+          node.args.unshift(new UglifyJS.AST_String({value: 'info'}));
+        }
         return functionCall("__log."+node.expression.end.value, node.args);
       } else {
         return functionCallByNode(new UglifyJS.AST_Sub({
