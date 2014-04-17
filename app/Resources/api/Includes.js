@@ -52,6 +52,7 @@ var includes = [
   Ti.Utils,
   Ti.Contacts.createGroup,
   Ti.Contacts.createPerson,
+  Ti.Database,
   Ti.Database.open,
   Ti.Database.execute,
   Ti.Facebook,
