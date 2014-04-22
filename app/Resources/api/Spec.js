@@ -38,7 +38,7 @@ exports.run = function (name, junitxml, type) {
     jasmine = (function() {
       this.should = require('/lib/should');
       var jasmineRequire = require('/lib/jasmine-2.0.0/jasmine');
-      var jasmineBoot = require('/lib/jasmine-2.0.0/node-boot');
+      var jasmineBoot = require('/lib/jasmine-2.0.0/node_boot');
       return jasmineBoot(jasmineRequire, this);
     })();
     var TiShadowReporter2 = require('/api/TiShadowReporter2');
