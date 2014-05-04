@@ -68,13 +68,6 @@ config.buildPaths = function(env, callback) {
     var app_name = config.app_name = result.name[0] || "bundle";
     config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
-    if (config.isTiCaster && result.ticaster_user[0] && result.ticaster_app[0]) {
-      config.room = result.ticaster_user[0] + ":" + result.ticaster_app[0];
-    }
-    if (config.room === undefined) {
-      logger.error("ticaster setting missing from tiapp.xml");
-      process.exit();
-    }
     config.isAlloy = fs.existsSync(config.alloy_path);
     if (!config.platform && config.isAlloy) {
       var deploymentTargets = [];
@@ -123,15 +116,9 @@ config.init = function(env) {
   config.isPipe     = env.pipe;
   config.isBundle   = env._name === "bundle";
   config.includeDotFiles = env.includeDotFiles;
-  config.isTiCaster = env.ticaster;
-  if (!env.ticaster) {
-    config.host     = env.host || config.host || "localhost";
-    config.port     = env.port || config.port || "3000";
-    config.room     = env.room || config.room || "default";
-  } else {
-    config.host     = "www.ticaster.io";
-    config.port     = 443;
-  }
+  config.host     = env.host || config.host || "localhost";
+  config.port     = env.port || config.port || "3000";
+  config.room     = env.room || config.room || "default";
   config.screenshot_path = env.screenshotPath || os.tmpdir();
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
