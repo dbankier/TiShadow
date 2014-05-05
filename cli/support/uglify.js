@@ -32,11 +32,14 @@ function addAppName(node) {
 }
 
 function argsToPath(args) {
-	if (args.length > 1)  {
-		return binaryAdd(args[0],/*binaryAdd(args[0], symbol('"/"')),*/ argsToPath(_.tail(args)));
-	} else {
-		return args[0];
-	}
+    var path = args[0];
+    if (args.length > 1) {
+        for (var i = 1; i < args.length - 1; ++i) {
+            path = binaryAdd(path, binaryAdd(args[i], symbol('"/"')));
+        }
+        path = binaryAdd(path, _.last(args));
+    }
+    return path;
 }
 function couldBeAsset(name) {
   return typeof name === 'string' && name.toLowerCase().match("image$")  ||
