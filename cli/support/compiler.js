@@ -3,7 +3,6 @@
  * Please see the LICENSE file included with this distribution for details.
  */
 
-#!/usr/bin/env node
 var path   = require("path"),
     fs     = require("fs"),
     spawn  = require("./spawn"),
