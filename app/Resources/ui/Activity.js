@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 var activity_win, activity_view, activity_label;
 var osname = Ti.Platform.osname;
 
