@@ -21,10 +21,17 @@ body {
 #console {
   border-radius:3px;
   height: 300px;
+  padding: 5px;
+  background-color: #333;
   overflow-x: hidden;
   overflow-y: auto;
+  line-height: 14px;
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+  font-size: 12px;
 }
-
+.control-group.success .control-label, .control-group.success .help-block, .control-group.success .help-inline {
+    color: #eee;
+}
 .alert {
   margin-bottom:5px;
   border-radius: 3px;
