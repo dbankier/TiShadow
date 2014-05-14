@@ -47,7 +47,9 @@ function argsToPath(args) {
     return path;
 }
 function couldBeAsset(name) {
-  return typeof name === 'string' && name.toLowerCase().match("image$")  ||
+  return typeof name === 'string' && 
+		name.toLowerCase().match("image$")  ||
+		name.toLowerCase().match("icon$")  ||
     ["file", "sound", "icon", "url", "leftButton", "rightButton", "images"].indexOf(name) !== -1;
 }
 
