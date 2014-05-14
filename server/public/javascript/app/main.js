@@ -44,7 +44,9 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
 
     socket.on('device_log', function(e) {
       var now = new Date();
-      var log = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " [" + e.level + "] [" + e.name + "]    " + (e.message === undefined ? 'undefined' : e.message.toString().replace("\n","<br/>"));
+      var minutes = now.getMinutes();
+      var seconds = now.getSeconds();
+      var log = now.getHours() + ":" + (minutes < 10 ? "0" : "") +  minutes + ":" + (seconds < 10 ? "0" : "" ) + seconds + " [" + e.level + "] [" + e.name + "]    " + (e.message === undefined ? 'undefined' : e.message.toString().replace("\n","<br/>"));
       var style = e.level === "ERROR"  || e.level === "FAIL" ? " error" : e.level === "WARN" ? "warning" : e.level === "INFO" ? " success" : " info";
       $("#console").append("<div class='control-group " + style + "'><span class='control-label'>" + log + "</span></div>");
       $("#console").scrollTop($("#console")[0].scrollHeight);
