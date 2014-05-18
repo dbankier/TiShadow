@@ -48,9 +48,9 @@ function argsToPath(args) {
 }
 function couldBeAsset(name) {
   return typeof name === 'string' && 
-		name.toLowerCase().match("image$")  ||
+		(name.toLowerCase().match("image$")  ||
 		name.toLowerCase().match("icon$")  ||
-    ["file", "sound", "icon", "url", "leftButton", "rightButton", "images"].indexOf(name) !== -1;
+    ["file", "sound", "icon", "url", "leftButton", "rightButton", "images"].indexOf(name) !== -1);
 }
 
 function doNotTouch(node) {
