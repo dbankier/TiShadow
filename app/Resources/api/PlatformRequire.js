@@ -76,6 +76,16 @@ exports.fileContent = function(context) {
 };
 
 /*
+ * Ensure that the path entry ends with a path separator
+ */
+exports.endsWithPathSeparator = function (pathEntry) {
+  if (typeof pathEntry === "string") {
+    return pathEntry + (pathEntry.charAt(pathEntry.length-1) !== '/' ? '/' : '');
+  }
+  return pathEntry;
+};
+
+/*
  * Asset Redirection
  */
 exports.file = function(extension) {
