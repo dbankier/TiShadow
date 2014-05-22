@@ -96,6 +96,7 @@ program.command('spec')
   .option('-P, --platform <platform>', 'target platform')
   .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
   .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
+  .option('-C, --clear-spec-files', 'clears only the spec files from the cache')
   .action(compiler);
 
 program.command('close')
