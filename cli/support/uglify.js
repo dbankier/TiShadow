@@ -38,7 +38,7 @@ function addAppName(node) {
 
 function argsToPath(args) {
     if (args.length > 1) {
-        return binaryAdd(functionCall("__p.endsWithPathSeparator", [args[0]]), argsToPath(_.tail(args)));
+        return binaryAdd(binaryAdd(args[0], symbol('"/"')), argsToPath(_.tail(args)));
     }
     else {
         return args[0];

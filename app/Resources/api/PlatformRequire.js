@@ -76,14 +76,25 @@ exports.fileContent = function(context) {
 };
 
 /*
- * Ensure that the path entry ends with a path separator
+ * Remove any double forward slashes from the extension.
  */
-exports.endsWithPathSeparator = function (pathEntry) {
-  if (typeof pathEntry === "string") {
-    return pathEntry + (pathEntry.charAt(pathEntry.length-1) !== '/' ? '/' : '');
+function removeDoubleForwardSlashes(extension) {
+  var protocol = "://";
+  var pattern = /\/\//g;
+  var i = extension.indexOf(protocol);
+  if (i !== -1) {
+    // the extension is a URL so don't replace the forward
+    // slashes in scheme portion (e.g http://, file:///, etc.)
+    var base = extension.substring(0, i);
+    var rest = extension.substring(i + protocol.length);
+    var newExtension = base + protocol + rest.replace(pattern, "/");
+    return newExtension;
   }
-  return pathEntry;
-};
+  else {
+    // not a URL
+    return extension.replace(pattern, "/");
+  }
+}
 
 /*
  * Asset Redirection
@@ -95,6 +106,7 @@ exports.file = function(extension) {
     return extension;
   }
   extension = extension.replace(/^\//, '');
+  extension = removeDoubleForwardSlashes(extension);
   var base = Ti.Filesystem.applicationDataDirectory + require("/api/TiShadow").currentApp + "/";
   if (extension.indexOf(base) !== -1) { 
     extension = extension.replace(base,"");
