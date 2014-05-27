@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 var log = require("/api/Log"),
     utils = require("/api/Utils"),
     densityFile = require("/api/DensityAssets"),
@@ -128,6 +133,25 @@ exports.clearCache = function (list) {
 };
 
 /*
+ * clear require and global cache using a regular expression. any file
+ * that matches will be removed.
+ */
+exports.clearCacheWithRegEx = function (regex) {
+  for (var key in cache) {
+    if (cache.hasOwnProperty(key) && key.match(regex)) {
+      log.debug('Clearing: ' + key + ' from the require cache');
+      delete cache[key];
+    }
+  }
+  for (var a in global_context) {
+    if (global_context.hasOwnProperty(a) && !_.contains(global_keys, a) && a.match(regex)) {
+      log.debug('Clearing: ' + a + ' from global context');
+      delete global_context[a];
+    }
+  }
+};
+
+/*
  * new repl
  */
 exports.eval = function(message) {
@@ -149,6 +173,7 @@ exports.addSpy = function(name,spy) {
   context.__log = require('/api/Log');
   context.__p = exports;
   context.__ui = require('/api/UI');
+  context.__app = require('/api/App');
   context.L = require('/api/Localisation').fetchString;
   context.assert = require('/api/Assert');
   context.closeApp =require('/api/TiShadow').closeApp;

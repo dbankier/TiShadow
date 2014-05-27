@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 var log = require('/api/Log');
 var utils = require('/api/Utils');
 var Compression = require("ti.compression");
@@ -130,6 +135,7 @@ exports.disconnect = function() {
 var bundle;
 function restart() {
   require("/api/UI").closeAll();
+  require("/api/App").clearAll();
   Ti.App.Properties.setBool("tishadow::reconnect",true );
   Ti.App.fireEvent('tishadow:close');
   exports.disconnect();
@@ -235,7 +241,7 @@ function loadRemoteZip(name, url, data, version_property) {
       // Launch
       if (data && data.spec && data.spec.run) {
         exports.currentApp = path_name;
-        require("/api/Spec").run(path_name, data.spec.junitxml, data.spec.type);
+        require("/api/Spec").run(path_name, data.spec.junitxml, data.spec.type, data.spec.clearSpecFiles);
       } else if (data && data.patch && data.patch.run) {
         require('/api/PlatformRequire').clearCache(data.patch.files);
       } else  {

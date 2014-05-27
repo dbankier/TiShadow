@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 var UglifyJS = require("uglify-js"),
     _ = require("underscore");
     path = require("path");
@@ -32,15 +37,20 @@ function addAppName(node) {
 }
 
 function argsToPath(args) {
-	if (args.length > 1)  {
-		return binaryAdd(args[0],/*binaryAdd(args[0], symbol('"/"')),*/ argsToPath(_.tail(args)));
-	} else {
-		return args[0];
-	}
+    var path = args[0];
+    if (args.length > 1) {
+        for (var i = 1; i < args.length - 1; ++i) {
+            path = binaryAdd(path, binaryAdd(args[i], symbol('"/"')));
+        }
+        path = binaryAdd(path, _.last(args));
+    }
+    return path;
 }
 function couldBeAsset(name) {
-  return typeof name === 'string' && name.toLowerCase().match("image$")  ||
-    ["file", "sound", "icon", "url", "leftButton", "rightButton", "images"].indexOf(name) !== -1;
+  return typeof name === 'string' && 
+		(name.toLowerCase().match("image$")  ||
+		name.toLowerCase().match("icon$")  ||
+    ["file", "sound", "icon", "url", "leftButton", "rightButton", "images"].indexOf(name) !== -1);
 }
 
 function doNotTouch(node) {
@@ -69,6 +79,10 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
     }
     if (node.expression.start.value === "console") {
       if (typeof node.expression.property === 'string') {
+        // console.log(...) => __log.log('info', ...)
+        if (node.expression.property === 'log') {
+          node.args.unshift(new UglifyJS.AST_String({value: 'info'}));
+        }
         return functionCall("__log."+node.expression.end.value, node.args);
       } else {
         return functionCallByNode(new UglifyJS.AST_Sub({
@@ -114,6 +128,14 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
           node.expression.expression.property === "iPad") {
         return functionCall("__ui."+node.expression.end.value, node.args);
       }*/
+      //control global listener -- App
+      if (node.expression.end.value.match("^(addEventListener|removeEventListener|fireEvent)$") &&
+          ["App","Gesture","Geolocation"].indexOf(node.expression.expression.property) > -1) {
+        return functionCall("__app."+node.expression.end.value, 
+                            [new UglifyJS.AST_String({
+                              value: node.expression.expression.property
+                            })].concat(node.args));
+      }
       //control localisation -- API
       if (node.expression.expression.property === "API") {
         if (typeof node.expression.property === 'string') {

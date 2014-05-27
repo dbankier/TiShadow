@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 var api      = require('./support/api'),
     compiler = require('./support/compiler'),
     colors   = require('colors'),
@@ -44,7 +49,6 @@ program.command('clear')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
-  .option('-c, --ticaster', 'connect to ticaster')
   .option('-P, --platform <platform>', 'target platform')
   .action(api.clearCache);
 
@@ -58,7 +62,6 @@ program.command('run')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
-  .option('-c, --ticaster', 'connect to ticaster')
   .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
   .option('-P, --platform <platform>', 'target platform')
   .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
@@ -72,7 +75,6 @@ program.command('deploy')
   .option('-r, --room <room>', 'server room')
   .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
   .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
-  .option('-c, --ticaster', 'connect to ticaster')
   .action(compiler);
 
 program.command('bundle')
@@ -90,13 +92,13 @@ program.command('spec')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .option('-t, --type <type>', 'testing library')
-  .option('-c, --ticaster', 'connect to ticaster')
   .option('-j, --jshint', 'analyse code with JSHint')
   .option('-x, --junit-xml','output report as JUnit XML')
   .option('-P, --platform <platform>', 'target platform')
   .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
   .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
   .option('-T, --target <app_name>', 'target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)')
+  .option('-C, --clear-spec-files', 'clears only the spec files from the cache')
   .action(compiler);
 
 program.command('close')
@@ -104,7 +106,6 @@ program.command('close')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
-  .option('-c, --ticaster', 'connect to ticaster')
   .option('-P, --platform <platform>', 'target platform')
   .action(api.closeApp);
 
@@ -114,7 +115,6 @@ program.command('repl')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .option('-i, --pipe', 'pipe to repl')
-  .option('-c, --ticaster', 'connect to ticaster')
   .option('-P, --platform <platform>', 'target platform')
   .action(api.sendSnippet);
 
@@ -133,7 +133,6 @@ program.command('log')
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
-  .option('-c, --ticaster', 'connect to ticaster')
   .action(function(env) {
     config.init(env);
     require('./support/socket').connect();
@@ -172,7 +171,6 @@ program.command('appify')
   .option('-p, --port <port>', 'set server port')
   .option('-r, --room <room>', 'set server room')
   .option('-P, --platform <platform>', 'target platform')
-  .option('-c, --ticaster', 'connect to ticaster')
   .action(require('./support/appify').build);
 
 program.command('express')

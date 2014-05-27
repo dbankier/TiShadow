@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 var LoginView = require('/ui/LoginView');
 var Activity = require('/ui/Activity');
 //Includes do not need to be included at runtime, just needed to trick

@@ -1,22 +1,37 @@
 extends layout
 
 block content
-  .topbar
-    .fill
-      .container
-        a(class="brand", href="#") TiShadow 
-  .container
-    .row
-      .span9
-        h3 Enter your Titanium Code 
-        .button
-          input(type='submit', id="tisubmit", value="Send Code")
-        div(id="editor")
+  div(ng-controller='mainController')
+    .well.row-fluid
+      .span9(style='position:relative')
+        h3.title Enter your Titanium Code
+        #editor
+        button.btn.btn-danger(type='submit', id="tisubmit") Execute Code
       .span3
-        h3 Devices 
-          ul.device_list
-    .row
-      .span12
-        h3 Console
-        .console
-
+        h4 Devices
+        ul.device_list.unstyled
+          li(ng-repeat="device in devices", id="device.id")
+            i.fa.fa-mobile
+            | &nbsp;&nbsp;{{ device.name }}
+    .well.row-fluid
+      .span12(style='position:relative;')
+        h3.title Console
+        #console
+        .form-search
+          input#filter.input-large.search-query(type='search', placeholder="Filter")
+          .btn-group(style='margin-left:5px;')
+            button.btn.btn-all.disabled.btn-toggle All
+            button.btn.btn-info.btn-toggle Debug 
+            button.btn.btn-success.btn-toggle Info
+            button.btn.btn-warning.btn-toggle Warning
+            button.btn.btn-danger.btn-toggle Errors
+          .btn-group
+            button.btn.btn-primary.dropdown-toggle(data-toggle='dropdown', ng-disabled="!_.size(devices)")
+              | Devices
+              | &nbsp;&nbsp;<span class="caret"></span>
+            ul.dropdown-menu
+              li(ng-repeat="device in devices")
+                a {{ device.name }}
+          button.btn.pull-right(style='margin-left:5px;', ng-click='downloadFile()')
+            i.fa.fa-file
+            | &nbsp; Download Log

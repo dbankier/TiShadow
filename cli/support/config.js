@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 var path = require("path"),
     fs = require("fs"),
     os = require("os"),
@@ -39,7 +44,7 @@ function getAppName(callback) {
         return;
       }
     }
-    base = result.path; 
+    base = result.path;
     var local_regex = /<key>CFBundleDevelopmentRegion<\/key>(\s|\n)*<string>(\w*)<\/string>/g
     var matches = local_regex.exec(result.str);
     if (matches) {
@@ -93,13 +98,6 @@ config.buildPaths = function(env, callback) {
     config.bundle_name       = config.bundle_name || app_name;
     config.bundle_file       = path.join(config.tishadow_dist, config.bundle_name + ".zip");
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
-    if (config.isTiCaster && result.ticaster_user[0] && result.ticaster_app[0]) {
-      config.room = result.ticaster_user[0] + ":" + result.ticaster_app[0];
-    }
-    if (config.room === undefined) {
-      logger.error("ticaster setting missing from tiapp.xml");
-      process.exit();
-    }
     config.isAlloy = fs.existsSync(config.alloy_path);
     if (!config.platform && config.isAlloy) {
       var deploymentTargets = [];
@@ -119,7 +117,7 @@ config.buildPaths = function(env, callback) {
     }
     config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.platform ? '_' + config.platform.join('_') : ''));
     config.isPatch = env.patch;
-    config.isUpdate = (env.update || env.patch) 
+    config.isUpdate = (env.update || env.patch)
                     && fs.existsSync(config.tishadow_src)
                     && fs.existsSync(config.last_updated_file);
 
@@ -137,26 +135,21 @@ config.init = function(env) {
   config.globalCmd  = _.contains(['clear','close','screenshot','repl'], env._name);
   config.watchInterval = config.watchInterval || 100;
   config.watchDelay    = config.watchDelay || 0;
-  if (['jasmine','mocha-chai','mocha-should'].indexOf(config.specType) === -1) {
+  if (['jasmine','mocha-chai','mocha-should','jasmine2'].indexOf(config.specType) === -1) {
     logger.error("Invalid test library, please choose from: jasmine, mocha-should or mocha-chai");
     process.exit(-1);
   }
   config.isDeploy   = env._name === "deploy";
   config.isTailing  = env.tailLogs || config.isSpec;
   config.isJUnit    = env.junitXml;
+  config.clearSpecFiles = env.clearSpecFiles;
   config.isREPL     = env._name === "repl";
   config.isPipe     = env.pipe;
   config.isBundle   = env._name === "bundle";
   config.includeDotFiles = env.includeDotFiles;
-  config.isTiCaster = env.ticaster;
-  if (!env.ticaster) {
-    config.host     = env.host || config.host || "localhost";
-    config.port     = env.port || config.port || "3000";
-    config.room     = env.room || config.room || "default";
-  } else {
-    config.host     = "www.ticaster.io";
-    config.port     = 443;
-  }
+  config.host     = env.host || config.host || "localhost";
+  config.port     = env.port || config.port || "3000";
+  config.room     = env.room || config.room || "default";
   config.screenshot_path = env.screenshotPath || os.tmpdir();
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 var connect_button = Ti.UI.createButton({title:'Connect', color: '#2192E3', left: "10dp", width: Ti.UI.SIZE});
 
 module.exports = {

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 var config = require("./config"),
     logger = require("../../server/logger"),
     colors = require('colors'),
@@ -74,7 +79,7 @@ exports.newBundle = function(file_list) {
   fn("bundle", {
     bundle:config.bundle_file,
     deployOnly: config.isDeploy || undefined,
-    spec: {run: config.isSpec, junitxml: config.isJUnit, type: config.specType},
+    spec: {run: config.isSpec, junitxml: config.isJUnit, type: config.specType, clearSpecFiles: config.clearSpecFiles},
     locale: config.locale,
     platform: config.platform,
     patch : {run: config.isPatch, files: file_list}

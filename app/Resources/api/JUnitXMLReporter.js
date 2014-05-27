@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.
+ * Please see the LICENSE file included with this distribution for details.
+ */
+
 // The code for this JUnit XML reporter has been taken from https://github.com/larrymyers/jasmine-reporters
 // (MIT Licenced) and has been modified for use in TiShadow.
 

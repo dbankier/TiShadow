@@ -225,6 +225,7 @@ Here are a full list of options:
     -t, --type <type>      testing library
     -j, --jshint           analyse code with JSHint
     -x, --junit-xml        output report as JUnit XML
+    -C, --clear-spec-files clears only the spec files from the cache
 ```
 
 **NEW**: You can now select the testing library to use `jasmine`, `mocha-should` or `mocha-chai`. 
@@ -438,26 +439,33 @@ Contributors
 
 ```
  project  : TiShadow
- repo age : 1 year, 10 months
- active   : 176 days
- commits  : 393
- files    : 197
+ repo age : 2 years, 1 month
+ active   : 226 days
+ commits  : 560
+ files    : 202
  authors  :
-   303  David Bankier           77.1%
-    42  dbankier                10.7%
-    35  Fokke Zandbergen        8.9%
-     2  noughts                 0.5%
-     1  Lee, JongEun            0.3%
-     1  Clément Blanco         0.3%
-     1  Pedro Palmero           0.3%
-     1  Timan Rebel             0.3%
-     1  astronaughts            0.3%
-     1  iskugor                 0.3%
-     1  jsjant                  0.3%
-     1  Luis Cruz               0.3%
-     1  Hugh Cannon             0.3%
-     1  Ivan Skugor             0.3%
-     1  Jeff Bonnes             0.3%
+   427  David Bankier           76.2%
+    61  Fokke Zandbergen        10.9%
+    42  dbankier                7.5%
+     6  Javen Wang              1.1%
+     3  Eric Boehs              0.5%
+     3  Joshua Ogle             0.5%
+     2  noughts                 0.4%
+     1  Lee, JongEun            0.2%
+     1  Luis Cruz               0.2%
+     1  Matt Apperson           0.2%
+     1  Pedro Palmero           0.2%
+     1  Terry Morgan            0.2%
+     1  Timan Rebel             0.2%
+     1  astronaughts            0.2%
+     1  iskugor                 0.2%
+     1  jsjant                  0.2%
+     1  Lee, Jong Eun           0.2%
+     1  Guillermo Zunino        0.2%
+     1  Hugh Cannon             0.2%
+     1  Ivan Skugor             0.2%
+     1  Jeff Bonnes             0.2%
+     1  Jongeun Lee             0.2%
 ```
 
 Feedback appreciated.
