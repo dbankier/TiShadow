@@ -171,6 +171,7 @@ Here are full list of options:
     -o, --host <host>      server host name / ip address
     -p, --port <port>      server port
     -r, --room <room>      server room
+    -T, --target <appname> target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)
 ```
 
 
@@ -225,6 +226,7 @@ Here are a full list of options:
     -t, --type <type>      testing library
     -j, --jshint           analyse code with JSHint
     -x, --junit-xml        output report as JUnit XML
+    -T, --target <appname> target TiShadow app (defaults to name on tiapp.xml ormoduleid on manifest)
     -C, --clear-spec-files clears only the spec files from the cache
 ```
 
