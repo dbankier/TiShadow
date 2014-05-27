@@ -62,6 +62,7 @@ program.command('run')
   .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
   .option('-P, --platform <platform>', 'target platform')
   .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
+  .option('-T, --target <app_name>', 'target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)')
   .action(compiler);
 
 program.command('deploy')
@@ -211,4 +212,3 @@ if (config.isWatching) {
 } 
 
 execute();
-
