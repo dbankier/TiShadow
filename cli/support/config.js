@@ -96,16 +96,13 @@ config.buildPaths = function(env, callback) {
                     && fs.existsSync(config.tishadow_src)
                     && fs.existsSync(config.last_updated_file);
 
-    if (config.isSpec) {
-      config.specCount = _.uniq(glob.sync(config.spec_path +"/**/*_spec.js").concat(glob.sync(config.resources_path + "/**/*_spec.js"))).length;
-    }
     callback();
   });
 };
 
 config.init = function(env) {
   config.isSpec     = env._name === "spec";
-  config.specType   = env.type || config.type  || "jasmine"
+  config.specType   = env.type || config.type  || "jasmine";
   // commands that go through buildPath/init but done mandate a being in the project path
   config.globalCmd  = _.contains(['clear','close','screenshot','repl'], env._name);
   config.watchInterval = config.watchInterval || 100;
