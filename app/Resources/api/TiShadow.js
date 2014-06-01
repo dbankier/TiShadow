@@ -237,7 +237,7 @@ function loadRemoteZip(name, url, data, version_property) {
       // Launch
       if (data && data.spec && data.spec.run) {
         exports.currentApp = path_name;
-        require("/api/Spec").run(path_name, data.spec.junitxml, data.spec.type);
+        require("/api/Spec").run(path_name, data.spec.junitxml, data.spec.type, data.spec.clearSpecFiles);
       } else if (data && data.patch && data.patch.run) {
         require('/api/PlatformRequire').clearCache(data.patch.files);
       } else  {

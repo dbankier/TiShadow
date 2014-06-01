@@ -117,6 +117,7 @@ config.init = function(env) {
   config.isDeploy   = env._name === "deploy";
   config.isTailing  = env.tailLogs || config.isSpec;
   config.isJUnit    = env.junitXml;
+  config.clearSpecFiles = env.clearSpecFiles;
   config.isREPL     = env._name === "repl";
   config.isPipe     = env.pipe;
   config.isBundle   = env._name === "bundle";
