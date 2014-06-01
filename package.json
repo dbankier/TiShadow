@@ -1,6 +1,6 @@
 {
   "name": "tishadow",
-  "version": "2.5.5",
+  "version": "2.5.6",
   "dependencies": {
     "ticonfig": ">= 0.2.5",
     "jade": ">= 0.0.1",
