@@ -26,10 +26,15 @@ function loadSpecs(name, base, filter) {
   });
 }
 
-exports.run = function (name, junitxml, type) {
+exports.run = function (name, junitxml, type, clearSpecFiles) {
   var jasmine;
   //For a new environment reset
-  p.clearCache();
+  if (clearSpecFiles) {
+    p.clearCacheWithRegEx(/_spec\.js/);
+  }
+  else {
+    p.clearCache();
+  }
   type = type || "jasmine";
   if (type === "jasmine") {
     jasmine = require('/lib/jasmine').jasmine;

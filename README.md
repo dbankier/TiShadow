@@ -225,6 +225,7 @@ Here are a full list of options:
     -t, --type <type>      testing library
     -j, --jshint           analyse code with JSHint
     -x, --junit-xml        output report as JUnit XML
+    -C, --clear-spec-files clears only the spec files from the cache
 ```
 
 **NEW**: You can now select the testing library to use `jasmine`, `mocha-should` or `mocha-chai`. 

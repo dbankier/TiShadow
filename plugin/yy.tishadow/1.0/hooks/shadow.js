@@ -40,6 +40,16 @@ function preCompileHook(isExpress) {
                .filter(function(el) { return el !== "--shadow" && el !== "--tishadow" && el !== "--appify"})
                .concat(["--project-dir", new_project_dir]);
 
+    if (build.certDeveloperName) {
+      args.push("--developer-name");
+      args.push(build.certDeveloperName);
+    }
+
+    if (build.provisioningProfileUUID) {
+      args.push("--pp-uuid");
+      args.push(build.provisioningProfileUUID);
+    }
+
     // appify -> express
     function launch(ip_address){
       commands.startAppify(logger, new_project_dir, build.cli.argv.platform, ip_address, function() {
