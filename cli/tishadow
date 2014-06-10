@@ -117,7 +117,7 @@ program.command('repl')
   .action(api.sendSnippet);
 
 program.command('screenshot')
-  .description('close the running app on the device'.grey)
+  .description('capture screenshots of all connected devices'.grey)
   .option('-o, --host <host>', 'server host name / ip address')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
