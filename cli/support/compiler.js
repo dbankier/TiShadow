@@ -131,14 +131,15 @@ module.exports = function(env, callback) {
 };
 
 function beginCompile(callback) {
-  var file_list,i18n_list,spec_list;
+  var file_list,i18n_list,spec_list,assets_list;
   if( config.isUpdate) {
     var last_stat = fs.statSync(config.last_updated_file);
     file_list = config.isAlloy ? alloy.mapFiles(last_stat) : fs.getList(config.resources_path,last_stat.mtime);
+    assets_list = fs.getList(config.assets_path,last_stat.mtime);
     i18n_list = fs.getList(config.i18n_path,last_stat.mtime);
     spec_list = fs.getList(config.spec_path,last_stat.mtime);
 
-    if (file_list.files.length === 0 && i18n_list.files.length === 0 && spec_list.files.length === 0) {
+    if (file_list.files.length === 0 && assets_list.files.length === 0 && i18n_list.files.length === 0 && spec_list.files.length === 0) {
       logger.warn("Nothing to update.");
       return;
     }
@@ -153,6 +154,7 @@ function beginCompile(callback) {
     // Create the tishadow build paths
     fs.mkdirs([config.tishadow_build, config.tishadow_src, config.tishadow_dist]);
     file_list = fs.getList(config.resources_path);
+    assets_list = fs.getList(config.assets_path);
     i18n_list = fs.getList(config.i18n_path);
     spec_list = fs.getList(config.spec_path);
   }
@@ -168,19 +170,30 @@ function beginCompile(callback) {
     spec_list.files = spec_list.files.map(function(file) { return "spec/" + file;});
     spec_list.dirs = ["spec"].concat(spec_list.dirs.map(function(dir) {return "spec/" + dir;}));
   }
+  
+  if(assets_list.files.length > 0 && config.isModule) {
+  	fs.mkdirs([config.module_name], config.tishadow_src);
+  	fs.mkdirs(assets_list.dirs, config.module_path);
+  }
 
   // tasks to process files
   var process_tasks = file_list.files.map(function(file) {
     return _.bind(prepare, null, path.join(config.resources_path,file), path.join(config.tishadow_src,file));
-  }).concat(spec_list.files.map(function(file) {
+  }).concat(assets_list.files.map(function(file) {
+  	return _.bind(prepare, null, path.join(config.assets_path,file), path.join(config.tishadow_src, config.module_name, file));
+  })).concat(spec_list.files.map(function(file) {
     return _.bind(prepare, null, path.join(config.base,file), path.join(config.tishadow_src,file));
   }));
-
+  
+  if (config.isModule) {
+    assets_list.files = assets_list.files.map(function(file) { return config.module_name + "/" + file;});
+  }
+  
   async.series([
     _.bind(async.eachLimit, null, i18n_list.files, 100, copyI18n), //localisation filed
     _.bind(async.parallelLimit, null, process_tasks, 100), // source, assets, specs
     function() {
-      file_list.files = file_list.files.concat(i18n_list.files).concat(spec_list.files);
+      file_list.files = file_list.files.concat(assets_list.files).concat(i18n_list.files).concat(spec_list.files);
       finalise(file_list,callback);
     }
   ]);
