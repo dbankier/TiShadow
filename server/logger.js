@@ -13,7 +13,8 @@ color = {
   TRACE: 'grey',
   ERROR: 'red',
   FAIL: 'red',
-  PASS: 'green'
+  PASS: 'green',
+  COVER : 'yellow'
 };
 
 exports.log = function(level, name, msg) {
@@ -28,11 +29,11 @@ exports.log = function(level, name, msg) {
   }else {
     console.log(msg);
   }
-}
+};
 
-var levels = ['info','debug','error','warn'];
+var levels = ['info','debug','error','warn', 'cover'];
 levels.forEach(function(level) {
   exports[level] = function(msg) {
     exports.log(level.toUpperCase(),null,msg);
-  }
+  };
 });

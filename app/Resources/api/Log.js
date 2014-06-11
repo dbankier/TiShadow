@@ -3,11 +3,11 @@
  * Please see the LICENSE file included with this distribution for details.
  */
 
-var logLevels = ['info', 'error', 'debug', 'trace', 'repl', 'warn', 'pass', 'fail', 'test'];
+var logLevels = ['info', 'error', 'debug', 'trace', 'repl', 'warn', 'pass', 'fail', 'test', 'cover'];
 
 logLevels.forEach(function(level) {
   exports[level] = function() {
-    Array.prototype.unshift.call(arguments, level)
+    Array.prototype.unshift.call(arguments, level);
     _write.apply(null, arguments);
   };
 });
@@ -17,7 +17,7 @@ exports.log = function(level) {
   // an info-level message prefixed with the value is logged.
   // http://docs.appcelerator.com/titanium/latest/#!/api/Titanium.API-method-log
   if (logLevels.indexOf(level) === -1) {
-    Array.prototype.unshift.call(arguments, 'info')
+    Array.prototype.unshift.call(arguments, 'info');
   }
   _write.apply(null, arguments);
 };

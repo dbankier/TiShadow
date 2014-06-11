@@ -226,6 +226,7 @@ Here are a full list of options:
     -j, --jshint           analyse code with JSHint
     -x, --junit-xml        output report as JUnit XML
     -C, --clear-spec-files clears only the spec files from the cache
+    -c, --coverage <report_types> runs code coverage, for available report_types see https://github.com/gotwarlost/istanbul#the-report-command
 ```
 
 **NEW**: You can now select the testing library to use `jasmine`, `mocha-should` or `mocha-chai`. 

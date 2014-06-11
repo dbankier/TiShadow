@@ -97,6 +97,7 @@ program.command('spec')
   .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
   .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
   .option('-C, --clear-spec-files', 'clears only the spec files from the cache')
+  .option('-c, --coverage <report_types>', 'runs code coverage, for available report_types see https://github.com/gotwarlost/istanbul#the-report-command')
   .action(compiler);
 
 program.command('close')
