@@ -90,7 +90,6 @@ if (Ti.Platform.osname !== "android"){
     Titanium.UI.iPad.DocumentViewer,
     Titanium.UI.iPad.SplitWindow,
     Titanium.UI.iPad.Popover,
-    Ti.UI.iOS.3DMatrix,
     Ti.UI.iOS.AdView,
     Ti.UI.iOS.AnchorAttachmentBehavior,
     Ti.UI.iOS.Animator,
