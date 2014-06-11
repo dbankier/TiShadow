@@ -71,8 +71,8 @@ exports.connect = function(o) {
       return;
     }
     if(data.locale) {
-      require("/api/Localisation").locale = data.locale;
-    }
+      Ti.App.Properties.setString("tishadow::locale", data.locale);
+    } 
     loadRemoteZip(data.name, (o.proto || "http") + "://" + o.host + ":" + o.port + "/bundle", data, version_property);
   });
 
@@ -159,6 +159,12 @@ exports.launchApp = function(name) {
     Ti.App.Properties.setString("tishadow::currentApp", "");
     Ti.App.Properties.setBool("tishadow::reconnect", false);
 
+    //initialise custom localisation
+    var locale =  Ti.App.Properties.getString("tishadow::locale","");
+    if (locale) {
+      require("/api/Localisation").locale = locale;
+    } 
+
     exports.currentApp = name;
     bundle = p.include(null, "/app.js");
     log.info(exports.currentApp.replace(/_/g," ") + " launched.");
@@ -169,7 +175,7 @@ exports.launchApp = function(name) {
 
 exports.clearCache = function(no_restart) {
   Ti.App.Properties.listProperties().forEach(function(property) {
-    if (!property.match("^tishadow:")) {
+    if (!property.match("^tishadow:") || property === "tishadow::locale") {
       Ti.App.Properties.removeProperty(property);
     }
   });
