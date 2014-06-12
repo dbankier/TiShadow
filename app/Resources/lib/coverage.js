@@ -2,7 +2,7 @@
  * Returns __coverage__ global object from istanbul instrumented code. 
  */
 function getCoverage(){
-	return JSON.stringify(__coverage__);	
+	return ( typeof __coverage__ !== 'undefined') ? JSON.stringify(__coverage__) : null;
 }
 
 module.exports = {

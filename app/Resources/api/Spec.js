@@ -38,8 +38,10 @@ exports.run = function (name, junitxml, type, clearSpecFiles, runCoverage) {
   
   var onComplete = function() {
   	if(runCoverage){
-		var coverage = require('/lib/coverage');
-		log.cover(coverage.getCoverage());   
+		var coverage = require('/lib/coverage').getCoverage();
+		if (coverage){
+			log.cover(coverage);   
+		}
   	}
   };
   
