@@ -50,6 +50,7 @@ var includes = [
   Ti.Media.createSound,
   Ti.Media.createVideoPlayer,
   Ti.Media.showCamera,
+  Ti.Network.registerForPushNotifications,
   Ti.Network.Socket.createTCP,
   Ti.Calendar,
   Ti.Stream,
