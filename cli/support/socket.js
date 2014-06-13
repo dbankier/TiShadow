@@ -20,29 +20,31 @@ exports.connect = function(onconnect) {
     }
   });
   socket.on('device_connect', function(e){
-    running = running + config.specCount;
+    running = running++;
     logger.log("INFO", e.name, "Connected");
   });
   socket.on('device_disconnect', function(e){
-    running = running - config.specCount;;
+    running = running--;
     logger.log("WARN", e.name,"Disconnected");
   });
   socket.on('device_log', function(data) {
-    if (config.isSpec && data.message.match("Runner Finished$")) {
-      if (config.runCoverage){
-      	 coverage = require("./coverage");
-	     coverage.writeReports(config.tishadow_coverage, config.runCoverage);
-	     logger.log("INFO", "COVER","Check the report on " + config.tishadow_coverage + " directory");
-      }
-      socket.disconnect();      
-    } else if (config.isJUnit && data.level === "TEST") {
-      var target_file = path.join(config.tishadow_build, data.name.replace(/(, |\.)/g, "_") + "_" + Math.random().toString(36).substring(7) +  "_" +  Date.now() + "_result.xml");
-      fs.writeFileSync(target_file,data.message);
+    if (data.message.match("Runner Finished$")) {
       running--;
       if (running <= 0) {
-        socket.disconnect();
+   		running = 0;
+    	if (config.runCoverage){
+      	  coverage = require("./coverage");
+	   	  coverage.writeReports(config.tishadow_coverage, config.runCoverage);
+	      logger.log("INFO", "COVER","Check the report on " + config.tishadow_coverage + " directory");
+      	}
+    	socket.disconnect();
       }
-      logger.info("Report Generated: " + target_file);
+    } else if(config.isJUnit && data.level === "TEST"){
+      var file_name = data.message.substring(0, data.message.indexOf(' '));
+      var content = data.message.substring(data.message.indexOf(' ')+1);
+      var target_file = path.join(config.tishadow_build, data.name.replace(/(, |\.)/g, "_") + "_" + file_name + "_" + Math.random().toString(36).substring(7) +  "_result.xml");
+      fs.writeFileSync(target_file,content);
+   	  logger.info("Report Generated: " + target_file);
     } else if (data.level === "COVER") {
 	  coverage = require("./coverage");
       var coverageObject = JSON.parse(data.message);

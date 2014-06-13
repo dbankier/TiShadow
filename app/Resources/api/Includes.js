@@ -90,12 +90,20 @@ if (Ti.Platform.osname !== "android"){
     Titanium.UI.iPad.DocumentViewer,
     Titanium.UI.iPad.SplitWindow,
     Titanium.UI.iPad.Popover,
-    Titanium.UI.iOS.AdView,
-    Titanium.UI.iOS.CoverFlowView,
-    Titanium.UI.iOS.DocumentViewer,
-    Titanium.UI.iOS.TabbedBar,
-    Titanium.UI.iOS.Toolbar,
-    Titanium.UI.iOS.NavigationWindow
+    Ti.UI.iOS.AdView,
+    Ti.UI.iOS.AnchorAttachmentBehavior,
+    Ti.UI.iOS.Animator,
+    Ti.UI.iOS.AttributedString,
+    Ti.UI.iOS.CollisionBehavior,
+    Ti.UI.iOS.CoverFlowView,
+    Ti.UI.iOS.DocumentViewer,
+    Ti.UI.iOS.DynamicItemBehavior,
+    Ti.UI.iOS.GravityBehavior,
+    Ti.UI.iOS.NavigationWindow,
+    Ti.UI.iOS.PushBehavior,
+    Ti.UI.iOS.SnapBehavior,
+    Ti.UI.iOS.TabbedBar,
+    Ti.UI.iOS.Toolbar
   ];
 } else {
   var android_includes = [

@@ -21,8 +21,24 @@ function getAppName(callback) {
   tiapp.find(process.cwd(),function(err,result) {
     if (err ) {
       if (!config.globalCmd) {
-        logger.error("Script must be run within a Titanium project.");
-        process.exit();
+      	
+      	if (fs.existsSync(path.join(process.cwd(), 'timodule.xml')) && fs.existsSync(path.join(process.cwd(), 'manifest'))) {
+	      var data = fs.readFileSync(path.join(process.cwd(),'manifest'));
+	          base = process.cwd();
+	          var timod = {};
+	          var module_id = /moduleid: (.*)/g;
+	          var matches = module_id.exec(data);
+	          if (matches) {
+	          	timod.name = [matches[1]];
+	          	timod.isModule = true;
+	          	callback(timod);
+	          	return;
+	          }
+	      
+	    } else {
+          logger.error("Script must be run within a Titanium project.");
+	    }
+	    process.exit();
       } else {
         callback(null);
         return;
@@ -57,6 +73,7 @@ config.buildPaths = function(env, callback) {
     config.base              = base;
     config.alloy_path        = path.join(base, 'app');
     config.resources_path    = path.join(base, 'Resources');
+    config.assets_path	     = path.join(base, 'assets');
     config.res_alloy_path    = path.join(base, 'Resources', 'alloy');
     config.fonts_path        = path.join(config.resources_path, 'fonts');
     config.modules_path      = path.join(base, 'modules');
@@ -72,7 +89,15 @@ config.buildPaths = function(env, callback) {
     config.alloy_map_path    = path.join(config.tishadow_build, 'alloy_map.json');
 
     var app_name = config.app_name = result.name[0] || "bundle";
-    config.bundle_file       = path.join(config.tishadow_dist, app_name + ".zip");
+    
+    config.isModule = fs.existsSync(config.assets_path) && result.isModule;
+    if (config.isModule) {
+      config.module_name = app_name;
+      config.module_path = path.join(config.tishadow_src, config.module_name);
+    }
+    
+    config.bundle_name       = config.bundle_name || app_name;
+    config.bundle_file       = path.join(config.tishadow_dist, config.bundle_name + ".zip");
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
     config.isAlloy = fs.existsSync(config.alloy_path);
     if (!config.platform && config.isAlloy) {
@@ -97,9 +122,6 @@ config.buildPaths = function(env, callback) {
                     && fs.existsSync(config.tishadow_src)
                     && fs.existsSync(config.last_updated_file);
 
-    if (config.isSpec) {
-      config.specCount = _.uniq(glob.sync(config.spec_path +"/**/*_spec.js").concat(glob.sync(config.resources_path + "/**/*_spec.js"))).length;
-    }
     callback();
   });
 };
@@ -108,7 +130,6 @@ config.init = function(env) {
   config.isSpec       = env._name === "spec";
   config.specType     = env.type || config.type  || "jasmine";
   config.runCoverage  = env.coverage;
-  
   // commands that go through buildPath/init but done mandate a being in the project path
   config.globalCmd  = _.contains(['clear','close','screenshot','repl'], env._name);
   config.watchInterval = config.watchInterval || 100;
@@ -133,6 +154,7 @@ config.init = function(env) {
   config.isLongPolling = env.longPolling;
   config.skipAlloyCompile = env.skipAlloyCompile;
   config.isManageVersions = env.manageVersions;
+  config.bundle_name = env.target;
   config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : undefined;
 };
 
