@@ -26,7 +26,7 @@ function loadSpecs(name, base, filter) {
   });
 }
 
-exports.run = function (name, junitxml, type, clearSpecFiles) {
+exports.run = function (name, junitxml, type, clearSpecFiles, runCoverage) {
   var jasmine;
   //For a new environment reset
   if (clearSpecFiles) {
@@ -35,14 +35,24 @@ exports.run = function (name, junitxml, type, clearSpecFiles) {
   else {
     p.clearCache();
   }
+  
+  var onComplete = function() {
+  	if(runCoverage){
+		var coverage = require('/lib/coverage').getCoverage();
+		if (coverage){
+			log.cover(coverage);   
+		}
+  	}
+  };
+  
   type = type || "jasmine";
   if (type === "jasmine") {
     jasmine = require('/lib/jasmine').jasmine;
     jasmine.currentEnv_ = new jasmine.Env();
     if (junitxml) {
-      jasmine.getEnv().addReporter(new JUnitXMLReporter());
+      jasmine.getEnv().addReporter(new JUnitXMLReporter(true, true, onComplete));
     } else {
-      jasmine.getEnv().addReporter(new TiShadowReporter());
+      jasmine.getEnv().addReporter(new TiShadowReporter(onComplete));
     }
   } else if (type === 'jasmine2') {
     jasmine = (function() {
@@ -57,6 +67,7 @@ exports.run = function (name, junitxml, type, clearSpecFiles) {
       showColors: true,
       timer: new jasmine.Timer(),
       onComplete: function() {
+      	onComplete();
         log.test('Runner Finished');
       }
     }));
@@ -75,10 +86,8 @@ exports.run = function (name, junitxml, type, clearSpecFiles) {
     jasmine.getEnv().execute();
   } else {
     mocha.run(function(){
+      onComplete();
       log.test("Runner Finished");
     });
   }
-}
-
-
-
+};

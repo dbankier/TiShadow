@@ -48,9 +48,10 @@ function escapeInvalidXmlChars(str) {
      *                  dots rather than spaces (ie "Class.init" not
      *                  "Class init"); default: true
 */
-var JUnitXmlReporter = function(consolidate, useDotNotation) {
+var JUnitXmlReporter = function(consolidate, useDotNotation, onComplete) {
   this.consolidate = consolidate === jasmine.undefined ? true : consolidate;
   this.useDotNotation = useDotNotation === jasmine.undefined ? true : useDotNotation;
+  this.onComplete = onComplete;
 };
 JUnitXmlReporter.finished_at = null; // will be updated after all files have been written
 
@@ -138,6 +139,9 @@ JUnitXmlReporter.prototype = {
         log.test(output);
       }
     }
+    
+    this.onComplete();
+    
     // When all done, make it known on JUnitXmlReporter
     JUnitXmlReporter.finished_at = (new Date()).getTime();
     runner.suites_ = [];

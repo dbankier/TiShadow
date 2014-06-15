@@ -68,7 +68,7 @@ config.buildPaths = function(env, callback) {
       callback();
       return;
     }
-    config.locale     = env.locale || config.locale;
+    config.locale     		 = env.locale || config.locale;
 
     config.base              = base;
     config.alloy_path        = path.join(base, 'app');
@@ -82,6 +82,7 @@ config.buildPaths = function(env, callback) {
     config.i18n_path         = path.join(base, 'i18n');
     config.build_path        = path.join(base, 'build');
     config.tishadow_build    = path.join(config.build_path, 'tishadow');
+    config.tishadow_coverage = path.join(config.tishadow_build, 'coverage');
     config.tishadow_src      = path.join(config.tishadow_build, 'src');
     config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
     config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
@@ -126,8 +127,9 @@ config.buildPaths = function(env, callback) {
 };
 
 config.init = function(env) {
-  config.isSpec     = env._name === "spec";
-  config.specType   = env.type || config.type  || "jasmine";
+  config.isSpec       = env._name === "spec";
+  config.specType     = env.type || config.type  || "jasmine";
+  config.runCoverage  = env.coverage;
   // commands that go through buildPath/init but done mandate a being in the project path
   config.globalCmd  = _.contains(['clear','close','screenshot','repl'], env._name);
   config.watchInterval = config.watchInterval || 100;

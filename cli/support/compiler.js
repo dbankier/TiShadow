@@ -39,6 +39,12 @@ function prepare(src, dst, callback) {
           +src_text;
         }
       }
+      else if(config.runCoverage && !src.match("spec/")) { //Instrumenting the application code with istanbul for code coverage
+		var coverage = require("./coverage");
+		var instrumentedCode = coverage.instrumentCode(src_text, src);
+		src_text = instrumentedCode; 
+      }
+
       fs.writeFile(dst,src_text, callback);
     } catch (e) {
       logger.error(e.message + "\nFile   : " + src + "\nLine   : " + e.line + "\nColumn : " + e.col);
@@ -52,7 +58,7 @@ function prepare(src, dst, callback) {
 }
 
 function copyI18n(file, callback) {
-  var read = fs.createReadStream(path.join(config.i18n_path,file))
+  var read = fs.createReadStream(path.join(config.i18n_path,file));
   var write = fs.createWriteStream(path.join(config.tishadow_src, file));
   write.on('close',callback);
   read.pipe(write);
