@@ -123,13 +123,16 @@ exports.build = function(env) {
       var source_tiapp = fs.readFileSync(path.join(config.base,"tiapp.xml"),'utf8');
       required_modules.push("</modules>")
       var injected_xml = required_modules.concat(required_properties);
-      fs.writeFileSync(path.join(dest,"tiapp.xml"), 
-                       source_tiapp
+      var new_tiapp_xml = source_tiapp
                        .replace(/<plugin[^>]*>ti\.alloy<\/plugin>/,"")
                        .replace(/<property[^>]+ti\.android\.bug2373\.finishfalseroot[^>]+>true<\/property>/,'')
                        .replace('android:launchMode="singleTop"','')
                        .replace("<modules/>","<modules></modules>")
-                       .replace("</modules>",injected_xml.join("\n")));
+                       .replace("</modules>",injected_xml.join("\n"));
+      if(config.modifyAppId) {
+        new_tiapp_xml = new_tiapp_xml.replace("</id>",".appified</id>");
+      }
+      fs.writeFileSync(path.join(dest,"tiapp.xml"), new_tiapp_xml);
       // copy the bundle
       fs.writeFileSync(path.join(dest_resources, config.app_name.replace(/ /g,"_") + ".zip"),fs.readFileSync(config.bundle_file));
 

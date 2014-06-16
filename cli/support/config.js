@@ -150,6 +150,7 @@ config.init = function(env) {
   config.port     = env.port || config.port || "3000";
   config.room     = env.room || config.room || "default";
   config.screenshot_path = env.screenshotPath || os.tmpdir();
+  config.modifyAppId = env.modifyAppId;
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.skipAlloyCompile = env.skipAlloyCompile;

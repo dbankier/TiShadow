@@ -171,6 +171,7 @@ program.command('appify')
   .option('-o, --host <host>', 'set server host name / ip address')
   .option('-p, --port <port>', 'set server port')
   .option('-r, --room <room>', 'set server room')
+  .option('-m, --modify-app-id', 'appends .appifed to the applicatin id')
   .option('-P, --platform <platform>', 'target platform')
   .action(require('./support/appify').build);
 
