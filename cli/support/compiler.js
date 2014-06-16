@@ -40,9 +40,10 @@ function prepare(src, dst, callback) {
         }
       }
       else if(config.runCoverage && !src.match("spec/")) { //Instrumenting the application code with istanbul for code coverage
-		var coverage = require("./coverage");
-		var instrumentedCode = coverage.instrumentCode(src_text, src);
-		src_text = instrumentedCode; 
+		var instrumentedCode = require("./coverage").instrumentCode(src_text, src);
+		src_text = instrumentedCode;
+		
+		config.instrumentedfiles.push(src);// = src; ////storing all instrumented file
       }
 
       fs.writeFile(dst,src_text, callback);
