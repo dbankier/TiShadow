@@ -10,6 +10,7 @@ var logger = require("../../server/logger.js"),
     path = require("path"),
     tishadow_app = path.join(__dirname, "../..","app"),
     config = require("./config"),
+    package_version = require("../../package.json").version,
     _ = require("underscore");
 
 _.templateSettings = {
@@ -55,6 +56,7 @@ exports.copyCoreProject = function(env) {
     var target_tiapp = fs.readFileSync(path.join(dest,"tiapp.xml"),'utf8');
     var write_tiapp = target_tiapp
            .replace(/<property[^>]+ti\.android\.bug2373\.finishfalseroot[^>]+>true<\/property>/,'')
+           .replace(/<version>.*<\/version>/,"<version>" + package_version + "</version>")
            .replace('android:launchMode="singleTop"','')
            .replace("<modules/>","<modules></modules>");
     required_properties.forEach(function(prop) {
