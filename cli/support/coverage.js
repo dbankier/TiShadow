@@ -5,6 +5,7 @@
 
 var path = require('path'),
 	fs = require('fs'),
+	config = require("./config"),
     istanbul = require('istanbul'),
     Instrumenter = istanbul.Instrumenter,
     Collector = istanbul.Collector,
@@ -61,6 +62,19 @@ function instrumentCode(code, filename) {
     return instrumenter.instrumentSync(code, filename);
 }
 
+function addUnRequiredCoverage() {
+	var no_instrumentedFiles = getNoInstrumentedFiles(config.instrumentedfiles);
+	if (no_instrumentedFiles) {
+		for(var instrumentFile in no_instrumentedFiles ){
+			var objStr = gettingStringObject(no_instrumentedFiles[instrumentFile]);
+			eval(objStr);
+		}
+		if (typeof __coverage__ !== 'undefined'){
+			addCoverage(__coverage__);
+		}
+	}
+}
+
 /**
  * Filter intrumentedFiles with files added to collector
  * If file is not required, istanbul doesn't include it on coverage report
@@ -71,35 +85,31 @@ function instrumentCode(code, filename) {
  */
 function getNoInstrumentedFiles(instrumentedFiles){
 	var no_instrumented = [];
-	
-	instrumentedFiles.forEach(function(instrumentFile){
+	for(var instrumentFile in instrumentedFiles ){
 		if ( !getCollector().store.map[instrumentFile]){
-			//console.log("Adding " + instrumentFile);
-			no_instrumented.push(instrumentFile);
+			no_instrumented[instrumentFile] = instrumentedFiles[instrumentFile];
 		}
-	});
+	}
 	return no_instrumented;
 }
 
-function gettingStringObject(path){ /*TODO: better matchs statements*/
-	var objStr = ''
+function gettingStringObject(path){
+	var file = fs.readFileSync(path, "utf8")
+	,   lines = file.split('\n')
+	,	objStr = ''
 	,	variable = ''
-	,	flag = false
-	,	file = fs.readFileSync(path, "utf8");
-	
-	file.split('\n').forEach(function(line){
+
+	for(var index in lines){
+		var line = lines[index];
 		if (line){
 			if (line.match("'return this'")){
 				objStr = line;
 				variable = addslashes((line.split(' = ')[0]).replace('var ', ''));
-				flag = true;
 			}
-			else if(line.match(variable +" = " + variable + "\\[")) { flag = false; }
-			else if(flag){ objStr +=line; }
+			else if(line.match(variable + " = " + variable + "\\[")) { break; /*don't wasting time parsing the unuseful lines */ }
+			else if(objStr != "" ){ objStr += line; }
 		}
-	});
-	
-	//console.log(" adding " + path);
+	}
 	return objStr;
 }
 
@@ -110,8 +120,7 @@ function addslashes(str) {
 module.exports = {
     instrumentCode: instrumentCode,
     addCoverage: addCoverage,
-    writeReports: writeReports,
-    getNoInstrumentedFiles : getNoInstrumentedFiles,
-    gettingStringObject : gettingStringObject
+    addUnRequiredCoverage : addUnRequiredCoverage, 
+    writeReports: writeReports
 };
     
