@@ -44,6 +44,13 @@ exports.listen = function(app) {
           };
         }
       } else{
+        if (e.app_version !== config.package_version) {
+          Logger.log("WARN", e.name, "App-Server version mismatch");
+          Logger.log("WARN", e.name, "  server : " + config.package_version);
+          Logger.log("WARN", e.name, "  app    : " + e.app_version);
+          Logger.log("WARN", e.name, "Please consider upgrading the container app:");
+          Logger.log("WARN", e.name, "  ts app --upgrade -d [path-to-app]");
+        }
         socket.set('uuid', e.uuid);
         socket.set('host', false, function() {Logger.log("INFO", e.name, "Connected")});
         e.id = e.uuid;
