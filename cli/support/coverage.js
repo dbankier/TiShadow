@@ -64,12 +64,14 @@ function instrumentCode(code, filename) {
 
 function addUnRequiredCoverage() {
 	var no_instrumentedFiles = getNoInstrumentedFiles(config.instrumentedfiles);
-	if (no_instrumentedFiles && no_instrumentedFiles.length) {
+	if (no_instrumentedFiles) {
 		for(var instrumentFile in no_instrumentedFiles ){
 			var objStr = gettingStringObject(no_instrumentedFiles[instrumentFile]);
 			eval(objStr);
 		}
-		addCoverage(__coverage__);
+		if (typeof __coverage__ !== 'undefined'){
+			addCoverage(__coverage__);
+		}
 	}
 }
 
