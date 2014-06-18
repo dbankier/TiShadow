@@ -112,7 +112,7 @@ module.exports = function(env, callback) {
             wrench.copyDirSyncRecursive(
               config.res_alloy_path,
               path.join(config.resources_path,(platform === 'ios' ? 'iphone' : platform),'alloy'),
-              {preserve:true,preserveFiles:true, forceDelete:true}
+              {preserve:true,preserveFiles:true}
             );
           }
           callback(false);
