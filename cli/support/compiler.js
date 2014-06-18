@@ -43,7 +43,7 @@ function prepare(src, dst, callback) {
 		var instrumentedCode = require("./coverage").instrumentCode(src_text, src);
 		src_text = instrumentedCode;
 		
-		config.instrumentedfiles.push(src);// = src; ////storing all instrumented file
+		config.instrumentedfiles[src] = dst;// storing all instrumented file 
       }
 
       fs.writeFile(dst,src_text, callback);
