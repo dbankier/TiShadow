@@ -24,7 +24,8 @@
     "async": "~0.2.9",
     "mkdirp": "~0.3.5",
     "ipselector": "~0.1.3",
-    "istanbul" : ">=0.2.10"
+    "istanbul" : ">=0.2.10",
+    "update-notifier": "~0.1.10"
   },
   "devDependencies": {},
   "optionalDependencies": {},

@@ -32,6 +32,7 @@ exports.connect = function(o) {
       uuid : Ti.App.Properties.getString("tishadow:uuid"),
       os_osname: Ti.Platform.osname,
       os_version: Ti.Platform.version,
+      app_version: Ti.App.version,
       room : o.room,
       version: Ti.App.Properties.getString(version_property) || undefined
     });

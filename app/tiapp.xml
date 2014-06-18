@@ -10,7 +10,7 @@
     <sdk-version>3.2.2.GA</sdk-version>
     <id>{{APPID}}</id>
     <name>TiShadow</name>
-    <version>1.0</version>
+    <version>2.5.6</version>
     <publisher>YY Digital Pty Ltd</publisher>
     <url>http://www.yydigital.com</url>
     <description>not specified</description>

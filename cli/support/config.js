@@ -130,6 +130,8 @@ config.init = function(env) {
   config.isSpec       = env._name === "spec";
   config.specType     = env.type || config.type  || "jasmine";
   config.runCoverage  = env.coverage;
+  config.instrumentedfiles = []; //stored instrumented files
+  
   // commands that go through buildPath/init but done mandate a being in the project path
   config.globalCmd  = _.contains(['clear','close','screenshot','repl'], env._name);
   config.watchInterval = config.watchInterval || 100;
@@ -157,6 +159,7 @@ config.init = function(env) {
   config.isManageVersions = env.manageVersions;
   config.bundle_name = env.target;
   config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : undefined;
+  config.package_version   = require("../../package.json").version;
 };
 
 config.write = function(env) {

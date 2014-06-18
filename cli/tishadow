@@ -4,17 +4,18 @@
  * Please see the LICENSE file included with this distribution for details.
  */
 
-var api      = require('./support/api'),
-    compiler = require('./support/compiler'),
-    colors   = require('colors'),
-    config   = require('./support/config'),
-    logger   = require("../server/logger.js"),
-    pkginfo  = require('pkginfo'),
-    program  = require('commander'),
-    fs       = require('fs'),
-    path     = require('path'),
-    spawn    = require('./support/spawn'),
-    gaze     = require('gaze');
+var api            = require('./support/api'),
+    compiler       = require('./support/compiler'),
+    colors         = require('colors'),
+    config         = require('./support/config'),
+    logger         = require("../server/logger.js"),
+    pkginfo        = require('pkginfo'),
+    program        = require('commander'),
+    fs             = require('fs'),
+    path           = require('path'),
+    spawn          = require('./support/spawn'), 
+    updateNotifier = require('update-notifier'),
+    gaze           = require('gaze');
 
 // check if watch enabled
 var at_index = process.argv.indexOf("@");
@@ -40,6 +41,16 @@ program.command('server')
   .option('-s, --screenshot-path <screenshot-path>', 'path to save screenshot (defaults to /tmp)')
   .option('-z, --manage-versions', 'manage and automatically update bundles')
   .action(function(env) {
+    // run package notifier but only on server command.
+    var notifier = updateNotifier({
+      packagePath: "../package.json",
+//      updateCheckInterval: 1000 * 60 * 60 * 24 * 7 // 1 week
+    });
+
+    if (notifier.update) {
+      notifier.notify();
+    }
+
     config.init(env);
     require("../server/app.js");
   });
@@ -145,8 +156,8 @@ program.command('config')
   .option('-p, --port <port>', 'set default server port')
   .option('-r, --room <room>', 'set default server room')
   .option('-t, --type <type>', 'default testing library')
-  .option('-w, --watch-delay <millis>',    'time to wait before responding to for changes (default: 0ms)')
-  .option('-i, --watch-interval <millis>', 'time to wait between checking files for changes (default: 100ms)')
+  .option('-w, --watch-delay <millis>',    'time to wait before responding to for changes (default: 0)')
+  .option('-i, --watch-interval <millis>', 'time to wait between checking files for changes (default: 100)')
   .action(config.write);
 
 program.command('app')
