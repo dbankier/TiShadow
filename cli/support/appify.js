@@ -72,12 +72,12 @@ exports.copyCoreProject = function(env) {
       }
     });
     fs.writeFileSync(path.join(dest,"tiapp.xml"), write_tiapp);
-    wrench.copyDirSyncRecursive(path.join(tishadow_app, 'Resources'), path.join(dest,'Resources'), {forceDelete:true});
-    wrench.copyDirSyncRecursive(path.join(tishadow_app, 'modules'), path.join(dest,'modules'));
+    wrench.copyDirSyncRecursive(path.join(tishadow_app, 'Resources'), path.join(dest,'Resources'));
+    wrench.copyDirSyncRecursive(path.join(tishadow_app, 'modules'), path.join(dest,'modules'), {preserve: true, preserveFiles: true});
   } else {
     logger.info("Creating new app...");
 
-    wrench.copyDirSyncRecursive(tishadow_app, dest, {forceDelete:true});
+    wrench.copyDirSyncRecursive(tishadow_app, dest);
 
     //inject new GUID
     var source_tiapp = fs.readFileSync(path.join(tishadow_app,"tiapp.xml"),'utf8');
@@ -112,24 +112,21 @@ exports.build = function(env) {
       fs.writeFileSync(path.join(dest_resources,"app.js"),new_app_js);
       //copy fonts
       if(fs.existsSync(config.fonts_path)) {
-        wrench.copyDirSyncRecursive(config.fonts_path,dest_fonts, {forceDelete:true});
+        wrench.copyDirSyncRecursive(config.fonts_path,dest_fonts);
       }
       //copy splash screen and icons
       ['iphone','android','blackberry','mobileweb','tizen'].forEach(function(platform) {
         if(fs.existsSync(path.join(config.resources_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.resources_path,platform),path.join(dest_resources,platform),{
             filter: new RegExp("(\.png|images|res-.*|fonts|\.otf|\.ttf)$","i"),
-            forceDelete: true,
             whitelist: true
           });
         }
         if(fs.existsSync(path.join(config.modules_path,platform))) {
-          wrench.copyDirSyncRecursive(path.join(config.modules_path,platform),path.join(dest_modules,platform),{
-            preserve:true
-          });
+          wrench.copyDirSyncRecursive(path.join(config.modules_path,platform),path.join(dest_modules,platform),{preserve:true});
         }
         if(fs.existsSync(path.join(config.platform_path,platform))) {
-          wrench.copyDirSyncRecursive(path.join(config.platform_path,platform),path.join(dest_platform,platform),{forceDelete: true});
+          wrench.copyDirSyncRecursive(path.join(config.platform_path,platform),path.join(dest_platform,platform));
         }
       });
       // copy tiapp.xml and inject modules
