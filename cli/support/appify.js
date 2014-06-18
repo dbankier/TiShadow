@@ -58,7 +58,7 @@ exports.copyCoreProject = function(env) {
     var target_tiapp = fs.readFileSync(path.join(dest,"tiapp.xml"),'utf8');
     var write_tiapp = target_tiapp
            .replace(/<property[^>]+ti\.android\.bug2373\.finishfalseroot[^>]+>true<\/property>/,'')
-           .replace(/<version>.*<\/version>/,"<version>" + package_version + "</version>")
+           .replace(/<property name="tishadow:version".*<\/property>/,"")
            .replace('android:launchMode="singleTop"','')
            .replace("<modules/>","<modules></modules>");
     required_properties.forEach(function(prop) {
@@ -71,6 +71,10 @@ exports.copyCoreProject = function(env) {
         write_tiapp = write_tiapp.replace("</modules>", "  " + mod + "\n</modules>");
       }
     });
+
+    //inject tishadow version
+    write_tiapp = write_tiapp.replace("</modules>", '</modules>\n  <property name="tishadow:version" type="string">'+ package_version + '</property>');
+
     fs.writeFileSync(path.join(dest,"tiapp.xml"), write_tiapp);
     wrench.copyDirSyncRecursive(path.join(tishadow_app, 'Resources'), path.join(dest,'Resources'));
     wrench.copyDirSyncRecursive(path.join(tishadow_app, 'modules'), path.join(dest,'modules'), {preserve: true, preserveFiles: true});
@@ -85,6 +89,7 @@ exports.copyCoreProject = function(env) {
          source_tiapp
            .replace("{{GUID}}", 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);})) // GUID one-liner: http://stackoverflow.com/a/2117523
            .replace("{{APPID}}", env.appid)
+           .replace("</modules>", '</modules>\n  <property name="tishadow:version" type="string">'+ package_version + '</property>')
                     );
   }
   return true;
@@ -138,7 +143,8 @@ exports.build = function(env) {
                        .replace(/<property[^>]+ti\.android\.bug2373\.finishfalseroot[^>]+>true<\/property>/,'')
                        .replace('android:launchMode="singleTop"','')
                        .replace("<modules/>","<modules></modules>")
-                       .replace("</modules>",injected_xml.join("\n"));
+                       .replace("</modules>",injected_xml.join("\n"))
+                       .replace("</modules>", '</modules>\n  <property name="tishadow:version" type="string">'+ package_version + '</property>');
       if(config.modifyAppId) {
         new_tiapp_xml = new_tiapp_xml.replace("</id>",".appified</id>");
       }

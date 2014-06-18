@@ -10,11 +10,11 @@
     <sdk-version>3.2.2.GA</sdk-version>
     <id>{{APPID}}</id>
     <name>TiShadow</name>
-    <version>2.5.6</version>
+    <version>1.0</version>
     <publisher>YY Digital Pty Ltd</publisher>
     <url>http://www.yydigital.com</url>
     <description>not specified</description>
-    <copyright>2012 by YY Digital Pty Ltd</copyright>
+    <copyright>2012-2014 by YY Digital Pty Ltd</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
