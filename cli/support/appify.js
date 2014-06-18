@@ -125,7 +125,6 @@ exports.build = function(env) {
         }
         if(fs.existsSync(path.join(config.modules_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.modules_path,platform),path.join(dest_modules,platform),{
-            forceDelete: true,
             preserve:true
           });
         }
