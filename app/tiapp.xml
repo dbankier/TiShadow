@@ -10,11 +10,11 @@
     <sdk-version>3.2.2.GA</sdk-version>
     <id>{{APPID}}</id>
     <name>TiShadow</name>
-    <version>2.5.6</version>
+    <version>1.0</version>
     <publisher>YY Digital Pty Ltd</publisher>
     <url>http://www.yydigital.com</url>
     <description>not specified</description>
-    <copyright>2012 by YY Digital Pty Ltd</copyright>
+    <copyright>2012-2014 by YY Digital Pty Ltd</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
@@ -174,12 +174,14 @@
         </application>
     	</manifest>
     </android>
-    <modules>
-        <module platform="iphone" version="0.1">yy.tidynamicfont</module>
-        <module platform="iphone" version="0.3">net.iamyellow.tiws</module>
-        <module platform="android" version="0.1">net.iamyellow.tiws</module>
-        <module platform="iphone" version="1.0.2">ti.compression</module>
-        <module platform="android" version="2.0.3">ti.compression</module>
-        <module platform="commonjs">ti.cloud</module>
-    </modules>
+    	<modules>
+		<module platform="android" version="0.1">net.iamyellow.tiws</module>
+		<module platform="android" version="2.0.3">ti.compression</module>
+		<module platform="android" version="0.1">yy.logcatcher</module>
+		<module platform="iphone" version="0.3">net.iamyellow.tiws</module>
+		<module platform="iphone" version="1.0.2">ti.compression</module>
+		<module platform="iphone" version="0.1">yy.logcatcher</module>
+		<module platform="iphone" version="0.1">yy.tidynamicfont</module>
+	</modules>
+
 </ti:app>
