@@ -34,17 +34,7 @@ exports.connect = function(onconnect) {
    		running = 0;
     	if (config.runCoverage){
       	  coverage = require("./coverage");
-      	  
-      	  var no_instrumented = coverage.getNoInstrumentedFiles(config.instrumentedfiles);
-	      if (no_instrumented){
-	        no_instrumented.forEach(function(file){
-		      	file = file.replace(config.resources_path, config.tishadow_src);
-	  			var objStr = coverage.gettingStringObject(file);
-	  			eval(objStr);
-      		}); 
-      		coverage.addCoverage(__coverage__);
-      	  }
-      	  
+      	  coverage.addUnRequiredCoverage();  
       	  coverage.writeReports(config.tishadow_coverage, config.runCoverage);
 	      logger.log("INFO", "COVER","Check the report on " + config.tishadow_coverage + " directory");
       	}
