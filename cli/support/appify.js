@@ -20,6 +20,8 @@ _.templateSettings = {
         '<module platform="iphone" version="0.1">yy.tidynamicfont</module>',
         '<module platform="iphone" version="0.3">net.iamyellow.tiws</module>',
         '<module platform="android" version="0.1">net.iamyellow.tiws</module>',
+        '<module platform="iphone" version="0.1">yy.logcatcher</module>',
+        '<module platform="android" version="0.1">yy.logcatcher</module>',
         '<module platform="iphone" version="1.0.2">ti.compression</module>',
         '<module platform="android" version="2.0.3">ti.compression</module>'
  ];
@@ -62,8 +64,14 @@ exports.copyCoreProject = function(env) {
         write_tiapp = write_tiapp.replace("</modules>", "</modules>\n  " +prop);
       }
     });
+    required_modules.forEach(function(mod) {
+      if (write_tiapp.indexOf(mod) === -1) {
+        write_tiapp = write_tiapp.replace("</modules>", "  " + mod + "\n</modules>");
+      }
+    });
     fs.writeFileSync(path.join(dest,"tiapp.xml"), write_tiapp);
     wrench.copyDirSyncRecursive(path.join(tishadow_app, 'Resources'), path.join(dest,'Resources'), {forceDelete:true});
+    wrench.copyDirSyncRecursive(path.join(tishadow_app, 'modules'), path.join(dest,'modules'));
   } else {
     logger.info("Creating new app...");
 

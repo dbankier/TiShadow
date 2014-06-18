@@ -4,6 +4,7 @@
  */
 
 var logLevels = ['info', 'error', 'debug', 'trace', 'repl', 'warn', 'pass', 'fail', 'test', 'cover'];
+var Logger = require("yy.logcatcher");
 
 logLevels.forEach(function(level) {
   exports[level] = function() {
@@ -46,3 +47,11 @@ function _write() {
     message: Array.prototype.join.call(arguments, ' ')
   });
 }
+Logger.addEventListener("error", function(e) {
+  delete e.source;
+  delete e.type;
+  delete e.bubbles;
+  delete e.cancelBubble;
+  exports.log("error", JSON.stringify(e, null, "  "));
+});
+
