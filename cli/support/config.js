@@ -130,7 +130,7 @@ config.init = function(env) {
   config.isSpec       = env._name === "spec";
   config.specType     = env.type || config.type  || "jasmine";
   config.runCoverage  = env.coverage;
-  config.instrumentedfiles = []; //stored instrumented files
+  config.instrumentedfiles = {}; //stored instrumented files
   
   // commands that go through buildPath/init but done mandate a being in the project path
   config.globalCmd  = _.contains(['clear','close','screenshot','repl'], env._name);
