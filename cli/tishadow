@@ -220,6 +220,7 @@ if (config.isWatching) {
       });
     });
   });
+  api.startRepl();
 } 
 
 execute();
