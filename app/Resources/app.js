@@ -18,4 +18,14 @@ if (current_app !== "") {
   new StartScreen().open();
 }
 
+var Logger = require("yy.logcatcher");
+Logger.addEventListener("error", function(e) {
+  var Log = require("/api/Log");
+  delete e.source;
+  delete e.type;
+  delete e.bubbles;
+  delete e.cancelBubble;
+  Log.error(JSON.stringify(e, null, "  "));
+});
+
 require("/lib/ti-mocha");
