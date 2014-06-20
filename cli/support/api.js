@@ -100,7 +100,8 @@ exports.startRepl = function(){
       postToServer("snippet",{code: data, platform: config.platform});
     });
   } else {
-    var socket = require("./socket").connect();
+    var socket = connected_socket || require("./socket").connect();
+    connected_socket = socket;
     console.log("TiShadow REPL\n\nlaunchApp(appName), closeApp(), runSpec() and clearCache() methods available.\nrequire(), Ti.include() and assests are relative the running app.\n\n".grey);
     repl.start({
       eval: function(command, context, filename, callback) {
