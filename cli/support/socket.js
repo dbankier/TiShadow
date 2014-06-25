@@ -35,8 +35,9 @@ exports.connect = function(onconnect) {
     	if (config.runCoverage){
       	  coverage = require("./coverage");
       	  coverage.addUnRequiredCoverage();  
-      	  coverage.writeReports(config.tishadow_coverage, config.runCoverage);
-	      logger.log("INFO", "COVER","Check the report on " + config.tishadow_coverage + " directory");
+      	  var coverageReportDir = path.join(config.tishadow_coverage, data.name.replace(/(, |\.)/g, "_"));
+      	  coverage.writeReports(coverageReportDir, config.runCoverage);
+	      logger.log("INFO", "COVER","Check the report on " + coverageReportDir + " directory");
       	}
     	socket.disconnect();
       }
