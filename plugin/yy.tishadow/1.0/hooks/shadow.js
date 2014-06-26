@@ -53,6 +53,10 @@ function preCompileHook(isExpress) {
     // appify -> express
     function launch(ip_address){
       commands.startAppify(logger, new_project_dir, build.cli.argv.platform, ip_address, function() {
+        if (args.indexOf("-p") === -1 && args.indexOf("--platform") === -1) {
+          args.push("-p");
+          args.push(build.cli.argv.platform);
+        }
         commands.buildApp(logger,args)
         if (isExpress) {
           commands.startServer(logger);
