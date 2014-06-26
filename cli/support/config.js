@@ -167,7 +167,7 @@ config.write = function(env) {
   if (fs.existsSync(config_path)) {
     new_config = require(config_path);
   }
-  ['host','port','room', 'type', 'watchInterval', 'watchDelay'].forEach(function(param) {
+  ['host','port','room', 'type', 'watchInterval', 'watchDelay','networkInterface'].forEach(function(param) {
     if (env[param] !== undefined) {
       new_config[param] = env[param];
     }
