@@ -74,7 +74,8 @@ function preCompileHook(isExpress) {
       // get ip address
       var ip_address = ipselector.selectOne({
         family : 'IPv4',
-        internal : false
+        internal : false,
+        networkInterface : config && config.networkInterface? config.networkInterface:undefined
       },function(ip_address) {
         launch(ip_address);
       });
