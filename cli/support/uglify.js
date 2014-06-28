@@ -158,6 +158,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
     //assets
     if (node.expression.end.value.match("^set") &&
         !doNotTouch(node.args) &&
+        node.args[0] !== undefined &&
         couldBeAsset(node.expression.end.value.replace("set","").toLowerCase())) {
       node.args[0].value = toFullPath(node.args[0].value);
       node.args = [functionCall("__p.file",node.args)];
