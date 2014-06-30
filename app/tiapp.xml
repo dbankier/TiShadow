@@ -38,7 +38,6 @@
     </iphone>
     <property name="ti.android.bug2373.finishfalseroot" type="bool">false</property>
     <property name="ti.android.bug2373.skipAlert" type="bool">true</property>
-    <property name="cli.includeAllTiModules" type="bool">true</property>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
       <manifest android:versionCode="6" android:versionName="1.5.0">
     		<!-- http://stackoverflow.com/questions/7523075/xml-android-permissions-list-full-->
