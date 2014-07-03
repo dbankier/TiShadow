@@ -30,11 +30,11 @@ var values = jsca.types.map(function(a) { return a.name;}).sort().reduce(functio
 })
 
 var output = '/*\n * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.\n * Please see the LICENSE file included with this distribution for details.\n */\n\n' +
-             'var includes = ["' + values.common.join('",\n  "') +'"\n];\n\n' + 
+             'var includes = [\n  ' + values.common.join(',\n  ') +'\n];\n\n' + 
              'if (Ti.Platform.osname !== "android"){\n' +
-             '  var ios_includes = [\n    "' + values.ios.join('",\n    "') + '"\n  ];\n' +
+             '  var ios_includes = [\n    ' + values.ios.join(',\n    ') + '\n  ];\n' +
              '} else {\n' +
-             '  var android_includes = [\n    "' + values.android.join('",\n    "') + '"\n  ];\n' +
+             '  var android_includes = [\n    ' + values.android.join(',\n    ') + '\n  ];\n' +
              '}\n';
 
 fs.writeFileSync(path.join(".","app","Resources","api","Includes.js"), output);
