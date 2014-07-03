@@ -96,6 +96,7 @@ exports.startWatch = function startWatch(logger, platform, ip_address) {
   });
   children.push(watch);
   watch.stdout.pipe(process.stdout);
+  watch.stderr.pipe(process.stderr);
 }
 
 exports.run = function(logger, config, cli) {
