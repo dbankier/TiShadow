@@ -9,17 +9,28 @@ var path = require("path");
 
 var jsca = JSON.parse(fs.readFileSync(process.argv[2]).toString());
 
-var values = jsca.types.map(function(a) { return a.name;}).sort().reduce(function(acc, name) {
+var includeFunctionsTypes = ['Titanium.Network'];
+var values = jsca.types.map(function(a) { return {name: a.name, functions:a.functions} ;}).sort(function(a,b){
+  if (a.name > b.name)
+    return 1;
+  if (a.name < b.name)
+    return -1;
+  return 0;
+}).reduce(function(acc, types) {
+  var name = types.name;
   if (name.indexOf("Ti") === 0) {
     if (name.match(/(Android|iOS|iPhone|iPad)$/)) return acc;
     if (name.indexOf("iOS") !== -1 ||
         name.indexOf("iPhone") !== -1 ||
         name.indexOf("iPad") !== -1) {
       acc.ios.push(name);
+      includeFunctionsTypes.indexOf(name)!== -1 && types.functions.forEach(function(func){ acc.ios.push(name+'.'+func.name) });
     } else if (name.indexOf("Android") !== -1) {
       acc.android.push(name);
+      includeFunctionsTypes.indexOf(name)!== -1 && types.functions.forEach(function(func){ acc.android.push(name+'.'+func.name) });
     } else {
       acc.common.push(name);
+      includeFunctionsTypes.indexOf(name)!== -1 && types.functions.forEach(function(func){ acc.common.push(name+'.'+func.name) });
     }
   }
   return acc;
@@ -30,11 +41,11 @@ var values = jsca.types.map(function(a) { return a.name;}).sort().reduce(functio
 })
 
 var output = '/*\n * Copyright (c) 2011-2014 YY Digital Pty Ltd. All Rights Reserved.\n * Please see the LICENSE file included with this distribution for details.\n */\n\n' +
-             'var includes = ["' + values.common.join('",\n  "') +'"\n];\n\n' + 
+             'var includes = [\n  ' + values.common.join(',\n  ') +'\n];\n\n' + 
              'if (Ti.Platform.osname !== "android"){\n' +
-             '  var ios_includes = [\n    "' + values.ios.join('",\n    "') + '"\n  ];\n' +
+             '  var ios_includes = [\n    ' + values.ios.join(',\n    ') + '\n  ];\n' +
              '} else {\n' +
-             '  var android_includes = [\n    "' + values.android.join('",\n    "') + '"\n  ];\n' +
+             '  var android_includes = [\n    ' + values.android.join(',\n    ') + '\n  ];\n' +
              '}\n';
 
 fs.writeFileSync(path.join(".","app","Resources","api","Includes.js"), output);
