@@ -140,6 +140,11 @@ config.init = function(env) {
     logger.error("Invalid test library, please choose from: jasmine, mocha-should or mocha-chai");
     process.exit(-1);
   }
+  if(config.networkInterface){
+    var ifaces = os.networkInterfaces(),
+        ipOfNtworkInterface = _.find(ifaces[config.networkInterface],function(ip){ return ip.family=='IPv4'});
+    config.hostOfNetworkInterface = ipOfNtworkInterface.address;
+  };
   config.isDeploy   = env._name === "deploy";
   config.isTailing  = env.tailLogs || config.isSpec;
   config.isJUnit    = env.junitXml;
@@ -148,7 +153,7 @@ config.init = function(env) {
   config.isPipe     = env.pipe;
   config.isBundle   = env._name === "bundle";
   config.includeDotFiles = env.includeDotFiles;
-  config.host     = env.host || config.host || "localhost";
+  config.host     = env.host || config.host || config.hostOfNetworkInterface || "localhost";
   config.port     = env.port || config.port || "3000";
   config.room     = env.room || config.room || "default";
   config.screenshot_path = env.screenshotPath || os.tmpdir();
