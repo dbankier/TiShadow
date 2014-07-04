@@ -233,6 +233,7 @@ if (Ti.Platform.osname !== "android"){
     Titanium.UI.iPhone.TableViewCellSelectionStyle,
     Titanium.UI.iPhone.TableViewScrollPosition,
     Titanium.UI.iPhone.TableViewSeparatorStyle,
+    Titanium.UI.create2DMatrix,
     Titanium.UI.iPhone.TableViewStyle
   ];
 } else {
