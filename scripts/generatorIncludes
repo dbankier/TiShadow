@@ -9,7 +9,6 @@ var path = require("path");
 
 var jsca = JSON.parse(fs.readFileSync(process.argv[2]).toString());
 
-var includeFunctionsTypes = ['Titanium.Network'];
 var values = jsca.types.map(function(a) { return {name: a.name, functions:a.functions} ;}).sort(function(a,b){
   if (a.name > b.name)
     return 1;
@@ -24,13 +23,13 @@ var values = jsca.types.map(function(a) { return {name: a.name, functions:a.func
         name.indexOf("iPhone") !== -1 ||
         name.indexOf("iPad") !== -1) {
       acc.ios.push(name);
-      includeFunctionsTypes.indexOf(name)!== -1 && types.functions.forEach(function(func){ acc.ios.push(name+'.'+func.name) });
+      types.functions.forEach(function(func){ if( func.name.indexOf('create')!==-1 || func.name.indexOf('register')!== -1) acc.ios.push(name+'.'+func.name) });
     } else if (name.indexOf("Android") !== -1) {
       acc.android.push(name);
-      includeFunctionsTypes.indexOf(name)!== -1 && types.functions.forEach(function(func){ acc.android.push(name+'.'+func.name) });
+      types.functions.forEach(function(func){ if( func.name.indexOf('create')!==-1 || func.name.indexOf('register')!== -1) acc.android.push(name+'.'+func.name) });
     } else {
       acc.common.push(name);
-      includeFunctionsTypes.indexOf(name)!== -1 && types.functions.forEach(function(func){ acc.common.push(name+'.'+func.name) });
+      types.functions.forEach(function(func){ if( func.name.indexOf('create')!==-1 || func.name.indexOf('register')!== -1) acc.common.push(name+'.'+func.name) });
     }
   }
   return acc;
