@@ -442,33 +442,41 @@ Contributors
 
 ```
  project  : TiShadow
- repo age : 2 years, 1 month
- active   : 226 days
- commits  : 560
- files    : 202
- authors  :
-   427  David Bankier           76.2%
-    61  Fokke Zandbergen        10.9%
-    42  dbankier                7.5%
-     6  Javen Wang              1.1%
-     3  Eric Boehs              0.5%
-     3  Joshua Ogle             0.5%
-     2  noughts                 0.4%
-     1  Lee, JongEun            0.2%
-     1  Luis Cruz               0.2%
-     1  Matt Apperson           0.2%
-     1  Pedro Palmero           0.2%
-     1  Terry Morgan            0.2%
-     1  Timan Rebel             0.2%
-     1  astronaughts            0.2%
-     1  iskugor                 0.2%
-     1  jsjant                  0.2%
-     1  Lee, Jong Eun           0.2%
-     1  Guillermo Zunino        0.2%
-     1  Hugh Cannon             0.2%
-     1  Ivan Skugor             0.2%
-     1  Jeff Bonnes             0.2%
-     1  Jongeun Lee             0.2%
+ repo age : 2 years, 4 months
+ active   : 272 days
+ commits  : 661
+ files    : 229
+ authors  : 
+   493	David Bankier           74.6%
+    62	Fokke Zandbergen        9.4%
+    42	dbankier                6.4%
+    10	Guillermo Zunino        1.5%
+    10	Jong Eun Lee            1.5%
+     8	Javen Wang              1.2%
+     7	Ismael Viamontes Marrero 1.1%
+     3	Joshua Ogle             0.5%
+     3	Eric Boehs              0.5%
+     2	noughts                 0.3%
+     2	Jordan                  0.3%
+     1	Ivan Skugor             0.2%
+     1	Hugh Cannon             0.2%
+     1	Jongeun Lee             0.2%
+     1	Clément Blanco         0.2%
+     1	Gilberto Avalos         0.2%
+     1	Lee, Jong Eun           0.2%
+     1	Lee, JongEun            0.2%
+     1	Luis Cruz               0.2%
+     1	Matt Apperson           0.2%
+     1	Pedro Palmero           0.2%
+     1	Terry Morgan            0.2%
+     1	Timan Rebel             0.2%
+     1	astronaughts            0.2%
+     1	clairecoloma            0.2%
+     1	Donggu Lee              0.2%
+     1	iskugor                 0.2%
+     1	jsjant                  0.2%
+     1	katangagonzalez         0.2%
+     1	Jeff Bonnes             0.2%
 ```
 
 Feedback appreciated.
