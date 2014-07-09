@@ -37,8 +37,15 @@ function preCompileHook(isExpress) {
 
     // pass through arguments
     var args = build.cli.argv.$_
-               .filter(function(el) { return el !== "--shadow" && el !== "--tishadow" && el !== "--appify"})
-               .concat(["--project-dir", new_project_dir]);
+               .filter(function(el) { return el !== "--shadow" && el !== "--tishadow" && el !== "--appify"});
+               
+    if ((index = args.indexOf('-p')) >= 0) {
+      args[index + 1] = new_project_dir;
+    } else if (index === args.indexOf('--project-dir') >= 0) {
+      args[index + 1] = new_project_dir;
+    } else {
+      args.concat(["--project-dir", new_project_dir]);
+    }
 
     if (build.certDeveloperName) {
       args.push("--developer-name");
