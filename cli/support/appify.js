@@ -135,6 +135,12 @@ exports.build = function(env) {
       });
       // copy tiapp.xml and inject modules
       var source_tiapp = fs.readFileSync(path.join(config.base,"tiapp.xml"),'utf8');
+
+      //if source tiapp is missing a modules tag
+      if (source_tiapp.indexOf("</modules>") === -1 && source_tiapp.indexOf("<modules/>") === -1) {
+        source_tiapp = source_tiapp.replace("</ti:app>", "  <modules/>\n</ti:app>");
+      }
+
       required_modules.push("</modules>")
       var injected_xml = required_modules.concat(required_properties);
       var new_tiapp_xml = source_tiapp
