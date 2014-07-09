@@ -143,7 +143,9 @@ config.init = function(env) {
   if(config.networkInterface){
     var ifaces = os.networkInterfaces(),
         ipOfNtworkInterface = _.find(ifaces[config.networkInterface],function(ip){ return ip.family=='IPv4'});
-    config.hostOfNetworkInterface = ipOfNtworkInterface.address;
+    if (ipOfNtworkInterface) {
+    	config.hostOfNetworkInterface = ipOfNtworkInterface.address;
+    }
   };
   config.isDeploy   = env._name === "deploy";
   config.isTailing  = env.tailLogs || config.isSpec;
