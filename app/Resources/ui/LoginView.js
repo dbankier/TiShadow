@@ -82,7 +82,9 @@ function LoginView() {
     // If user unnecessarily enters full url in the host field
     // e.g. http://localhost:3000
     Ti.App.Properties.setString("tishadow:port", port.value);
-    if (host.value.match("^http://")) {
+    if (host.value === null) {
+      host.value = '';
+    } else if (host.value.match("^http://")) {
       host.value = host.value.substring(7);
       host.fireEvent("change");
     } else if (host.value.match("3000$")) {
