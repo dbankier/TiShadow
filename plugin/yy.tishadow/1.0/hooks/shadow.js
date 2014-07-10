@@ -44,7 +44,7 @@ function preCompileHook(isExpress) {
     } else if (index === args.indexOf('--project-dir') >= 0) {
       args[index + 1] = new_project_dir;
     } else {
-      args.concat(["--project-dir", new_project_dir]);
+      args.push("--project-dir", new_project_dir);
     }
 
     if (build.certDeveloperName) {
