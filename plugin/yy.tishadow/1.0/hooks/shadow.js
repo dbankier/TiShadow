@@ -39,7 +39,7 @@ function preCompileHook(isExpress) {
     var args = build.cli.argv.$_
                .filter(function(el) { return el !== "--shadow" && el !== "--tishadow" && el !== "--appify"});
                
-    if ((index = args.indexOf('-p')) >= 0) {
+    if ((index = args.indexOf('-d')) >= 0) {
       args[index + 1] = new_project_dir;
     } else if (index === args.indexOf('--project-dir') >= 0) {
       args[index + 1] = new_project_dir;
