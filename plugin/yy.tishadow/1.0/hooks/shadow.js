@@ -50,7 +50,7 @@ function preCompileHook(isExpress) {
       args.splice(index, 2);
     }
                
-    if ((index = args.indexOf('--project-dir')) >= 0) {
+    if ((index = args.indexOf('--project-dir')) >= 0 || (index = args.indexOf('-d')) >= 0) {
       args[index + 1] = new_project_dir;
     } else {
       args.push("--project-dir", new_project_dir);
