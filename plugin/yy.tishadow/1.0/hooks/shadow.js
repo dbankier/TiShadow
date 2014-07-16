@@ -32,16 +32,25 @@ function init(_logger, config, cli) {
 }
 function preCompileHook(isExpress) {
   return function (build, finished) {
+    var index;
+
     // temp appify build path
     var new_project_dir = path.join(build.projectDir, 'build', 'appify');
 
     // pass through arguments
     var args = build.cli.argv.$_
                .filter(function(el) { return el !== "--shadow" && el !== "--tishadow" && el !== "--appify"});
+
+    // existing tishadow config?
+    var config_path = path.join(home,'.tishadow.json');
+    var config = fs.existsSync(config_path) ? require(config_path) : {};
+
+    if ((index = args.indexOf('--host')) >= 0 || (index = args.indexOf('-o')) >= 0) {
+      config.host = args[index + 1];
+      args.splice(index, 2);
+    }
                
-    if ((index = args.indexOf('-d')) >= 0) {
-      args[index + 1] = new_project_dir;
-    } else if ( (index = args.indexOf('--project-dir')) >= 0) {
+    if ((index = args.indexOf('--project-dir')) >= 0 || (index = args.indexOf('-d')) >= 0) {
       args[index + 1] = new_project_dir;
     } else {
       args.push("--project-dir", new_project_dir);
@@ -72,21 +81,14 @@ function preCompileHook(isExpress) {
       });
     }
 
-    // existing tishadow config?
-    var config;
-    var config_path = path.join(home,'.tishadow.json');
-    if (fs.existsSync(config_path)) {
-      config = require(config_path);
-    }
-
-    if (config && config.host) {
+    if (config.host) {
       launch(config.host);
     } else {
       // get ip address
       var ip_address = ipselector.selectOne({
         family : 'IPv4',
         internal : false,
-        networkInterface : config && config.networkInterface? config.networkInterface:undefined
+        networkInterface : config.networkInterface? config.networkInterface:undefined
       },function(ip_address) {
         launch(ip_address);
       });
