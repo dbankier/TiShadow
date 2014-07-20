@@ -61,7 +61,7 @@ This will launch your app in the simulator and reload with any code/style/locali
 
 Under the hood it:
  1. starts the tishadow server - `tishadow server`
- 2. launches an appified version of your app - `tishadow appify` (with extra flags)
+ 2. creates and launches an appified version of your app - `tishadow appify` (with extra flags)
  3. watches your code and push on any changes - `tishadow @ run --update`
 
 **MAC**: If you get the error `EMFILE: Too many opened files.`, this is because of your system's max opened file limit. For OSX the default is very low (256). Increase your limit temporarily with `ulimit -n 8192`, the number being the new max limit.
@@ -162,20 +162,22 @@ If the app has been deployed and you want to push minor updates, use the followi
 Here are full list of options:
 
 ```
-    -h, --help             output usage information
-    -u, --update           Only send recently changed files
-    -a, --patch            patch updated files without causing app restart
-    -l, --locale <locale>  set the locale in in the TiShadow app
-    -j, --jshint           analyse code with JSHint
-    -t, --tail-logs        tail server logs on deploy
-    -o, --host <host>      server host name / ip address
-    -p, --port <port>      server port
-    -r, --room <room>      server room
-    -T, --target <appname> target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)
+    -h, --help                 output usage information
+    -u, --update               only send recently changed files
+    -a, --patch                patch updated files without causing app restart
+    -l, --locale <locale>      set the locale in in the TiShadow app
+    -j, --jshint               analyse code with JSHint
+    -t, --tail-logs            tail server logs on deploy
+    -o, --host <host>          server host name / ip address
+    -p, --port <port>          server port
+    -r, --room <room>          server room
+    -s, --skip-alloy-compile   skip automatic alloy compilation
+    -P, --platform <platform>  target platform
+    -D, --include-dot-files    includes dot files in the bundle (defaults to false)
+    -T, --target <app_name>    target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)
 ```
 
-
-The app is then cached on the device. If need to clear the cache, use
+The app is then cached on the device. If you need to clear the cache, use
 the following command:
 
 ```
@@ -184,8 +186,6 @@ the following command:
 
 __Some notes and limitations__
 
- * `Ti.include` is partially supported and will work if included with the full path 
-    i.e. slash leading.
  * Only files in the Resources directory will be sent to the device
    using TiShadow. That said, localisation files **are** supported. (see
    options above). 
@@ -217,22 +217,27 @@ To execute the tests enter the following command:
 Here are a full list of options:
 
 ```
-    -h, --help             output usage information
-    -u, --update           Only send recently changed files
-    -l, --locale <locale>  Set the locale in in the TiShadow app
-    -o, --host <host>      server host name / ip address
-    -p, --port <port>      server port
-    -r, --room <room>      server room
-    -t, --type <type>      testing library
-    -j, --jshint           analyse code with JSHint
-    -x, --junit-xml        output report as JUnit XML
-    -T, --target <appname> target TiShadow app (defaults to name on tiapp.xml ormoduleid on manifest)
-    -C, --clear-spec-files clears only the spec files from the cache
-    -c, --coverage <report_types> runs code coverage, for available report_types see https://github.com/gotwarlost/istanbul#the-report-command
+    -h, --help                     output usage information
+    -u, --update                   only send recently changed files
+    -l, --locale <locale>          set the locale in in the TiShadow app
+    -o, --host <host>              server host name / ip address
+    -p, --port <port>              server port
+    -r, --room <room>              server room
+    -t, --type <type>              testing library
+    -j, --jshint                   analyse code with JSHint
+    -x, --junit-xml                output report as JUnit XML
+    -P, --platform <platform>      target platform
+    -s, --skip-alloy-compile       skip automatic alloy compilation
+    -D, --include-dot-files        includes dot files in the bundle (defaults to false)
+    -T, --target <app_name>        target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)
+    -C, --clear-spec-files         clears only the spec files from the cache
+    -c, --coverage <report_types>  runs code coverage, for available report_types see https://github.com/gotwarlost/istanbul#the-report-command
 ```
 
 **NEW**: You can now select the testing library to use `jasmine`, `mocha-should` or `mocha-chai`. 
 The default library is `jasmine` to change that use, e.g. `tishadow config -t mocha-should`.
+
+**NEW**: test coverage reports using instanbul is also available using the `--coverage <report_types>` flag.
 
 The test results will be returned to the server/cli output:
 ![Spec Output](http://github.com/dbankier/TiShadow/raw/master/example/spec.png)
@@ -240,7 +245,7 @@ The test results will be returned to the server/cli output:
 See the included example project or this [blog post](http://www.yydigital.com/blog/2013/2/14/Testing_Alloy_With_Jasmine_And_TiShadow).
 
 
-_Alternatively (yet not preferred)_
+_Alternatively (yet not preferred/depcrecated)_
 
 TiShadow also supports the use of assertions and the results are
 returned either to the browser or server logs.
@@ -378,6 +383,31 @@ push upgrades.
 ```
 
 See the following [blog post](http://www.yydigital.com/blog/2013/2/19/TiShadow_Appify).
+
+**NEW**: if you want to quickly create and launch/deploy and appified app you can use
+the tishadow titanium hook. For example
+
+~~~
+$ ti build -p ios -F ipad -T device --appify
+~~~
+
+TiShadow CLI defaults
+---------------------
+
+You can use the `tishadow config` command to set some tishadow cli defaults.
+
+The following are some of the options you can set:
+
+~~~
+    -h, --help                           output usage information
+    -o, --host <host>                    set default server host name / ip address
+    -p, --port <port>                    set default server port
+    -r, --room <room>                    set default server room
+    -t, --type <type>                    default testing library
+    -w, --watch-delay <millis>           time to wait before responding to for changes (default: 0)
+    -i, --watch-interval <millis>        time to wait between checking files for changes (default: 100)
+    -n, --network-interface <interface>  set default network interface (used for express mode to avoid the ip selector)
+~~~
 
 
 Launch From Web

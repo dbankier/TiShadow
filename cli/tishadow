@@ -158,7 +158,7 @@ program.command('config')
   .option('-t, --type <type>', 'default testing library')
   .option('-w, --watch-delay <millis>',    'time to wait before responding to for changes (default: 0)')
   .option('-i, --watch-interval <millis>', 'time to wait between checking files for changes (default: 100)')
-  .option('-n, --network-interface <interface>', 'set default network interface')
+  .option('-n, --network-interface <interface>', 'set default network interface (used in express mode)')
   .action(config.write);
 
 program.command('app')
