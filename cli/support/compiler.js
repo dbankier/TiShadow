@@ -148,7 +148,7 @@ function beginCompile(callback) {
     i18n_list = fs.getList(config.i18n_path,last_stat.mtime);
     spec_list = fs.getList(config.spec_path,last_stat.mtime);
 
-    if (file_list.files.length === 0 && assets_list.files.length === 0 && i18n_list.files.length === 0 && spec_list.files.length === 0) {
+    if (file_list.files.length === 0 && (!config.isModule || assets_list.files.length === 0) && i18n_list.files.length === 0 && spec_list.files.length === 0) {
       logger.warn("Nothing to update.");
       return;
     }
