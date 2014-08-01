@@ -292,7 +292,7 @@ getJasmineRequireObj().Spec = function(j$) {
     }
 
     function clearTimeoutable() {
-      Function.prototype.apply.apply(self.timer.clearTimeout, [j$.getGlobal(), [timeout]]);
+      if(timeout) {Function.prototype.apply.apply(self.timer.clearTimeout, [j$.getGlobal(), [timeout]]);}
       timeout = void 0;
     }
 
@@ -927,7 +927,7 @@ getJasmineRequireObj().Clock = function() {
       return Function.prototype.apply.apply(timer.setInterval, [global, arguments]);
     };
 
-    self.clearTimeout = function(id) {
+    self.clearTimeout = function(id) {      
       return Function.prototype.call.apply(timer.clearTimeout, [global, id]);
     };
 
