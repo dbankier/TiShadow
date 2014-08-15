@@ -197,11 +197,23 @@ function beginCompile(callback) {
   	fs.mkdirs(assets_list.dirs, config.module_path);
     // add files for processing 
     process_tasks = process_tasks.concat(assets_list.files.map(function(file) {
-      return _.bind(prepare, null, path.join(config.assets_path,file), path.join(config.tishadow_src, config.module_name, file));
+      var fileName = file.slice(0,file.lastIndexOf('.'));
+      if(fileName == config.module_name){
+      	return _.bind(prepare, null, path.join(config.assets_path,file), path.join(config.tishadow_src, file));
+      } else {
+      	return _.bind(prepare, null, path.join(config.assets_path,file), path.join(config.tishadow_src, config.module_name, file));
+      }
     }));
     console.log(process_tasks);
     // modify for bundling
-    assets_list.files = assets_list.files.map(function(file) { return config.module_name + "/" + file;});
+    assets_list.files = assets_list.files.map(function(file) {
+      var filePath = config.module_name + "/" + file;
+      var fileName = file.slice(0,file.lastIndexOf('.'));
+      if(fileName == config.module_name){
+      	filePath = file;
+      }
+      return filePath;
+    });
   }
   
   async.series([
