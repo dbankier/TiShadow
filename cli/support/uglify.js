@@ -37,15 +37,14 @@ function addAppName(node) {
 }
 
 function argsToPath(args) {
-    var path = args[0];
     if (args.length > 1) {
-        for (var i = 1; i < args.length - 1; ++i) {
-            path = binaryAdd(path, binaryAdd(args[i], symbol('"/"')));
-        }
-        path = binaryAdd(path, _.last(args));
+        return binaryAdd(binaryAdd(args[0], symbol('"/"')), argsToPath(_.tail(args)));
     }
-    return path;
+    else {
+        return args[0];
+    }
 }
+
 function couldBeAsset(name) {
   return typeof name === 'string' && 
 		(name.toLowerCase().match("image$")  ||
