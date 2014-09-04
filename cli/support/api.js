@@ -40,6 +40,7 @@ function postZipToServer (_path, data) {
   form.append('bundle', fs.createReadStream(config.bundle_file));
   logger.info('Uploading...');
   form.submit("http" + (config.isTiCaster ? "s" : "") + "://" + config.host + ":" + config.port + "/" + _path, function(err, response) {
+    if (err) return logger.error(err);
     response.pipe(process.stdout);
   });
 }
