@@ -31,7 +31,7 @@ function exit() {
 }
 exports.startServer = function startServer(logger) {
   logger.info("Starting TiShadow server");
-  var server = spawn("ts", ["server"]);
+  var server = spawn("ts", ["server"], {stdio: "inherit"});
   server.stdout.pipe(process.stdout);
   server.stderr.pipe(process.stderr);
   server.on('exit', function(){
@@ -51,7 +51,7 @@ exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address
   if (ip_address) {
     args = args.concat(['-o', ip_address]);
   }
-  var appify = spawn('ts', args);
+  var appify = spawn('ts', args, {stdio: "inherit"});
   appify.stdout.pipe(process.stdout);
   appify.stderr.pipe(process.stderr);
   appify.on('error',function() {
@@ -71,7 +71,7 @@ exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address
 
 exports.buildApp = function buildApp(logger, args) {
   logger.info("Building App...");
-  var build = spawn('ti', args);
+  var build = spawn('ti', args, {stdio: "inherit"});
   build.stdout.pipe(process.stdout);
   build.stderr.pipe(process.stderr);
   build.on('error', function(err) {
@@ -89,7 +89,7 @@ exports.startWatch = function startWatch(logger, platform, ip_address) {
     args = args.concat(['-o', ip_address]);
   }
 
-  var watch = spawn('ts', args);
+  var watch = spawn('ts', args, {stdio: "inherit"});
   watch.on('exit', function() {
     logger.error("TiShadow watch exited.");
     exit();
