@@ -65,8 +65,14 @@ exports.find = function(file) {
     if (Ti.Filesystem.getFile(file).exists()) {
       return file;
     }
+    if (Ti.Platform.displayCaps.density > 320) {
+      var rethd_file_name = injectSuffix(file, "@3x");  
+      if (Ti.Filesystem.getFile(rethd_file_name).exists() && Ti.Platform.displayCaps.density === "high") {
+        return rethd_file_name;
+      }
+    }
     if (Ti.Platform.displayCaps.density > 160) {
-      var ret_file_name = injectSuffix(file, (Ti.Platform.displayCaps.density > 320) ? "@3x" : "@2x");  
+      var ret_file_name = injectSuffix(file, "@2x");  
       if (Ti.Filesystem.getFile(ret_file_name).exists() && Ti.Platform.displayCaps.density === "high") {
         return ret_file_name;
       }
