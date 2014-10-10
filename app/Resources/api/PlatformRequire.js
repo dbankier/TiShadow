@@ -111,6 +111,24 @@ exports.file = function(extension) {
 };
 
 /*
+ * Asset Redirection - ByPass for file method. 
+ * Parses the whole list of argument and merges them using a safe structure
+ */
+exports.getFile = function() {
+  var extension = '';
+  for(var i=0; i<arguments.length; i++){
+  	var argument = arguments[i];
+  	//Only adds a slash when left arguments don't have it
+  	if(extension.charAt(extension.length-1) != '/' && argument.charAt(0) != '/' && i != 0){
+	  extension += '/' + argument;
+  	} else {
+  	  extension += argument;
+  	}
+  }
+  return exports.file(extension);
+};
+
+/*
  * clear require and global cache
  */
 // if a list of files is provided it will selectively clear the cache

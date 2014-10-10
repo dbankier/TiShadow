@@ -60,14 +60,22 @@ function injectSuffix(file, suffix) {
 
 //density files only for png files
 exports.find = function(file) {
-  //iOS Retina Check
+  //iOS (HD) Retina Check
   if ((os === "ipad" || os === "iphone")) {
     if (Ti.Filesystem.getFile(file).exists()) {
       return file;
     }
-    var ret_file_name = injectSuffix(file, "@2x");
-    if (Ti.Filesystem.getFile(ret_file_name).exists() && Ti.Platform.displayCaps.density === "high") {
-      return ret_file_name;
+    if (Ti.Platform.displayCaps.density > 320) {
+      var rethd_file_name = injectSuffix(file, "@3x");  
+      if (Ti.Filesystem.getFile(rethd_file_name).exists() && Ti.Platform.displayCaps.density === "high") {
+        return rethd_file_name;
+      }
+    }
+    if (Ti.Platform.displayCaps.density > 160) {
+      var ret_file_name = injectSuffix(file, "@2x");  
+      if (Ti.Filesystem.getFile(ret_file_name).exists() && Ti.Platform.displayCaps.density === "high") {
+        return ret_file_name;
+      }
     }
   } else if (os === "android") {
     var d_file_name = file.replace("android/images/", "android/images/%FOLDER%/"),

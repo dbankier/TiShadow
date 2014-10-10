@@ -22,75 +22,87 @@ exports.init = init;
 var logger;
 function init(_logger, config, cli) {
   // users who are on the wrong SDK without this being set... TiShadow would just fail to work at all
-  cli.config.cli.failOnWrongSDK = true;
-  if (process.argv.indexOf('--shadow') !== -1 || process.argv.indexOf('--tishadow') !== -1) {
-    cli.addHook('build.pre.compile', preCompileHook(true));
-  } else if (process.argv.indexOf('--appify') !== -1) {
-    cli.addHook('build.pre.compile', preCompileHook(false));
-  }
+  cli.addHook('build.pre.compile', preCompileHook);
+  cli.addHook('cli:pre-validate', preValidateHook);
+
   logger = _logger;
 }
-function preCompileHook(isExpress) {
-  return function (build, finished) {
-    // temp appify build path
-    var new_project_dir = path.join(build.projectDir, 'build', 'appify');
+function preValidateHook(build,finished) {
+  if (build.cli.argv.$_.indexOf('--shadow') !== -1 || 
+      build.cli.argv.$_.indexOf('--tishadow') !== -1 || 
+      build.cli.argv.$_.indexOf('--appify') !== -1) {
+    build.cli.config.cli.failOnWrongSDK = true;
+  }
+  finished();
+}
+function preCompileHook(build, finished) {
+  if (build.cli.argv.$_.indexOf('--shadow') === -1 && 
+      build.cli.argv.$_.indexOf('--tishadow') === -1 && 
+      build.cli.argv.$_.indexOf('--appify') === -1) {
+    return finished();
+  }
 
-    // pass through arguments
-    var args = build.cli.argv.$_
-               .filter(function(el) { return el !== "--shadow" && el !== "--tishadow" && el !== "--appify"});
-               
-    if ((index = args.indexOf('-d')) >= 0) {
-      args[index + 1] = new_project_dir;
-    } else if ( (index = args.indexOf('--project-dir')) >= 0) {
-      args[index + 1] = new_project_dir;
-    } else {
-      args.push("--project-dir", new_project_dir);
-    }
+  var index;
+  var isExpress = build.cli.argv.$_.indexOf('--appify') === -1;
 
-    if (build.certDeveloperName) {
-      args.push("--developer-name");
-      args.push(build.certDeveloperName);
-    }
+  // pass through arguments
+  var args = build.cli.argv.$_
+  .filter(function(el) { return el !== "--shadow" && el !== "--tishadow" && el !== "--appify"});
 
-    if (build.provisioningProfileUUID) {
-      args.push("--pp-uuid");
-      args.push(build.provisioningProfileUUID);
-    }
+  // temp appify build path
+  var new_project_dir = path.join(build.projectDir, 'build', 'appify');
 
-    // appify -> express
-    function launch(ip_address){
-      commands.startAppify(logger, new_project_dir, build.cli.argv.platform, ip_address, function() {
-        if (args.indexOf("-p") === -1 && args.indexOf("--platform") === -1) {
-          args.push("-p");
-          args.push(build.cli.argv.platform);
-        }
-        commands.buildApp(logger,args)
-        if (isExpress) {
-          commands.startServer(logger);
-          commands.startWatch(logger, build.cli.argv.platform, ip_address);
-        }
-      });
-    }
+  // existing tishadow config?
+  var config_path = path.join(home,'.tishadow.json');
+  var config = fs.existsSync(config_path) ? require(config_path) : {};
 
-    // existing tishadow config?
-    var config;
-    var config_path = path.join(home,'.tishadow.json');
-    if (fs.existsSync(config_path)) {
-      config = require(config_path);
-    }
+  if ((index = args.indexOf('--host')) >= 0 || (index = args.indexOf('-o')) >= 0) {
+    config.host = args[index + 1];
+    args.splice(index, 2);
+  }
 
-    if (config && config.host) {
-      launch(config.host);
-    } else {
-      // get ip address
-      var ip_address = ipselector.selectOne({
-        family : 'IPv4',
-        internal : false,
-        networkInterface : config && config.networkInterface? config.networkInterface:undefined
-      },function(ip_address) {
-        launch(ip_address);
-      });
-    }
+  if ((index = args.indexOf('--project-dir')) >= 0 || (index = args.indexOf('-d')) >= 0) {
+    args[index + 1] = new_project_dir;
+  } else {
+    args.push("--project-dir", new_project_dir);
+  }
+
+  if (build.certDeveloperName) {
+    args.push("--developer-name");
+    args.push(build.certDeveloperName);
+  }
+
+  if (build.provisioningProfileUUID) {
+    args.push("--pp-uuid");
+    args.push(build.provisioningProfileUUID);
+  }
+
+  // appify -> express
+  function launch(ip_address){
+    commands.startAppify(logger, new_project_dir, build.cli.argv.platform, ip_address, function() {
+      if (args.indexOf("-p") === -1 && args.indexOf("--platform") === -1) {
+        args.push("-p");
+        args.push(build.cli.argv.platform);
+      }
+      commands.buildApp(logger,args)
+      if (isExpress) {
+        commands.startServer(logger);
+        commands.startWatch(logger, build.cli.argv.platform, ip_address);
+      }
+    });
+  }
+
+  if (config.host) {
+    launch(config.host);
+  } else {
+    // get ip address
+    var ip_address = ipselector.selectOne({
+      family : 'IPv4',
+      internal : false,
+      networkInterface : config.networkInterface? config.networkInterface:undefined
+    },function(ip_address) {
+      launch(ip_address);
+    });
   }
 }
 

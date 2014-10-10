@@ -105,7 +105,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       }
       if (node.expression.end.value === "getFile" &&
           node.expression.expression.property === "Filesystem") {
-				node.args = [functionCall("__p.file", [argsToPath(node.args)])];
+				node.args = [functionCall("__p.getFile", node.args)];
 				return node;
       }
 

@@ -57,9 +57,13 @@ server.listen(config.port, config.internalIP);
 //test if server is up
 function isUp() {
   if (server.address() != null) {
-      Logger.debug("TiShadow server started. Go to http://"+ config.host + ":" + config.port);
+    var address = server.address().address;
+    if (address === "0.0.0.0") {
+      address = "localhost";
+    }
+    Logger.debug("TiShadow server started. Go to http://"+ address + ":" + server.address().port);
   } else {
-      Logger.error("Failed to start server on port: " + config.port );
+    Logger.error("Failed to start server on port: " + config.port );
   }
 }
 // we need a delay when binding to internal ip/host
