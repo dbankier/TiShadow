@@ -31,9 +31,7 @@ function exit() {
 }
 exports.startServer = function startServer(logger) {
   logger.info("Starting TiShadow server");
-  var server = spawn("ts", ["server"], {stdio: "inherit"});
-  server.stdout.pipe(process.stdout);
-  server.stderr.pipe(process.stderr);
+  var server = spawn("ts", ["server"], {stdio: ["pipe", "pipe",2]});
   server.on('exit', function(){
     logger.error("TiShadow Server exited.");
     exit();
@@ -51,9 +49,7 @@ exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address
   if (ip_address) {
     args = args.concat(['-o', ip_address]);
   }
-  var appify = spawn('ts', args, {stdio: "inherit"});
-  appify.stdout.pipe(process.stdout);
-  appify.stderr.pipe(process.stderr);
+  var appify = spawn('ts', args, {stdio: ["pipe", 1, 2]});
   appify.on('error',function() {
     logger.error("Appify Failed.");
     exit();
@@ -72,8 +68,6 @@ exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address
 exports.buildApp = function buildApp(logger, args) {
   logger.info("Building App...");
   var build = spawn('ti', args, {stdio: "inherit"});
-  build.stdout.pipe(process.stdout);
-  build.stderr.pipe(process.stderr);
   build.on('error', function(err) {
     logger.error(err);
     logger.error("Titanium build exited.");
@@ -83,20 +77,19 @@ exports.buildApp = function buildApp(logger, args) {
 }
 
 exports.startWatch = function startWatch(logger, platform, ip_address) {
-  logger.info("Starting Watch...");
   var args = ['@', 'run', '-u', '-P', platform];
   if (ip_address) {
     args = args.concat(['-o', ip_address]);
   }
-
-  var watch = spawn('ts', args, {stdio: "inherit"});
-  watch.on('exit', function() {
-    logger.error("TiShadow watch exited.");
-    exit();
-  });
-  children.push(watch);
-  watch.stdout.pipe(process.stdout);
-  watch.stderr.pipe(process.stderr);
+  setTimeout(function() { // avoid potential stdio conflict with ti build (hack at the moment)
+    logger.info("Starting Watch...");
+    var watch = spawn('ts', args, {stdio: 'inherit'});
+    watch.on('exit', function() {
+      logger.error("TiShadow watch exited.");
+      exit();
+    });
+    children.push(watch);
+  }, 5000);
 }
 
 exports.run = function(logger, config, cli) {

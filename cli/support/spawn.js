@@ -4,11 +4,11 @@
  */
 
 var spawn = require('child_process').spawn;
-module.exports = function(cmd,args) {
+module.exports = function(cmd,args,props) {
   if (process.platform === 'win32') {
     args = ['/c',cmd].concat(args);
     cmd = process.env.comspec;
   }
-  return spawn(cmd,args);
+  return spawn(cmd,args,props);
 }
 
