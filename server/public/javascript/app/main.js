@@ -145,13 +145,13 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
     $scope.downloadFile = function(){
       downloadInnerHtml('logfile_' + new Date().getTime(), 'console', 'text/html');
     };
-    $scope.update = function(key,value) {
-      TiShadow.socket.emit("snippet", {code: "me['"+key+"'] = " + value + ";"});
+    $scope.update = function(key,value, key2) {
+      TiShadow.socket.emit("snippet", {code: "me['"+key+"']" + (key2 ? "['" + key2 + "']" : "") + "= " + value + ";"});
       TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
     };
-    $scope.keypress = function(evt, key,value) {
+    $scope.keypress = function(evt, key,value, key2) {
       if (evt.which===13){
-        TiShadow.socket.emit("snippet", {code: "me['"+key+"'] = '" + value + "';"});
+        TiShadow.socket.emit("snippet", {code: "me['"+key+"']" + (key2 ? "['" + key2 + "']" : "") + "= '" + value + "';"});
         TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
       }
     };

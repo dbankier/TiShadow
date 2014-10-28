@@ -46,8 +46,14 @@ block content
               .control-group(ng-repeat="(key, value) in inspect.values" ng-if="key.indexOf('_') !==0")
                 label.control-label {{key}}
                 .controls
-                  input(type="text",ng-model="value",ng-if="!_.isBoolean(value)" ng-keypress="keypress($event, key, value)")
+                  input(type="text",ng-model="value",ng-if="!_.isObject(value) && !_.isBoolean(value)" ng-keypress="keypress($event, key, value)")
                   input(type="checkbox",ng-model="value",ng-if="_.isBoolean(value)",ng-change="update(key,value)")
+                  div(ng-if="_.isObject(value)")
+                    div(ng-repeat="(key2,value2) in value")
+                      div{{key2}}
+                      input(type="text",ng-model="value2",ng-if="!_.isObject(value2) && !_.isBoolean(value2)" ng-keypress="keypress($event, key, value2, key2)")
+                      input(type="checkbox",ng-model="value2",ng-if="_.isBoolean(value2)",ng-change="update(key,value2,key2)")
+
 
   script(type="text/javascript").
     $('#tabs a').click(function (e) {
