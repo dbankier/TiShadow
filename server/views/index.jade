@@ -5,8 +5,8 @@ block content
     .well.row-fluid
       .span9(style='position:relative')
         h3.title Enter your Titanium Code
-        #editor
-        button.btn.btn-danger(type='submit', id="tisubmit") Execute Code
+        #editor(ng-keypress="keypress")
+        button.btn.btn-danger(type='submit', id="tisubmit", ng-click="submit()") Execute Code
       .span3
         h4 Devices
         ul.device_list.unstyled
@@ -23,14 +23,16 @@ block content
       .tab-content
         #cons.tab-pane.active(style='position:relative;')
           #console
+            div(ng-repeat="log in logs | filter:search" class="control-group {{log.style}}")
+             span.control-label {{log.log}}
           .form-search
-            input#filter.input-large.search-query(type='search', placeholder="Filter")
+            input#filter.input-large.search-query(type='search', placeholder="Filter",ng-model="search.log")
             .btn-group(style='margin-left:5px;')
-              button.btn.btn-all.disabled.btn-toggle All
-              button.btn.btn-info.btn-toggle Debug 
-              button.btn.btn-success.btn-toggle Info
-              button.btn.btn-warning.btn-toggle Warning
-              button.btn.btn-danger.btn-toggle Errors
+              button.btn.btn-all.disabled.btn-toggle(ng-click="search.level=''") All
+              button.btn.btn-info.btn-toggle(ng-click="search.level='DEBUG'")  Debug 
+              button.btn.btn-success.btn-toggle(ng-click="search.level='INFO'")  Info
+              button.btn.btn-warning.btn-toggle(ng-click="search.level='WARN'")  Warning
+              button.btn.btn-danger.btn-toggle(ng-click="search.level='ERROR'")  Errors
             .btn-group
               button.btn.btn-primary.dropdown-toggle(data-toggle='dropdown', ng-disabled="!_.size(devices)")
                 | Devices

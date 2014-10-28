@@ -21,6 +21,7 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
   $scope._       = _;
   $scope.devices = {};
   $scope.inspect = {};
+  $scope.logs = [];
 
   var TiShadow = {};
   TiShadow.init = function (session, guest){
@@ -51,14 +52,34 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
         var seconds = now.getSeconds();
         var log = now.getHours() + ":" + (minutes < 10 ? "0" : "") +  minutes + ":" + (seconds < 10 ? "0" : "" ) + seconds + " [" + e.level + "] [" + e.name + "]    " + (e.message === undefined ? 'undefined' : e.message.toString().replace("\n","<br/>"));
         var style = e.level === "ERROR"  || e.level === "FAIL" ? " error" : e.level === "WARN" ? "warning" : e.level === "INFO" ? " success" : " info";
-        $("#console").append("<div class='control-group " + style + "'><span class='control-label'>" + log + "</span></div>");
-        $("#console").scrollTop($("#console")[0].scrollHeight);
+        $scope.logs.push({
+          level: e.level,
+          log: log,
+          style: style
+        });
+        $apply($scope);
       } else {
         $scope.inspect.values = JSON.parse(e.message);
         $apply($scope);
       }
     });
     TiShadow.socket = socket;
+  };
+  $scope.submit = function() {
+    TiShadow.socket.emit("snippet", {code: editor.getSession().getValue()});
+  };
+  $scope.downloadFile = function(){
+    downloadInnerHtml('logfile_' + new Date().getTime(), 'console', 'text/html');
+  };
+  $scope.update = function(key,value, key2) {
+    TiShadow.socket.emit("snippet", {code: "me['"+key+"']" + (key2 ? "['" + key2 + "']" : "") + "= " + value + ";"});
+    TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+  };
+  $scope.keypress = function(evt, key,value, key2) {
+    if (evt.which===13){
+      TiShadow.socket.emit("snippet", {code: "me['"+key+"']" + (key2 ? "['" + key2 + "']" : "") + "= '" + value + "';"});
+      TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+    }
   };
 
   $timeout(function(){
@@ -69,92 +90,18 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     editor.getSession().setMode(new JavaScriptMode());
 
-    $("button#tisubmit").click(function() {
-      TiShadow.socket.emit("snippet", {code: editor.getSession().getValue()});
-    });
 
     $("#editor").keypress(function (event) {
+      console.log(event.which);
+      console.log(event.ctrlKey);
+      console.log(event.metaKey);
       if ((event.which == 115 && event.ctrlKey) || (event.which == 115 && event.metaKey)){
-        $("input#tisubmit").click();
+        $scope.submit();
         event.preventDefault();
         return false;
       }
     });
 
-    $('#filter').change(function(){
-      filter();
-    });
-
-    $('#filter').keyup(function(){
-      var val = this.value;
-      filter(val);
-    });
-
-    var filter = function(value){
-      var _console = $('#console .control-label');
-
-      if(!value){
-        $('#console .control-label').parent().show();
-        return;
-      }
-
-      var regexp = new RegExp(value, 'gi');
-
-      _console.each(function(index, item){
-        item = $(item);
-
-        if(regexp.test(item.html())){
-          item.parent().show();
-        } else {
-          item.parent().hide();
-        }
-      });
-    };
-
-    $('.form-search .btn-toggle').click(function(){
-      var btn      = $(this);
-      var _console = $('#console .control-group');
-      _console.hide();
-
-      $('.form-search .btn-toggle').removeClass('disabled');
-      btn.addClass('disabled');
-
-      if(btn.hasClass('btn-all')){
-        _console.show();
-      }
-
-      if(btn.hasClass('btn-info')){
-        $('#console .control-group.info').show();
-      }
-
-      if(btn.hasClass('btn-success')){
-        $('#console .control-group.success').show();
-      }
-
-      if(btn.hasClass('btn-warning')){
-        $('#console .control-group.warning').show();
-      }
-
-      if(btn.hasClass('btn-danger')){
-        $('#console .control-group.error').show();
-      }
-
-      $('#console').scrollTop($('#console')[0].scrollHeight);
-    });
-
-    $scope.downloadFile = function(){
-      downloadInnerHtml('logfile_' + new Date().getTime(), 'console', 'text/html');
-    };
-    $scope.update = function(key,value, key2) {
-      TiShadow.socket.emit("snippet", {code: "me['"+key+"']" + (key2 ? "['" + key2 + "']" : "") + "= " + value + ";"});
-      TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
-    };
-    $scope.keypress = function(evt, key,value, key2) {
-      if (evt.which===13){
-        TiShadow.socket.emit("snippet", {code: "me['"+key+"']" + (key2 ? "['" + key2 + "']" : "") + "= '" + value + "';"});
-        TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
-      }
-    };
 
   });
 
