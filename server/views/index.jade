@@ -14,24 +14,43 @@ block content
             i.fa.fa-mobile
             | &nbsp;&nbsp;{{ device.name }}
     .well.row-fluid
-      .span12(style='position:relative;')
-        h3.title Console
-        #console
-        .form-search
-          input#filter.input-large.search-query(type='search', placeholder="Filter")
-          .btn-group(style='margin-left:5px;')
-            button.btn.btn-all.disabled.btn-toggle All
-            button.btn.btn-info.btn-toggle Debug 
-            button.btn.btn-success.btn-toggle Info
-            button.btn.btn-warning.btn-toggle Warning
-            button.btn.btn-danger.btn-toggle Errors
-          .btn-group
-            button.btn.btn-primary.dropdown-toggle(data-toggle='dropdown', ng-disabled="!_.size(devices)")
-              | Devices
-              | &nbsp;&nbsp;<span class="caret"></span>
-            ul.dropdown-menu
-              li(ng-repeat="device in devices")
-                a {{ device.name }}
-          button.btn.pull-right(style='margin-left:5px;', ng-click='downloadFile()')
-            i.fa.fa-file
-            | &nbsp; Download Log
+      ul#tabs.nav.nav-tabs
+        li.active
+          a(href="#cons") Console
+        li
+          a(href="#inspector") Inspector
+
+      .tab-content
+        #cons.tab-pane.active(style='position:relative;')
+          #console
+          .form-search
+            input#filter.input-large.search-query(type='search', placeholder="Filter")
+            .btn-group(style='margin-left:5px;')
+              button.btn.btn-all.disabled.btn-toggle All
+              button.btn.btn-info.btn-toggle Debug 
+              button.btn.btn-success.btn-toggle Info
+              button.btn.btn-warning.btn-toggle Warning
+              button.btn.btn-danger.btn-toggle Errors
+            .btn-group
+              button.btn.btn-primary.dropdown-toggle(data-toggle='dropdown', ng-disabled="!_.size(devices)")
+                | Devices
+                | &nbsp;&nbsp;<span class="caret"></span>
+              ul.dropdown-menu
+                li(ng-repeat="device in devices")
+                  a {{ device.name }}
+            button.btn.pull-right(style='margin-left:5px;', ng-click='downloadFile()')
+              i.fa.fa-file
+              | &nbsp; Download Log
+        #inspector.tab-pane(style='position:relative;')
+            form.form-horizontal
+              .control-group(ng-repeat="(key, value) in inspect.values" ng-if="key.indexOf('_') !==0")
+                label.control-label {{key}}
+                .controls
+                  input(type="text",ng-model="value",ng-if="!_.isBoolean(value)" ng-keypress="keypress($event, key, value)")
+                  input(type="checkbox",ng-model="value",ng-if="_.isBoolean(value)",ng-change="update(key,value)")
+
+  script(type="text/javascript").
+    $('#tabs a').click(function (e) {
+      $(this).tab('show');
+      e.preventDefault();
+    })

@@ -7,19 +7,20 @@ var $apply = function($scope){
 };
 
 function downloadInnerHtml(filename, elId, mimeType) {
-    var elHtml = document.getElementById(elId).innerHTML;
-    var link = document.createElement('a');
-    mimeType = mimeType || 'text/plain';
+  var elHtml = document.getElementById(elId).innerHTML;
+  var link = document.createElement('a');
+  mimeType = mimeType || 'text/plain';
 
-    link.setAttribute('download', filename);
-    link.setAttribute('href', 'data:' + mimeType  +  ';charset=utf-8,' + encodeURIComponent(elHtml));
-    link.click();
+  link.setAttribute('download', filename);
+  link.setAttribute('href', 'data:' + mimeType  +  ';charset=utf-8,' + encodeURIComponent(elHtml));
+  link.click();
 }
 
 // Main controller
 app.controller('mainController', ['$scope', '$timeout', function($scope, $timeout){
   $scope._       = _;
   $scope.devices = {};
+  $scope.inspect = {};
 
   var TiShadow = {};
   TiShadow.init = function (session, guest){
@@ -27,6 +28,7 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
 
     socket.on('connect', function(data) {
       socket.emit("join", {name: 'controller'});
+      socket.emit("snippet", {code: "console.inspect(me)"});
     });
 
     socket.on('device_connect', function(e){
@@ -43,13 +45,18 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
     });
 
     socket.on('device_log', function(e) {
-      var now = new Date();
-      var minutes = now.getMinutes();
-      var seconds = now.getSeconds();
-      var log = now.getHours() + ":" + (minutes < 10 ? "0" : "") +  minutes + ":" + (seconds < 10 ? "0" : "" ) + seconds + " [" + e.level + "] [" + e.name + "]    " + (e.message === undefined ? 'undefined' : e.message.toString().replace("\n","<br/>"));
-      var style = e.level === "ERROR"  || e.level === "FAIL" ? " error" : e.level === "WARN" ? "warning" : e.level === "INFO" ? " success" : " info";
-      $("#console").append("<div class='control-group " + style + "'><span class='control-label'>" + log + "</span></div>");
-      $("#console").scrollTop($("#console")[0].scrollHeight);
+      if (e.level !== "INSPECT") {
+        var now = new Date();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+        var log = now.getHours() + ":" + (minutes < 10 ? "0" : "") +  minutes + ":" + (seconds < 10 ? "0" : "" ) + seconds + " [" + e.level + "] [" + e.name + "]    " + (e.message === undefined ? 'undefined' : e.message.toString().replace("\n","<br/>"));
+        var style = e.level === "ERROR"  || e.level === "FAIL" ? " error" : e.level === "WARN" ? "warning" : e.level === "INFO" ? " success" : " info";
+        $("#console").append("<div class='control-group " + style + "'><span class='control-label'>" + log + "</span></div>");
+        $("#console").scrollTop($("#console")[0].scrollHeight);
+      } else {
+        $scope.inspect.values = JSON.parse(e.message);
+        $apply($scope);
+      }
     });
     TiShadow.socket = socket;
   };
@@ -137,6 +144,16 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
 
     $scope.downloadFile = function(){
       downloadInnerHtml('logfile_' + new Date().getTime(), 'console', 'text/html');
+    };
+    $scope.update = function(key,value) {
+      TiShadow.socket.emit("snippet", {code: "me['"+key+"'] = " + value + ";"});
+      TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+    };
+    $scope.keypress = function(evt, key,value) {
+      if (evt.which===13){
+        TiShadow.socket.emit("snippet", {code: "me['"+key+"'] = '" + value + "';"});
+        TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+      }
     };
 
   });
