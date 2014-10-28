@@ -9,9 +9,11 @@ var log = require("/api/Log");
 var containers = {};
 
 function stack(e) {
+  var p = require("/api/PlatformRequire");
   var container = e.source.__tishadowContainer;
   var app = e.source.__tishadowApp;
-
+  p.addSpy(container, e.source);
+  log.trace("SPY:" + container);
   if (!containers[app]) {
     containers[app] = {};
   }
@@ -20,6 +22,8 @@ function stack(e) {
 }
 
 function unstack(e) {
+  var p = require("/api/PlatformRequire");
+  p.removeSpy(e.container);
   delete containers[e.app][e.container];
   return;
 }
@@ -44,6 +48,9 @@ var create = function(fn,a) {
   o.addEventListener('open', stack);
   o.addEventListener('close', function(e) {
     unstack({ app: args.__tishadowApp, container: args.__tishadowContainer });
+  });
+  o.addEventListener('focus', function(e) {
+    log.inspect(e.source);
   });
   return o;
 };

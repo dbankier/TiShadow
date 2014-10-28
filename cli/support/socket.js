@@ -51,7 +51,7 @@ exports.connect = function(onconnect) {
 	  coverage = require("./coverage");
       var coverageObject = JSON.parse(data.message);
       coverage.addCoverage(coverageObject);
-    } else if (!config.isJUnit) {
+    } else if (!config.isJUnit && data.level !=="INSPECT") {
       logger.log(data.level, data.name, data.message);
     }
   });

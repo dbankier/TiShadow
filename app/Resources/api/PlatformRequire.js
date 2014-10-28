@@ -182,6 +182,10 @@ exports.eval = function(message) {
 
 exports.addSpy = function(name,spy) {
   spys[name]=spy;
+  global_context.me = spy;
+};
+exports.removeSpy = function(name,spy) {
+  spys[name]=spy;
 };
 
 /*
