@@ -147,3 +147,6 @@ a.yybrand {
 .form-horizontal .control-label {
   text-align: left;
 }
+.form-horizontal .control-group {
+  margin-bottom: 5px;
+}

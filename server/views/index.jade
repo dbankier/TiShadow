@@ -45,23 +45,23 @@ block content
               i.fa.fa-file
               | &nbsp; Download Log
         #inspector.tab-pane(style='position:relative;')
-            button.btn.btn-default.pull-right(ng-if="currentSpy" ng-click="inspectReset()") Reload 
+            a.btn.btn-default.pull-right(ng-if="currentSpy" ng-click="inspectReset()") Reload 
             form.form-horizontal
               .control-group(ng-repeat="(key, value) in inspect.values" ng-if="key.indexOf('_') !==0" ng-init="stack=[]")
                  span(ng-include="'json.html'")
-              button.btn.btn-default(ng-click="inspectChildren(key,value,stack)") Inspect Children     
+               a.btn.btn-default(ng-click="inspectChildren(key,value,[])") Inspect Children     
 
   script(id="json.html",type="text/ng-template").
     <label class="control-label"> {{key}}</label>
     <div style="controls">
       <input type="text" ng-model="value" ng-if="!_.isObject(value) && !_.isBoolean(value)" ng-keypress="keypress($event, key, value, stack)">
       <input type="checkbox" ng-model="value" ng-if="_.isBoolean(value)" $ng-change="update(key,value, stack)">
-      <div ng-if="_.isObject(value)" ng-style="{'padding-left': + ((stack.length + 1) * 50) + 'px'}">
-        <hr ng-init="stack.push(key)"/>
+      <div ng-init="stack = stack.concat(key)" ng-if="_.isObject(value)" ng-style="{'padding-left': + ((stack.length + 1) * 50) + 'px'}">
+        <hr/>
         <div class="control-group" ng-repeat="(key, value) in value" ng-if="key.indexOf('_') !==0")>
          <span ng-include="'json.html'"></span>
-         </div>
-         <button class"btn btn-default" ng-click="inspectChildren(key,value,stack)" > Inspect Children </button>    
+        </div>
+         <a class="btn btn-default" ng-click="inspectChildren(key,value,stack)" >Inspect Children</a>    
          <hr/>
        </div>
     </div>
