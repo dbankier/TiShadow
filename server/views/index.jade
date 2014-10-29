@@ -7,6 +7,7 @@ block content
         h3.title Enter your Titanium Code
         #editor(ng-keypress="keypress")
         button.btn.btn-danger(type='submit', id="tisubmit", ng-click="submit()") Execute Code
+        button.btn.btn-default(type='submit', id="tisubmit", ng-click="closeApp()") Close/Restart
       .span3
         h4 Devices
         ul.device_list.unstyled
@@ -44,18 +45,27 @@ block content
               i.fa.fa-file
               | &nbsp; Download Log
         #inspector.tab-pane(style='position:relative;')
+            button.btn.btn-default.pull-right(ng-if="currentSpy" ng-click="inspectReset()") Reload 
             form.form-horizontal
-              .control-group(ng-repeat="(key, value) in inspect.values" ng-if="key.indexOf('_') !==0")
-                label.control-label {{key}}
-                .controls
-                  input(type="text",ng-model="value",ng-if="!_.isObject(value) && !_.isBoolean(value)" ng-keypress="keypress($event, key, value)")
-                  input(type="checkbox",ng-model="value",ng-if="_.isBoolean(value)",ng-change="update(key,value)")
-                  div(ng-if="_.isObject(value)")
-                    div(ng-repeat="(key2,value2) in value")
-                      div{{key2}}
-                      input(type="text",ng-model="value2",ng-if="!_.isObject(value2) && !_.isBoolean(value2)" ng-keypress="keypress($event, key, value2, key2)")
-                      input(type="checkbox",ng-model="value2",ng-if="_.isBoolean(value2)",ng-change="update(key,value2,key2)")
+              .control-group(ng-repeat="(key, value) in inspect.values" ng-if="key.indexOf('_') !==0" ng-init="stack=[]")
+                 span(ng-include="'json.html'")
+              button.btn.btn-default(ng-click="inspectChildren(key,value,stack)") Inspect Children     
 
+  script(id="json.html",type="text/ng-template").
+    <label class="control-label"> {{key}}</label>
+    <div style="controls">
+      <input type="text" ng-model="value" ng-if="!_.isObject(value) && !_.isBoolean(value)" ng-keypress="keypress($event, key, value, stack)">
+      <input type="checkbox" ng-model="value" ng-if="_.isBoolean(value)" $ng-change="update(key,value, stack)">
+      <div ng-if="_.isObject(value)" ng-style="{'padding-left': + ((stack.length + 1) * 50) + 'px'}">
+        <hr ng-init="stack.push(key)"/>
+        <div class="control-group" ng-repeat="(key, value) in value" ng-if="key.indexOf('_') !==0")>
+         <span ng-include="'json.html'"></span>
+         </div>
+         <button class"btn btn-default" ng-click="inspectChildren(key,value,stack)" > Inspect Children </button>    
+         <hr/>
+       </div>
+    </div>
+      
 
   script(type="text/javascript").
     $('#tabs a').click(function (e) {

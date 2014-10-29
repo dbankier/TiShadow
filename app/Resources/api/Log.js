@@ -3,7 +3,7 @@
  * Please see the LICENSE file included with this distribution for details.
  */
 
-var logLevels = ['info', 'error', 'debug', 'trace', 'repl', 'warn', 'pass', 'fail', 'test', 'cover', 'inspect'];
+var logLevels = ['info', 'error', 'debug', 'trace', 'repl', 'warn', 'pass', 'fail', 'test', 'cover', 'inspect', 'spy'];
 
 logLevels.forEach(function(level) {
   exports[level] = function() {

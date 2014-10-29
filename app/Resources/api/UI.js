@@ -13,7 +13,7 @@ function stack(e) {
   var container = e.source.__tishadowContainer;
   var app = e.source.__tishadowApp;
   p.addSpy(container, e.source);
-  log.trace("SPY:" + container);
+  log.spy(container);
   if (!containers[app]) {
     containers[app] = {};
   }

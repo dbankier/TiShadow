@@ -22,6 +22,7 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
   $scope.devices = {};
   $scope.inspect = {};
   $scope.logs = [];
+  var editor;
 
   var TiShadow = {};
   TiShadow.init = function (session, guest){
@@ -46,7 +47,13 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
     });
 
     socket.on('device_log', function(e) {
-      if (e.level !== "INSPECT") {
+      if (e.level === "INSPECT") {
+        $scope.inspect.values = JSON.parse(e.message);
+        $apply($scope);
+      } else if (e.level ==="SPY") {
+        $scope.currentSpy = e.message;
+        $apply($scope);
+      } else {
         var now = new Date();
         var minutes = now.getMinutes();
         var seconds = now.getSeconds();
@@ -58,9 +65,6 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
           style: style
         });
         $apply($scope);
-      } else {
-        $scope.inspect.values = JSON.parse(e.message);
-        $apply($scope);
       }
     });
     TiShadow.socket = socket;
@@ -71,13 +75,24 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
   $scope.downloadFile = function(){
     downloadInnerHtml('logfile_' + new Date().getTime(), 'console', 'text/html');
   };
-  $scope.update = function(key,value, key2) {
-    TiShadow.socket.emit("snippet", {code: "me['"+key+"']" + (key2 ? "['" + key2 + "']" : "") + "= " + value + ";"});
+  $scope.update = function(key,value, stack) {
+    TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}) + "['"+key+"']" + "= " + value + ";"});
     TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
   };
-  $scope.keypress = function(evt, key,value, key2) {
+  $scope.inspectChildren = function(key,value, stack) {
+    TiShadow.socket.emit("snippet", {code: "me = me" + stack.map(function(k) {return "['"+k+"']";}) + ".children;"});
+    TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+  };
+  $scope.inspectReset = function() {
+    TiShadow.socket.emit("snippet", {code: "me = getSpy('"+$scope.currentSpy+"');"});
+    TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+  }
+  $scope.closeApp = function() {
+    TiShadow.socket.emit("snippet", {code: "closeApp();"});
+  }
+  $scope.keypress = function(evt, key,value, stack) {
     if (evt.which===13){
-      TiShadow.socket.emit("snippet", {code: "me['"+key+"']" + (key2 ? "['" + key2 + "']" : "") + "= '" + value + "';"});
+      TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}) + "['"+key+"']"+ "= '" + value + "';"});
       TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
     }
   };
@@ -85,7 +100,7 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
   $timeout(function(){
     TiShadow.init();
 
-    var editor = ace.edit("editor");
+    editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     editor.getSession().setMode(new JavaScriptMode());
@@ -101,8 +116,6 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
         return false;
       }
     });
-
-
   });
 
 }]);

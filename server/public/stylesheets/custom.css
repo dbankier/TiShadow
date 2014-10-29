@@ -144,4 +144,6 @@ a.yybrand {
 .nav-list > .active > a, .nav-list > .active > a:hover, .nav-list > .active > a:focus {
   color: #2192E3;
 }
-
+.form-horizontal .control-label {
+  text-align: left;
+}
