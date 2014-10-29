@@ -48,6 +48,8 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
 
     socket.on('device_log', function(e) {
       if (e.level === "INSPECT") {
+        $scope.inspect.values = {};
+        $apply($scope);
         $scope.inspect.values = JSON.parse(e.message);
         $apply($scope);
       } else if (e.level ==="SPY") {
