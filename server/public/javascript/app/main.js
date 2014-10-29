@@ -65,6 +65,7 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
           style: style
         });
         $apply($scope);
+        $("#console").scrollTop($("#console")[0].scrollHeight);
       }
     });
     TiShadow.socket = socket;
@@ -107,9 +108,6 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
 
 
     $("#editor").keypress(function (event) {
-      console.log(event.which);
-      console.log(event.ctrlKey);
-      console.log(event.metaKey);
       if ((event.which == 115 && event.ctrlKey) || (event.which == 115 && event.metaKey)){
         $scope.submit();
         event.preventDefault();
