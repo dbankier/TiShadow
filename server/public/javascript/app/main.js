@@ -96,7 +96,13 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
   $scope.keypress = function(evt, key,value, stack) {
     if (evt.which===13){
       console.log("me" + stack.map(function(k) {return "['"+k+"']";}) + "['"+key+"']" + "= " + value + ";");
-      TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + "['"+key+"']"+ "= '" + value + "';"});
+      if (key.indexOf("font") !== -1) {
+        var font = eval("$scope.inspect.values"+ stack.map(function(k) {return "['"+k+"']";}).join("")); 
+        font[key] = value;
+        TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + " = "+ JSON.stringify(font) +";"});
+      } else { 
+        TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + "['"+key+"']"+ "= '" + value + "';"});
+      }
       TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
     }
   };
