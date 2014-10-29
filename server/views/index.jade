@@ -55,7 +55,7 @@ block content
     <label class="control-label"> {{key}}</label>
     <div style="controls">
       <input type="text" ng-model="value" ng-if="!_.isObject(value) && !_.isBoolean(value)" ng-keypress="keypress($event, key, value, stack)">
-      <input type="checkbox" ng-model="value" ng-if="_.isBoolean(value)" $ng-change="update(key,value, stack)">
+      <input type="checkbox" ng-model="value" ng-if="_.isBoolean(value)" ng-change="update(key,value, stack)">
       <div ng-init="stack = stack.concat(key)" ng-if="_.isObject(value)" ng-style="{'padding-left': + ((stack.length + 1) * 50) + 'px'}">
         <hr/>
         <div class="control-group" ng-repeat="(key, value) in value" ng-if="key.indexOf('_') !==0")>

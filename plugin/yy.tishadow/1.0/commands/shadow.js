@@ -31,7 +31,7 @@ function exit() {
 }
 exports.startServer = function startServer(logger) {
   logger.info("Starting TiShadow server");
-  var server = spawn("ts", ["server"], {stdio: ["pipe", "pipe",2]});
+  var server = spawn("ts", ["server"], {stdio: ["ignore", "ignore", 2]});
   server.on('exit', function(){
     logger.error("TiShadow Server exited.");
     exit();
@@ -49,7 +49,7 @@ exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address
   if (ip_address) {
     args = args.concat(['-o', ip_address]);
   }
-  var appify = spawn('ts', args, {stdio: ["pipe", 1, 2]});
+  var appify = spawn('ts', args, {stdio: ["ignore", 1, 2]});
   appify.on('error',function() {
     logger.error("Appify Failed.");
     exit();
