@@ -79,11 +79,11 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
     downloadInnerHtml('logfile_' + new Date().getTime(), 'console', 'text/html');
   };
   $scope.update = function(key,value, stack) {
-    TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}) + "['"+key+"']" + "= " + value + ";"});
+    TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + "['"+key+"']" + "= " + value + ";"});
     TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
   };
   $scope.inspectChildren = function(key,value, stack) {
-    TiShadow.socket.emit("snippet", {code: "me = me" + stack.map(function(k) {return "['"+k+"']";}) + ".children;"});
+    TiShadow.socket.emit("snippet", {code: "me = me" + stack.map(function(k) {return "['"+k+"']";}).join("") + ".children;"});
     TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
   };
   $scope.inspectReset = function() {
@@ -95,7 +95,8 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
   }
   $scope.keypress = function(evt, key,value, stack) {
     if (evt.which===13){
-      TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}) + "['"+key+"']"+ "= '" + value + "';"});
+      console.log("me" + stack.map(function(k) {return "['"+k+"']";}) + "['"+key+"']" + "= " + value + ";");
+      TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + "['"+key+"']"+ "= '" + value + "';"});
       TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
     }
   };

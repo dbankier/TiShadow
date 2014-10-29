@@ -46,19 +46,20 @@ block content
               | &nbsp; Download Log
         #inspector.tab-pane(style='position:relative;')
             a.btn.btn-default.pull-right(ng-if="currentSpy" ng-click="inspectReset()") Reload 
-            form.form-horizontal
-              .control-group(ng-repeat="(key, value) in inspect.values" ng-if="key.indexOf('_') !==0" ng-init="stack=[]")
+            div.form-horizontal
+              .control-group(ng-repeat="(key, value) in inspect.values" ng-if="key.indexOf('_') !==0" ng-init="stack=[]; hideshow = {visible: true}")
                  span(ng-include="'json.html'")
                a.btn.btn-default(ng-click="inspectChildren(key,value,[])") Inspect Children     
 
   script(id="json.html",type="text/ng-template").
-    <label class="control-label"> {{key}}</label>
+    <label class="control-label" ng-if=!_.isObject(value)> {{key}}</label>
+    <a class="control-label" ng-if=_.isObject(value) ng-click="hideshow.visible = !hideshow.visible"> {{key}}</a>
     <div style="controls">
       <input type="text" ng-model="value" ng-if="!_.isObject(value) && !_.isBoolean(value)" ng-keypress="keypress($event, key, value, stack)">
       <input type="checkbox" ng-model="value" ng-if="_.isBoolean(value)" ng-change="update(key,value, stack)">
-      <div ng-init="stack = stack.concat(key)" ng-if="_.isObject(value)" ng-style="{'padding-left': + ((stack.length + 1) * 50) + 'px'}">
+      <div class="well row-fluid" ng-init="stack = stack.concat(key);" ng-if="_.isObject(value)" ng-style="{'padding-left': + ((stack.length) * 20) + 'px';}" ng-show="hideshow.visible">
         <hr/>
-        <div class="control-group" ng-repeat="(key, value) in value" ng-if="key.indexOf('_') !==0")>
+        <div class="control-group" ng-repeat="(key, value) in value" ng-if="key.indexOf('_') !==0" ng-init="hideshow={visible:true};">
          <span ng-include="'json.html'"></span>
         </div>
          <a class="btn btn-default" ng-click="inspectChildren(key,value,stack)" >Inspect Children</a>    
