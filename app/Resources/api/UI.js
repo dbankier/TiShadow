@@ -42,7 +42,11 @@ function prepareArgs(a) {
 var create = function(fn,a) {
   var args = prepareArgs(a);
   // exitOnClose hampers the upgrade process so we will prevent it
-  args.exitOnClose = false;
+  
+  var exitOnClose = args.exitOnClose;
+  if (args.exitOnClose) { 
+    args.exitOnClose = false;
+  }
 
   var o = fn(args);
   o.addEventListener('open', stack);
@@ -52,6 +56,16 @@ var create = function(fn,a) {
   o.addEventListener('focus', function(e) {
     log.inspect(e.source);
   });
+  if (exitOnClose) {
+    o.addEventListener('androidback', function(e) {
+      log.warn("Intercepted exitOnClose. `ts close` called intead."); 
+      if (require("/api/TiShadow").Appify) {
+        log.warn("App in Appify mode. Application is restarting."); 
+      }
+      require("/api/TiShadow").closeApp();
+    });
+  }
+
   return o;
 };
 
