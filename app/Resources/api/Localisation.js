@@ -41,5 +41,5 @@ exports.fetchString = function (string, hint) {
   if (lookup === null) {
     loadFile();
   }
-  return lookup[string] !== undefined ? lookup[string].replace(/\\n/g,"\n") : (hint || string);
+  return lookup[string] !== undefined ? lookup[string].replace(/\\n/g,"\n") : (hint !== undefined ? hint : string);
 };
