@@ -95,7 +95,9 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
   }
   $scope.keypress = function(evt, key,value, stack) {
     if (evt.which===13){
-      console.log("me" + stack.map(function(k) {return "['"+k+"']";}) + "['"+key+"']" + "= " + value + ";");
+      if (value.match(/^Ti(tanium)?\./)) {
+        return $scope.update(key,value,stack);
+      }
       if (key.indexOf("font") !== -1) {
         var font = eval("$scope.inspect.values"+ stack.map(function(k) {return "['"+k+"']";}).join("")); 
         font[key] = value;
