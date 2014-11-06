@@ -5,6 +5,7 @@
 
 var assert = require("assert"),
     fs = require("fs"),
+		config = require("../cli/support/config"),
     tiugly = require("../cli/support/uglify");
 
 function loadTest(name) {
@@ -85,6 +86,12 @@ describe("TiShadow conversions", function() {
         "Ti.Database.install(__p.file(a + b + c), \"name\");");
     });
   });
+	describe("ti-commonjs support", function() {
+		it ("should on convert the necessary require functions", function() {
+			config.isTicommonjs = true;
+			loadTest("ticommon.js");
+		});
+	});
 
 
 });
