@@ -37,10 +37,10 @@ _.templateSettings = {
 exports.copyCoreProject = function(env) {
   var dest = env.destination || ".";
   if (!fs.existsSync(dest) || !fs.lstatSync(dest).isDirectory()) {
-    mkdirp(dest, function(err) {
-      logger.error("Could not create destination directory. Error: " + err);
+    if(mkdirp.sync(dest)){
+      logger.error("Could not create destination directory.");
       return false;
-    });
+    }
   }
   if (dest === ".") {
     logger.error("You really don't want to write to the current directory.");
