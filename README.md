@@ -175,6 +175,7 @@ Here are full list of options:
     -P, --platform <platform>  target platform
     -D, --include-dot-files    includes dot files in the bundle (defaults to false)
     -T, --target <app_name>    target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)
+    -c, --ticommonjs           support for applications using the ti-commonjs library
 ```
 
 The app is then cached on the device. If you need to clear the cache, use
