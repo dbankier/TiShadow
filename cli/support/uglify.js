@@ -4,7 +4,8 @@
  */
 
 var UglifyJS = require("uglify-js"),
-    _ = require("underscore");
+    _ = require("underscore"),
+    config = require("./config"),
     path = require("path");
 
 function functionCall(name, args) {
@@ -72,7 +73,9 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
   //function call replacement
   if (node instanceof UglifyJS.AST_Call) {
     // redirect require function
-    if (node.expression.name === "require") {
+    if ( (!config.isTicommonjs && node.expression.name === "require" ) ||
+         (config.isTicommonjs && (node.expression.name === "tirequire" || node.expression.name === "_require") )
+       ) {
       node.expression.name = "__p.require";
       node.args[0].value = toFullPath(node.args[0].value);
       return node;

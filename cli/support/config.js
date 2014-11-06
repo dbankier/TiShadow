@@ -154,6 +154,7 @@ config.init = function(env) {
   config.isREPL     = env._name === "repl";
   config.isPipe     = env.pipe;
   config.isBundle   = env._name === "bundle";
+  config.isTicommonjs = env.ticommonjs;
   config.includeDotFiles = env.includeDotFiles;
   config.host     = env.host || config.host || config.hostOfNetworkInterface || "localhost";
   config.port     = env.port || config.port || "3000";

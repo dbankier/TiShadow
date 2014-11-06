@@ -77,6 +77,7 @@ program.command('run')
   .option('-P, --platform <platform>', 'target platform')
   .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
   .option('-T, --target <app_name>', 'target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)')
+  .option('-c, --ticommonjs', 'support for applications using the ti-commonjs library')
   .action(compiler);
 
 program.command('deploy')
