@@ -17,12 +17,14 @@ function downloadInnerHtml(filename, elId, mimeType) {
 }
 
 // Main controller
-app.controller('mainController', ['$scope', '$timeout', function($scope, $timeout){
+app.controller('mainController', ['$scope', '$timeout', '$http', function($scope, $timeout, $http){
   $scope._       = _;
   $scope.devices = {};
   $scope.inspect = {};
   $scope.logs = [];
+  var api = [];
   var editor;
+
 
   var TiShadow = {};
   TiShadow.init = function (session, guest){
@@ -48,9 +50,21 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
 
     socket.on('device_log', function(e) {
       if (e.level === "INSPECT") {
-        $scope.inspect.values = {};
+        $scope.inspect.values = [];
         $apply($scope);
-        $scope.inspect.values = JSON.parse(e.message);
+        var current_values = JSON.parse(e.message);
+        if (current_values._api) { 
+          var current_api = current_values._api.replace(/^Ti\./, "Titanium.");
+          var oapi = _.find(api.types, function(a) { return a.name === current_api});
+          if (oapi) {
+            oapi.properties.forEach(function(p) {
+              if (current_values[p.name] === undefined) {
+                current_values[p.name] = p.type === "Boolean" ? false : "";
+              }
+            });
+          }
+        }
+        $scope.inspect.values = current_values;;
         $apply($scope);
       } else if (e.level ==="SPY") {
         $scope.currentSpy = e.message;
@@ -108,15 +122,17 @@ app.controller('mainController', ['$scope', '$timeout', function($scope, $timeou
       TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
     }
   };
+  // Get Titanium API
+  $http.get("/api").success(function (data, status, headers, config) {
+    api = data;
+    TiShadow.init();
+  });
 
   $timeout(function(){
-    TiShadow.init();
-
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     editor.getSession().setMode(new JavaScriptMode());
-
 
     $("#editor").keypress(function (event) {
       if ((event.which == 115 && event.ctrlKey) || (event.which == 115 && event.metaKey)){

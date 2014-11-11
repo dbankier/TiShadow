@@ -54,6 +54,7 @@ var create = function(fn,a) {
     unstack({ app: args.__tishadowApp, container: args.__tishadowContainer });
   });
   o.addEventListener('focus', function(e) {
+    e.source._api = e.source.apiName;
     log.inspect(e.source);
   });
   if (exitOnClose) {

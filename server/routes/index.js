@@ -22,6 +22,10 @@ exports.screencast = function(req, res){
   res.render('screencast', { title: 'TiShadow' });
 };
 
+exports.api = function (req, res) {
+  res.sendfile(path.resolve(__dirname + "/../../lib/api.jsca"));
+};
+
 
 // Bundles handled by GET/POST instead of socket connections.
 exports.getBundle = function(req,res) {
