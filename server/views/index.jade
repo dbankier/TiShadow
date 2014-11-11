@@ -57,6 +57,7 @@ block content
     <div style="controls">
       <input type="text" ng-model="value" ng-if="!_.isObject(value) && !_.isBoolean(value)" ng-keypress="keypress($event, key, value, stack)">
       <input type="checkbox" ng-model="value" ng-if="_.isBoolean(value)" ng-change="update(key,value, stack)">
+      <a href="#" data-toggle="tooltip" data-html="true" data-placement="right" title="{{tooltips[key]}}" ng-if="tooltips[key] !== undefined" tooltip> <i class="fa fa-info-circle" ></i></a>
       <div class="well row-fluid" ng-init="stack = stack.concat(key);" ng-if="_.isObject(value)" ng-style="{'padding-left': + ((stack.length) * 20) + 'px';}" ng-show="hideshow.visible">
         <hr/>
         <div class="control-group" ng-repeat="(key, value) in value" ng-if="key.indexOf('_') !==0" ng-init="hideshow={visible:true};">

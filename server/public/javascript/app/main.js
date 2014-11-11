@@ -17,7 +17,7 @@ function downloadInnerHtml(filename, elId, mimeType) {
 }
 
 // Main controller
-app.controller('mainController', ['$scope', '$timeout', '$http', function($scope, $timeout, $http){
+app.controller('mainController', ['$scope', '$timeout', '$http', '$sce', function($scope, $timeout, $http, $sce){
   $scope._       = _;
   $scope.devices = {};
   $scope.inspect = {};
@@ -56,15 +56,18 @@ app.controller('mainController', ['$scope', '$timeout', '$http', function($scope
         if (current_values._api) { 
           var current_api = current_values._api.replace(/^Ti\./, "Titanium.");
           var oapi = _.find(api.types, function(a) { return a.name === current_api});
+          var tooltips = {};
           if (oapi) {
             oapi.properties.forEach(function(p) {
               if (current_values[p.name] === undefined) {
                 current_values[p.name] = p.type === "Boolean" ? false : "";
               }
+              tooltips[p.name] = $sce.trustAsHtml(p.description);
             });
           }
+          $scope.tooltips = tooltips;
         }
-        $scope.inspect.values = current_values;;
+        $scope.inspect.values = current_values;
         $apply($scope);
       } else if (e.level ==="SPY") {
         $scope.currentSpy = e.message;
@@ -144,3 +147,15 @@ app.controller('mainController', ['$scope', '$timeout', '$http', function($scope
   });
 
 }]);
+app.directive('tooltip', function(){
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            $(element).hover(function(){
+                $(element).tooltip('show');
+            }, function(){
+                $(element).tooltip('hide');
+            });
+        }
+    };
+});
