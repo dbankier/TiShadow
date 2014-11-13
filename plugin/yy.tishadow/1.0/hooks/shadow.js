@@ -67,12 +67,9 @@ function preCompileHook(build, finished) {
     args.push("--project-dir", new_project_dir);
   }
 
-  if (build.certDeveloperName) {
+  if (build.certDeveloperName && build.provisioningProfileUUID) {
     args.push("--developer-name");
     args.push(build.certDeveloperName);
-  }
-
-  if (build.provisioningProfileUUID) {
     args.push("--pp-uuid");
     args.push(build.provisioningProfileUUID);
   }
