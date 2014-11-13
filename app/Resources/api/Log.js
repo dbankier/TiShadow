@@ -28,6 +28,9 @@ function _write() {
   Array.prototype.forEach.call(arguments, function(msg, i, messages) {
     if (typeof msg === 'object') {
       messages[i] = JSON.stringify(msg, function(key, val) {
+        if (key==="children" && upperCaseLevel === "INSPECT") {
+          return undefined;
+        }
         if (typeof val !== 'object') {
           return val;
         }
