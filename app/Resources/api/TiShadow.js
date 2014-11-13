@@ -135,12 +135,17 @@ exports.disconnect = function() {
 
 var bundle;
 function restart() {
-  require("/api/UI").closeAll();
-  require("/api/App").clearAll();
   Ti.App.Properties.setBool("tishadow::reconnect",true );
   Ti.App.fireEvent('tishadow:close');
   exports.disconnect();
-  Ti.App._restart();
+  if (Ti.Android) {
+    var tools = require('bencoding.android.tools').createPlatform();
+    tools.restartApp();
+  } else { 
+    require("/api/UI").closeAll();
+    require("/api/App").clearAll();
+    Ti.App._restart();
+  }
 }
 exports.closeApp = function() {
   Ti.App.Properties.setString("tishadow::currentApp","" );
