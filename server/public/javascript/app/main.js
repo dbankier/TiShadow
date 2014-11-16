@@ -96,16 +96,20 @@ app.controller('mainController', ['$scope', '$timeout', '$http', '$sce', functio
     downloadInnerHtml('logfile_' + new Date().getTime(), 'console', 'text/html');
   };
   $scope.update = function(key,value, stack) {
-    TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + "['"+key+"']" + "= " + value + ";"});
-    TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+    TiShadow.socket.emit("snippet", {
+      code: "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + "['"+key+"']" + "= " + value + ";" +
+            "console.inspect(me)"
+    });
   };
   $scope.inspectChildren = function(key,value, stack) {
-    TiShadow.socket.emit("snippet", {code: "me = me" + stack.map(function(k) {return "['"+k+"']";}).join("") + ".children;"});
-    TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+    TiShadow.socket.emit("snippet", {code: "me = me" + stack.map(function(k) {return "['"+k+"']";}).join("") + ".children;" + 
+            "console.inspect(me)"
+    });
   };
   $scope.inspectReset = function() {
-    TiShadow.socket.emit("snippet", {code: "me = getSpy('"+$scope.currentSpy+"');"});
-    TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+    TiShadow.socket.emit("snippet", {code: "me = getSpy('"+$scope.currentSpy+"');" + 
+            "console.inspect(me)"
+    });
   }
   $scope.closeApp = function() {
     TiShadow.socket.emit("snippet", {code: "closeApp();"});
@@ -115,14 +119,15 @@ app.controller('mainController', ['$scope', '$timeout', '$http', '$sce', functio
       if (value.match(/^Ti(tanium)?\./)) {
         return $scope.update(key,value,stack);
       }
+      var code = "";
       if (key.indexOf("font") !== -1) {
         var font = eval("$scope.inspect.values"+ stack.map(function(k) {return "['"+k+"']";}).join("")); 
         font[key] = value;
-        TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + " = "+ JSON.stringify(font) +";"});
+        code = "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + " = "+ JSON.stringify(font) +";";
       } else { 
-        TiShadow.socket.emit("snippet", {code: "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + "['"+key+"']"+ "= '" + value + "';"});
+        code = "me" + stack.map(function(k) {return "['"+k+"']";}).join("") + "['"+key+"']"+ "= '" + value + "';";
       }
-      TiShadow.socket.emit("snippet", {code: "console.inspect(me)"});
+      TiShadow.socket.emit("snippet", {code: code  + "console.inspect(me)"});
     }
   };
   // Get Titanium API
