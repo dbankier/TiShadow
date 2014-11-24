@@ -173,6 +173,9 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       node.right = functionCall("L", [node.right]);
       return node;
     } else if (couldBeAsset(node.left.property)) {
+      if (node.left.property === "url" && node.operator === "+=") { //issue #377
+        return node;
+      }
       node.right.value = toFullPath(node.right.value);
       node.right = functionCall("__p.file",[node.right]);
       return node;

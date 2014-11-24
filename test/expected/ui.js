@@ -18,3 +18,5 @@ tab.activeIcon = __p.file("app.png");
 win.backgroundImage = __p.file("app.png");
 
 win.backgroundImage = __p.file("/images" + variable + "/app.png");
+
+params.url += "?" + encodeData(params.urlparams);
