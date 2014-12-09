@@ -13,13 +13,13 @@ var fs     = require("fs"),
 var current_map, 
     file_list;
 
-exports.mapFiles = function(last_stat) {
+exports.mapFiles = function() {
   // full build if the previous map doesn't exits
-  if (!fs.existsSync(config.alloy_map_path)) {
+  if (!fs.existsSync(config.fs_map_path)) {
     return file_list;
   }
   // Can't use require here as it caches the result (!!)
-  var previous_map = JSON.parse(fs.readFileSync(config.alloy_map_path));
+  var previous_map = JSON.parse(fs.readFileSync(config.fs_map_path));
   file_list.files = file_list.files.filter(function(file) {
       return current_map[file] !== previous_map[file];
   });
@@ -27,7 +27,6 @@ exports.mapFiles = function(last_stat) {
 };
 
 exports.buildMap = function() {
-  // regular filtered by last_stat won't do it alone 
   file_list = fs.getList(config.resources_path);
 
   // create a map of hashes for js files
@@ -37,5 +36,5 @@ exports.buildMap = function() {
 };
 
 exports.writeMap = function() {
-  fs.writeFileSync(config.alloy_map_path, JSON.stringify(current_map));
+  fs.writeFileSync(config.fs_map_path, JSON.stringify(current_map));
 }

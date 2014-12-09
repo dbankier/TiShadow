@@ -86,7 +86,7 @@ config.buildPaths = function(env, callback) {
     config.tishadow_src      = path.join(config.tishadow_build, 'src');
     config.tishadow_spec     = path.join(config.tishadow_src, 'spec');
     config.tishadow_dist     = path.join(config.tishadow_build, 'dist');
-    config.alloy_map_path    = path.join(config.tishadow_build, 'alloy_map.json');
+    config.fs_map_path       = path.join(config.tishadow_build, 'fs_map.json');
 
     var app_name = config.app_name = result.name[0] || "bundle";
     

@@ -7,7 +7,7 @@ var path   = require("path"),
     fs     = require("fs"),
     spawn  = require("./spawn"),
     async  = require("async"),
-    alloy  = require("./alloy"),
+    fs_map = require("./fs_map"),
     api    = require("./api"),
     bundle = require("./bundle"),
     config = require("./config"),
@@ -70,9 +70,7 @@ function finalise(file_list,callback) {
   var total = file_list.files.length;
   bundle.pack(file_list.files,function(written) {
     logger.info(total+ " file(s) bundled.");
-    if (config.isAlloy) {
-      alloy.writeMap();
-    }
+    fs_map.writeMap();
     fs.touch(config.last_updated_file);
     if (config.isBundle) {
       logger.info("Bundle Ready: " + config.bundle_file);
@@ -126,11 +124,12 @@ module.exports = function(env, callback) {
           fs.rm_rf(config.res_alloy_path);
         }
         fs.touch(path.join(config.resources_path,'app.js'));
-        alloy.buildMap();
+        fs_map.buildMap();
         beginCompile(callback);
       });;
       //Remove non-specific
     } else {
+      fs_map.buildMap();
       beginCompile(callback);
     }
   });
@@ -140,7 +139,7 @@ function beginCompile(callback) {
   var file_list,i18n_list,spec_list,assets_list;
   if( config.isUpdate) {
     var last_stat = fs.statSync(config.last_updated_file);
-    file_list = config.isAlloy ? alloy.mapFiles(last_stat) : fs.getList(config.resources_path,last_stat.mtime);
+    file_list = fs_map.mapFiles();
     if (config.isModule)  {
       assets_list = fs.getList(config.assets_path,last_stat.mtime);
     }
