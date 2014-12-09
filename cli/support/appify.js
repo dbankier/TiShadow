@@ -29,7 +29,7 @@ _.templateSettings = {
  ];
  
  var required_properties = [
-    '<property name="ti.android.bug2373.finishfalseroot" type="bool">false</property>',
+    '<property name="ti.android.bug2373.finishfalseroot" type="bool">true</property>',
     '<property name="ti.android.bug2373.skipAlert" type="bool">true</property>'
  ]
 
