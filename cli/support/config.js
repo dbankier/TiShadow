@@ -78,6 +78,7 @@ config.buildPaths = function(env, callback) {
     config.fonts_path        = path.join(config.resources_path, 'fonts');
     config.modules_path      = path.join(base, 'modules');
     config.platform_path     = path.join(base, 'platform');
+    config.plugins_path      = path.join(base, 'plugins');
     config.spec_path         = path.join(base, 'spec');
     config.i18n_path         = path.join(base, 'i18n');
     config.build_path        = path.join(base, 'build');
