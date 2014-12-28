@@ -136,8 +136,7 @@ exports.clearCache = function (list) {
   if (_.isArray(list)) {
     list.forEach(function(file) {
       if (file.match(".js$")) {
-        cache[exports.file(file.replace(/.js$/,""))] = null;
-        cache[exports.file("/" + file.replace(/.js$/,""))] = null;
+        cache[exports.file(file)] = null;
       }
     });
   } else {
