@@ -12,8 +12,10 @@ function stack(e) {
   var p = require("/api/PlatformRequire");
   var container = e.source.__tishadowContainer;
   var app = e.source.__tishadowApp;
-  p.addSpy(container, e.source);
-  log.spy(container);
+  if (require("/api/TiShadow").inspector) {
+    p.addSpy(container, e.source);
+    log.spy(container);
+  }
   if (!containers[app]) {
     containers[app] = {};
   }
@@ -23,7 +25,9 @@ function stack(e) {
 
 function unstack(e) {
   var p = require("/api/PlatformRequire");
-  p.removeSpy(e.container);
+  if (require("/api/TiShadow").inspector) {
+    p.removeSpy(e.container);
+  }
   delete containers[e.app][e.container];
   return;
 }
@@ -46,10 +50,12 @@ var create = function(fn,a) {
   o.addEventListener('close', function(e) {
     unstack({ app: args.__tishadowApp, container: args.__tishadowContainer });
   });
-  o.addEventListener('focus', function(e) {
-    e.source._api = e.source.apiName;
-    log.inspect(e.source);
-  });
+  if (require("/api/TiShadow").inspector) {
+    o.addEventListener('focus', function(e) {
+      e.source._api = e.source.apiName;
+        log.inspect(e.source);
+    });
+  }
   return o;
 };
 

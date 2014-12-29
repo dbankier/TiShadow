@@ -143,12 +143,13 @@ config.init = function(env) {
   }
   if(config.networkInterface){
     var ifaces = os.networkInterfaces(),
-        ipOfNtworkInterface = _.find(ifaces[config.networkInterface],function(ip){ return ip.family=='IPv4'});
+        ipOfNtworkInterface = _.find(ifaces[config.networkInterface],function(ip){ return ip.family=='IPv4';});
     if (ipOfNtworkInterface) {
     	config.hostOfNetworkInterface = ipOfNtworkInterface.address;
     }
-  };
+  }
   config.isDeploy   = env._name === "deploy";
+  config.inspector   = env.inspector !== undefined ? env.inspector : config.inspector || false;
   config.isTailing  = env.tailLogs || config.isSpec;
   config.isJUnit    = env.junitXml;
   config.clearSpecFiles = env.clearSpecFiles;
@@ -176,7 +177,7 @@ config.write = function(env) {
   if (fs.existsSync(config_path)) {
     new_config = require(config_path);
   }
-  ['host','port','room', 'type', 'watchInterval', 'watchDelay','networkInterface'].forEach(function(param) {
+  ['host','port','room', 'type', 'inspector', 'watchInterval', 'watchDelay','networkInterface'].forEach(function(param) {
     if (env[param] !== undefined) {
       new_config[param] = env[param];
     }

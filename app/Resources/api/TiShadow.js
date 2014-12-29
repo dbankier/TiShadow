@@ -18,6 +18,7 @@ if (!Ti.App.Properties.hasProperty("tishadow:uuid")) {
 }
 
 exports.currentApp;
+exports.inspector;
 exports.connect = function(o) {
   room = o.room;
   var version_property = "tishadow:" + room + ":version";
@@ -177,6 +178,8 @@ exports.launchApp = function(name) {
     } 
 
     exports.currentApp = name;
+    exports.inspector = Ti.App.Properties.getBool("tishadow:inspector", false);
+
     bundle = p.include(null, "/app.js");
     log.info(exports.currentApp.replace(/_/g," ") + " launched.");
   } catch(e) {
@@ -251,6 +254,8 @@ function loadRemoteZip(name, url, data, version_property) {
       } else {
         Ti.App.Properties.removeProperty(version_property);
       }
+      exports.inspector = data.inspector;
+      Ti.App.Properties.setBool("tishadow:inspector", data.inspector || false);
       // Launch
       if (data && data.spec && data.spec.run) {
         exports.currentApp = path_name;

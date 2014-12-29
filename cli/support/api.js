@@ -83,6 +83,7 @@ exports.newBundle = function(file_list) {
     spec: {run: config.isSpec, junitxml: config.isJUnit, type: config.specType, clearSpecFiles: config.clearSpecFiles, runCoverage: config.runCoverage},
     locale: config.locale,
     platform: config.platform,
+    inspector: config.inspector,
     patch : {run: config.isPatch, files: file_list}
   });
 };
