@@ -68,13 +68,21 @@ function toFullPath(p) {
   }
  return p;
 }
-
+var is_titaniumified = false;
 var convert = new UglifyJS.TreeTransformer(null, function(node){
   //function call replacement
+  if (node instanceof UglifyJS.AST_SymbolFunarg) {
+    if (node.name === "require") {
+       is_titaniumified = true; 
+    }
+  }
   if (node instanceof UglifyJS.AST_Call) {
     // redirect require function
-    if ( (!config.isTicommonjs && node.expression.name === "require" ) ||
-         (config.isTicommonjs && (node.expression.name === "tirequire" || node.expression.name === "_require") )
+    if ( !is_titaniumified && 
+         (
+           (!config.isTicommonjs && node.expression.name === "require" ) ||
+           (config.isTicommonjs && (node.expression.name === "tirequire" || node.expression.name === "_require") )
+        )
        ) {
       node.expression.name = "__p.require";
       node.args[0].value = toFullPath(node.args[0].value);
@@ -202,6 +210,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
 var current_file;
 exports.toAST = function(input,file) {
   current_file = file;
+  is_titaniumified = false;
   var ast = UglifyJS.parse(input);
   return ast.transform(convert);
 };
