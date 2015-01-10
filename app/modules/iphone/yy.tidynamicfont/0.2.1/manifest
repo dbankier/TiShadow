@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.2.0
+version: 0.2.1
 apiversion: 2
 architectures: i386 x86_64 armv7 arm64
 description: iOS load custom font during run time

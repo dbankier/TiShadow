@@ -18,7 +18,7 @@ _.templateSettings = {
 };
 
  var required_modules = [
-        '<module platform="iphone" version="0.2.0">yy.tidynamicfont</module>',
+        '<module platform="iphone" version="0.2.1">yy.tidynamicfont</module>',
         '<module platform="iphone" version="0.5">net.iamyellow.tiws</module>',
         '<module platform="android" version="0.1">net.iamyellow.tiws</module>',
         '<module platform="iphone" version="0.2.0">yy.logcatcher</module>',
