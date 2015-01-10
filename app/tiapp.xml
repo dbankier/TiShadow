@@ -24,6 +24,7 @@
     <navbar-hidden>true</navbar-hidden>
     <analytics>false</analytics>
     <guid>{{GUID}}</guid>
+    <property name="ti.ui.defaultunit" type="string">dp</property>
     <iphone>
         <orientations device="iphone">
             <orientation>Ti.UI.PORTRAIT</orientation>
