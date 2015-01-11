@@ -29,10 +29,10 @@ app.configure(function(){
   app.use(express.limit('150mb'));
 });
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 app.configure('production', function(){
-  app.use(express.errorHandler()); 
+  app.use(express.errorHandler());
 });
 
 // if executed from package.json - "main":"app.js"
@@ -55,14 +55,31 @@ app.post('/bundle', routes.postBundle);
 sockets.listen(server);
 server.listen(config.port, config.internalIP);
 
+function getIPAddress() {
+  var interfaces = require('os').networkInterfaces();
+  for (var devName in interfaces) {
+    var iface = interfaces[devName];
+
+    for (var i = 0; i < iface.length; i++) {
+      var alias = iface[i];
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal)
+        return alias.address;
+    }
+  }
+  return '0.0.0.0';
+}
+
+
 //test if server is up
 function isUp() {
   if (server.address() != null) {
     var address = server.address().address;
+    var internalIP = getIPAddress();
     if (address === "0.0.0.0") {
       address = "localhost";
     }
     Logger.debug("TiShadow server started. Go to http://"+ address + ":" + server.address().port);
+    Logger.debug("Connect TiShadow app to "+ internalIP);
   } else {
     Logger.error("Failed to start server on port: " + config.port );
   }
