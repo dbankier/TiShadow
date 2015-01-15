@@ -102,6 +102,9 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
         }) ,node.args);
       }
     }
+    if (node.expression.start.value === "L") {
+      return functionCall("__L", node.args);
+    }
     if (node.expression.start.value.match && node.expression.start.value.match("^Ti(tanium)?$")){
       // redirect include
       if (node.expression.end.value === "include" && 
@@ -123,7 +126,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       //control localisation -- LOCALE
       if (node.expression.end.value === "getString" &&
           node.expression.expression.property === "Locale") {
-        return functionCall("L", node.args);
+        return functionCall("__L", node.args);
       }
 
       //control localisation -- UI
@@ -178,7 +181,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
   } else if (node instanceof UglifyJS.AST_Assign && !doNotTouch(node.right)){
     if (node.left.property && node.left.property.match && node.left.property.match("^(title|text)id$")) {
       node.left.property = node.left.property.replace("id","");
-      node.right = functionCall("L", [node.right]);
+      node.right = functionCall("__L", [node.right]);
       return node;
     } else if (couldBeAsset(node.left.property)) {
       if (node.left.property === "url" && node.operator === "+=") { //issue #377

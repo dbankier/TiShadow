@@ -3,10 +3,8 @@
  * Please see the LICENSE file included with this distribution for details.
  */
 
+L("hello");
 Ti.Locale.getString("hello");
 Ti.Locale.getString(variable);
 view.textid = "hello";
 view.titleid = evaluate("hi");
-Ti.UI.View({
-  textid: 'hi'
-});

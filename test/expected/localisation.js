@@ -1,11 +1,9 @@
-L("hello");
+__L("hello");
 
-L(variable);
+__L("hello");
 
-view.text = L("hello");
+__L(variable);
 
-view.title = L(evaluate("hi"));
+view.text = __L("hello");
 
-Ti.UI.View({
-    text: L("hi")
-});
+view.title = __L(evaluate("hi"));
