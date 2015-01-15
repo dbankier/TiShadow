@@ -84,13 +84,12 @@ exports.file = function(extension) {
   } else if (typeof extension !== "string") {
     return extension;
   }
-  extension = extension.replace(/^\//, '');
   var base = Ti.Filesystem.applicationDataDirectory + require("/api/TiShadow").currentApp + "/";
   if (extension.indexOf(base) !== -1) { 
     extension = extension.replace(base,"");
   }
-  var path = base + extension,
-  platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension;
+  var path = base + extension.replace(/^\//, ''),
+  platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension.replace(/^\//, '');
   var isImage = extension.toLowerCase().match("\\.(png|jpg)$");
   if (!isImage) {
     var file = Ti.Filesystem.getFile(platform_path);
