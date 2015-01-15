@@ -1,6 +1,6 @@
 {
   "name": "tishadow",
-  "version": "2.7.4",
+  "version": "2.7.5",
   "dependencies": {
     "jade": ">= 0.0.1",
     "socket.io": "0.9.x",
