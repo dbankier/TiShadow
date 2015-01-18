@@ -6,5 +6,9 @@
 L("hello");
 Ti.Locale.getString("hello");
 Ti.Locale.getString(variable);
+Ti.UI.View({
+  textid: 'hi'
+});
 view.textid = "hello";
 view.titleid = evaluate("hi");
+

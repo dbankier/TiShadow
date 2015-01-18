@@ -194,7 +194,7 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
   } else if (node instanceof UglifyJS.AST_ObjectKeyVal && !doNotTouch(node.value)) {
     if (typeof node.key === 'string' && node.key.match("^(title|text)id$")) {
       node.key = node.key.replace("id","");
-      node.value = functionCall("L", [node.value]);
+      node.value = functionCall("__L", [node.value]);
       return node;
     } else if (couldBeAsset(node.key)) {
       node.value.value = toFullPath(node.value.value);
