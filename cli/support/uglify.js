@@ -103,7 +103,9 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       }
     }
     if (node.expression.start.value === "L") {
-      return functionCall("__L", node.args);
+      node.expression.name="__L";
+      node.name="__L";
+      return node;
     }
     if (node.expression.start.value.match && node.expression.start.value.match("^Ti(tanium)?$")){
       // redirect include

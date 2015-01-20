@@ -1,5 +1,9 @@
 __L("hello");
 
+var a = __L("hello");
+
+__L("hello").split("l");
+
 __L("hello");
 
 __L(variable);
