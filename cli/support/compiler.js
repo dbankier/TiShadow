@@ -99,7 +99,11 @@ module.exports = function(env, callback) {
       }
       async.detectSeries(config.platform, function(platform, callback) {
         logger.info("Compiling Alloy for " + platform);
-        var alloy_command = spawn('alloy', ['compile', '-b','-l', '2', '--platform', platform, '--config', 'sourcemap=false'], {stdio: "inherit"});
+        var args = ['compile', '-b','-l', '2', '--platform', platform, '--config', 'sourcemap=false'];
+        if (config.alloyCompileFile) {
+          args[7] = "sourcemap=false,file="+config.alloyCompileFile;
+        }
+        var alloy_command = spawn('alloy', args, {stdio: "inherit"});
         alloy_command.on("exit", function(code) {
           if (code !== 0) {
             logger.error("Alloy Compile Error\n");

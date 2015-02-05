@@ -162,21 +162,22 @@ If the app has been deployed and you want to push minor updates, use the followi
 Here are full list of options:
 
 ```
-    -h, --help                 output usage information
-    -u, --update               only send recently changed files
-    -a, --patch                patch updated files without causing app restart
-    -i, --inspector            enable automatic inspection and spies
-    -l, --locale <locale>      set the locale in in the TiShadow app
-    -j, --jshint               analyse code with JSHint
-    -t, --tail-logs            tail server logs on deploy
-    -o, --host <host>          server host name / ip address
-    -p, --port <port>          server port
-    -r, --room <room>          server room
-    -s, --skip-alloy-compile   skip automatic alloy compilation
-    -P, --platform <platform>  target platform
-    -D, --include-dot-files    includes dot files in the bundle (defaults to false)
-    -T, --target <app_name>    target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)
-    -c, --ticommonjs           support for applications using the ti-commonjs library
+    -h, --help                           output usage information
+    -u, --update                         only send recently changed files
+    -a, --patch                          patch updated files without causing app restart
+    -i, --inspector                      enable automatic inspection and spies
+    -l, --locale <locale>                set the locale in in the TiShadow app
+    -j, --jshint                         analyse code with JSHint
+    -t, --tail-logs                      tail server logs on deploy
+    -o, --host <host>                    server host name / ip address
+    -p, --port <port>                    server port
+    -r, --room <room>                    server room
+    -s, --skip-alloy-compile             skip automatic alloy compilation
+    -f, --alloy-compile-file <filename>  compile only one alloy file
+    -P, --platform <platform>            target platform
+    -D, --include-dot-files              includes dot files in the bundle (defaults to false)
+    -T, --target <app_name>              target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)
+    -c, --ticommonjs                     support for applications using the ti-commonjs library
 ```
 
 The app is then cached on the device. If you need to clear the cache, use
@@ -219,21 +220,22 @@ To execute the tests enter the following command:
 Here are a full list of options:
 
 ```
-    -h, --help                     output usage information
-    -u, --update                   only send recently changed files
-    -l, --locale <locale>          set the locale in in the TiShadow app
-    -o, --host <host>              server host name / ip address
-    -p, --port <port>              server port
-    -r, --room <room>              server room
-    -t, --type <type>              testing library
-    -j, --jshint                   analyse code with JSHint
-    -x, --junit-xml                output report as JUnit XML
-    -P, --platform <platform>      target platform
-    -s, --skip-alloy-compile       skip automatic alloy compilation
-    -D, --include-dot-files        includes dot files in the bundle (defaults to false)
-    -T, --target <app_name>        target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)
-    -C, --clear-spec-files         clears only the spec files from the cache
-    -c, --coverage <report_types>  runs code coverage, for available report_types see https://github.com/gotwarlost/istanbul#the-report-command
+    -h, --help                           output usage information
+    -u, --update                         only send recently changed files
+    -l, --locale <locale>                set the locale in in the TiShadow app
+    -o, --host <host>                    server host name / ip address
+    -p, --port <port>                    server port
+    -r, --room <room>                    server room
+    -t, --type <type>                    testing library
+    -j, --jshint                         analyse code with JSHint
+    -x, --junit-xml                      output report as JUnit XML
+    -P, --platform <platform>            target platform
+    -s, --skip-alloy-compile             skip automatic alloy compilation
+    -f, --alloy-compile-file <filename>  compile only one alloy file
+    -D, --include-dot-files              includes dot files in the bundle (defaults to false)
+    -T, --target <app_name>              target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)
+    -C, --clear-spec-files               clears only the spec files from the cache
+    -c, --coverage <report_types>        runs code coverage, for available report_types see https://github.com/gotwarlost/istanbul#the-report-command```
 ```
 
 **NEW**: You can now select the testing library to use `jasmine`, `mocha-should` or `mocha-chai`. 
@@ -318,10 +320,8 @@ the repl at run time. In your code add the following command:
 `//addSpy("mywindow",win)` which will be uncommented when pushed.
 To get the object, simply use, e.g. `getSpy("mywindow")` from the repl.
 
-For Alloy, since comments are removed at compile time you can use the
-following [alloy.jmk](https://gist.github.com/dbankier/5648950) to
-automatically inject spies on the `$`object in your controllers, naming
-the spy with the file's name. 
+If you want to use the web-browser based inspector and/or automatic spy insertion,
+then use the `--inspector` flag with `run` or `config`. 
 
 Screenshots
 -----------
@@ -405,10 +405,12 @@ The following are some of the options you can set:
     -o, --host <host>                    set default server host name / ip address
     -p, --port <port>                    set default server port
     -r, --room <room>                    set default server room
+    -i, --inspector                      enable automatic inspection and spies
+    -b, --boost                          use super fast selective alloy compilation
     -t, --type <type>                    default testing library
     -w, --watch-delay <millis>           time to wait before responding to for changes (default: 0)
     -i, --watch-interval <millis>        time to wait between checking files for changes (default: 100)
-    -n, --network-interface <interface>  set default network interface (used for express mode to avoid the ip selector)
+    -n, --network-interface <interface>  set default network interface (used in express mode)
 ~~~
 
 
