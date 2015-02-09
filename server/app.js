@@ -6,15 +6,17 @@
 
 /**
  * Module dependencies.
-*/
+ */
 
-var express = require('express'),
-    http = require("http"),
-    app = express(),
-    routes = require('./routes'),
-    sockets = require('./support/sockets'),
-    Logger = require('./logger'),
-    config = require('../cli/support/config');
+var express = require('express');
+var http = require("http");
+var app = express();
+var _  = require("underscore");
+var os = require("os");
+var routes = require('./routes');
+var sockets = require('./support/sockets');
+var Logger = require('./logger');
+var config = require('../cli/support/config');
 
 var server = module.exports = http.createServer(app);
 
@@ -59,10 +61,22 @@ server.listen(config.port, config.internalIP);
 function isUp() {
   if (server.address() != null) {
     var address = server.address().address;
+    var port = server.address().port;
     if (address === "0.0.0.0") {
       address = "localhost";
     }
-    Logger.debug("TiShadow server started. Go to http://"+ address + ":" + server.address().port);
+    Logger.debug("TiShadow server started. Go to http://"+ address + ":" + port);
+    if (config.host !== "localhost") {
+      Logger.debug("connect to " + config.host + ":" + port);
+    } else {
+      _.each(os.networkInterfaces(), function(iface,dev_name){
+        iface.forEach(function(i) {
+          if (i.family === "IPv4" && !i.internal) {
+            Logger.debug("connect to " + i.address + ":" + port);
+          }
+        });
+      });
+    }
   } else {
     Logger.error("Failed to start server on port: " + config.port );
   }
