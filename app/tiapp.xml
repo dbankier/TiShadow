@@ -170,7 +170,7 @@
         <uses-feature android:name='android.hardware.touchscreen' android:required="false" />
         <uses-feature android:name='android.hardware.telephony' android:required="false" />
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow"/>
-        <application android:theme="@style/ThemeNoActionBar">
+        <application>
           <meta-data android:name="com.sec.android.support.multiwindow" android:value="true"/>
         </application>
     	</manifest>
