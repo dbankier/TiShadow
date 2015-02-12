@@ -75,6 +75,7 @@ program.command('run')
   .option('-p, --port <port>', 'server port')
   .option('-r, --room <room>', 'server room')
   .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
+  .option('-f, --alloy-compile-file <filename>', 'compile only one alloy file')
   .option('-P, --platform <platform>', 'target platform')
   .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
   .option('-T, --target <app_name>', 'target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)')
@@ -109,6 +110,7 @@ program.command('spec')
   .option('-x, --junit-xml','output report as JUnit XML')
   .option('-P, --platform <platform>', 'target platform')
   .option('-s, --skip-alloy-compile', 'skip automatic alloy compilation')
+  .option('-f, --alloy-compile-file <filename>', 'compile only one alloy file')
   .option('-D, --include-dot-files', 'includes dot files in the bundle (defaults to false)')
   .option('-T, --target <app_name>', 'target TiShadow app (defaults to name on tiapp.xml or moduleid on manifest)')
   .option('-C, --clear-spec-files', 'clears only the spec files from the cache')
@@ -158,6 +160,7 @@ program.command('config')
   .option('-p, --port <port>', 'set default server port')
   .option('-r, --room <room>', 'set default server room')
   .option('-i, --inspector', 'enable automatic inspection and spies')
+  .option('-b, --boost', 'use super fast selective alloy compilation')
   .option('-t, --type <type>', 'default testing library')
   .option('-w, --watch-delay <millis>',    'time to wait before responding to for changes (default: 0)')
   .option('-i, --watch-interval <millis>', 'time to wait between checking files for changes (default: 100)')
@@ -200,8 +203,13 @@ program.command('express')
     });
   });
 
-function execute() {
-  program.parse(process.argv);
+function execute(filename) {
+  var argv = process.argv.slice(0);
+  if ((argv[2] === "run" || argv[2] === "spec") && filename && !filename.match(/(alloy\.js|app.tss)$/)) {
+    argv.push("-f");
+    argv.push(filename); 
+  }
+  program.parse(argv);
   // Display help on an invalid command
   if (program.args.length === 0 || typeof program.args[program.args.length -1] === 'string'){
     program.help();
@@ -218,7 +226,7 @@ if (config.isWatching) {
       this.on('all', function watcher(event, filepath) {
         logger.debug(event + ": " + filepath);
         if (!responder) responder = setTimeout(function() {
-          execute();
+          execute(config.boost ? filepath.replace(config.base,"").substring(1) : undefined);
           responder = undefined;
         }, config.watchDelay);
       });

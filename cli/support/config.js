@@ -152,6 +152,7 @@ config.init = function(env) {
   }
   config.isDeploy   = env._name === "deploy";
   config.inspector   = env.inspector !== undefined ? env.inspector : config.inspector || false;
+  config.boost   = env.boost !== undefined ? env.boost : config.boost || false;
   config.isTailing  = env.tailLogs || config.isSpec;
   config.isJUnit    = env.junitXml;
   config.clearSpecFiles = env.clearSpecFiles;
@@ -168,6 +169,7 @@ config.init = function(env) {
   config.internalIP = env.internalIp;
   config.isLongPolling = env.longPolling;
   config.skipAlloyCompile = env.skipAlloyCompile;
+  config.alloyCompileFile = env.alloyCompileFile;
   config.isManageVersions = env.manageVersions;
   config.bundle_name = env.target;
   config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : undefined;
@@ -179,7 +181,7 @@ config.write = function(env) {
   if (fs.existsSync(config_path)) {
     new_config = require(config_path);
   }
-  ['host','port','room', 'type', 'inspector', 'watchInterval', 'watchDelay','networkInterface'].forEach(function(param) {
+  ['host','port','room', 'type', 'inspector', 'boost', 'watchInterval', 'watchDelay','networkInterface'].forEach(function(param) {
     if (env[param] !== undefined) {
       new_config[param] = env[param];
     }
