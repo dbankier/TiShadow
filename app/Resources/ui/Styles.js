@@ -108,7 +108,8 @@ exports.start = {
     exitOnClose : true,
     navBarHidden: true,
     keepScreenOn: true,
-    title: "TiShadow"
+    title: "TiShadow",
+    theme:"Theme.NoActionBar"
   }
 };
 if (exports.isPost7) {

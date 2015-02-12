@@ -15,7 +15,8 @@ function Activity(message) {
 		bottom : 0,
 		left : 0,
 		right : 0,
-		opacity : 0.70
+		opacity : 0.70,
+		theme:"Theme.NoActionBar"
 	});
 	activity_view = Titanium.UI.createView({
 		width : 280,
