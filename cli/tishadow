@@ -13,7 +13,7 @@ var api            = require('./support/api'),
     program        = require('commander'),
     fs             = require('fs'),
     path           = require('path'),
-    spawn          = require('./support/spawn'), 
+    spawn          = require('./support/spawn'),
     updateNotifier = require('update-notifier'),
     gaze           = require('gaze');
 
@@ -143,7 +143,7 @@ program.command('screenshot')
   .option('-x, --scale <ratio>', 'ratio (as decimal) to scale screenshot')
   .option('-P, --platform <platform>', 'target platform')
   .action(api.screenshot);
-  
+
 program.command('log')
   .description('tail server logs'.grey)
   .option('-o, --host <host>', 'server host name / ip address')
@@ -172,7 +172,7 @@ program.command('app')
   .option('-d, --destination <path>', 'target path for generated project')
   .option('-u, --upgrade', 'upgrade an existing tishadow app')
   .action(function(env) {
-    if (env.upgrade) { 
+    if (env.upgrade) {
       require('./support/appify').copyCoreProject(env);
     } else {
       program.prompt("Enter app id [com.yydigital.tishadowapp]: ", function(appid) {
@@ -219,7 +219,7 @@ function execute(filename) {
 if (config.isWatching) {
   config.buildPaths({},function() {
     var paths = [config.isAlloy ? "app" :"Resources", "i18n", "spec"].map(function(p) {
-      return path.join(p,"**/*");
+      return path.join(p, config.fileTypesToWatch);
     });
     var responder;
     gaze(paths, {cwd:config.base, interval: config.watchInterval}, function(err, watcher){
@@ -233,6 +233,6 @@ if (config.isWatching) {
     });
   });
   api.startRepl();
-} 
+}
 
 execute();
