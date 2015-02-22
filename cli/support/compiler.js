@@ -38,6 +38,11 @@ function prepare(src, dst, callback) {
             + "var sinon = require('/lib/sinon');\n"
           +src_text;
         }
+        if (config.isAlloy) {
+          src_text = 
+          "var Alloy = __p.require(\"alloy\"), _ = Alloy._, Backbone = Alloy.Backbone;\n"
+          +src_text;
+        }
       }
       else if(config.runCoverage && !src.match("spec/")) { //Instrumenting the application code with istanbul for code coverage
 		var instrumentedCode = require("./coverage").instrumentCode(src_text, src);
