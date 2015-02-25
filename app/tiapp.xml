@@ -176,14 +176,14 @@
     	</manifest>
     </android>
     	<modules>
-    <module platform="android" version="0.1">net.iamyellow.tiws</module>
+    <module platform="android" version="0.1.2">net.iamyellow.tiws</module>
     <module platform="android" version="2.0.3">ti.compression</module>
     <module platform="android" version="0.1">yy.logcatcher</module>
     <module platform="iphone" version="0.5">net.iamyellow.tiws</module>
     <module platform="iphone" version="1.1.1">ti.compression</module>
     <module platform="iphone" version="0.2.0">yy.logcatcher</module>
     <module platform="iphone" version="0.2.1">yy.tidynamicfont</module>
-    <module platform="android">bencoding.android.tools</module>
+    <module platform="android" version="0.34">bencoding.android.tools</module>
   </modules>
 
 </ti:app>
