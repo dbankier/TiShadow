@@ -1,6 +1,6 @@
 <h1>tiws Module</h1>
 <h2>Description</h2>
-<p>tiws is a very simple Titanium module (iOS / Android) for creating native websockets. 
+<p>tiws is a very simple Titanium module (iOS / Android) for creating native websockets.
 it is also possible use tiws with Socket.IO and Now.js, check it out here!
 https://gist.github.com/3071689</p>
 <p>tiws is open source (https://github.com/iamyellow/tiws) and uses third parties websocket implementations:</p>
@@ -18,14 +18,13 @@ https://github.com/codebutler/android-websockets</p>
 <p>To access this module from JavaScript, you would do the following:</p>
 <pre><code>var tiws = require("net.iamyellow.tiws");
 </code></pre>
-<p>The tiws variable is a reference to the Module object.<br />
-</p>
+<p>The tiws variable is a reference to the Module object.</p>
 <h2>Module functions</h2>
 <h3>createWS</h3>
 <p>Creates a websocket object.</p>
 <h2>Websocket object functions</h2>
-<h3>open (string uri)</h3>
-<p>Given an URI, opens the connection.</p>
+<h3>open (string uri[, string protocol])</h3>
+<p>Given an URI, opens the connection. Optionally, an additional string argument can be used to specify the subprotocol</p>
 <h3>send (string message)</h3>
 <p>Sends a string message.</p>
 <h3>close ()</h3>
