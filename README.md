@@ -410,6 +410,7 @@ The following are some of the options you can set:
     -t, --type <type>                    default testing library
     -w, --watch-delay <millis>           time to wait before responding to for changes (default: 0)
     -i, --watch-interval <millis>        time to wait between checking files for changes (default: 100)
+    -x, --watch-exclude <glob>           files to exclude from watch
     -n, --network-interface <interface>  set default network interface (used in express mode)
 ~~~
 
