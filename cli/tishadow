@@ -13,7 +13,7 @@ var api            = require('./support/api'),
     program        = require('commander'),
     fs             = require('fs'),
     path           = require('path'),
-    spawn          = require('./support/spawn'), 
+    spawn          = require('./support/spawn'),
     updateNotifier = require('update-notifier'),
     gaze           = require('gaze');
 
@@ -143,7 +143,7 @@ program.command('screenshot')
   .option('-x, --scale <ratio>', 'ratio (as decimal) to scale screenshot')
   .option('-P, --platform <platform>', 'target platform')
   .action(api.screenshot);
-  
+
 program.command('log')
   .description('tail server logs'.grey)
   .option('-o, --host <host>', 'server host name / ip address')
@@ -172,7 +172,7 @@ program.command('app')
   .option('-d, --destination <path>', 'target path for generated project')
   .option('-u, --upgrade', 'upgrade an existing tishadow app')
   .action(function(env) {
-    if (env.upgrade) { 
+    if (env.upgrade) {
       require('./support/appify').copyCoreProject(env);
     } else {
       program.prompt("Enter app id [com.yydigital.tishadowapp]: ", function(appid) {
@@ -196,7 +196,7 @@ program.command('appify')
 program.command('express')
   .description('install a titanium cli command plugin `shadow` for simple tishadow development')
   .action(function() {
-    var hooks = spawn('ti', ['config','-a','paths.hooks',path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','hooks')]);
+    var hooks = spawn('ti', ['config','paths.hooks','-a',path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','hooks')]);
     hooks.stderr.pipe(process.stderr);
     hooks.on("exit", function(code) {
       code === 0 && logger.info("Titanium CLI hook installed. Now use the `--shadow` flag when buliding your project for express tishadow development");
@@ -207,7 +207,7 @@ function execute(filename) {
   var argv = process.argv.slice(0);
   if ((argv[2] === "run" || argv[2] === "spec") && filename && !filename.match(/(alloy\.js|app.tss)$/)) {
     argv.push("-f");
-    argv.push(filename); 
+    argv.push(filename);
   }
   program.parse(argv);
   // Display help on an invalid command
@@ -233,6 +233,6 @@ if (config.isWatching) {
     });
   });
   api.startRepl();
-} 
+}
 
 execute();
