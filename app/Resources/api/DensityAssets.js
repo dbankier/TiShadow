@@ -75,9 +75,14 @@ exports.find = function(file) {
       return rethd_file_name;
     }
   } else if (os === "android") {
-    var d_file_name = file.replace("android/images/", "android/images/%FOLDER%/"),
-        do_file_name,
-        i;
+    if (typeof file !== "string") {
+      return null;
+    }
+    var file_parts = file.split("/");
+    file_parts.splice(file_parts.length -1, 0, "%FOLDER%");
+    var d_file_name = file_parts.join("/");
+    var do_file_name;
+
     for (i in density_folders) {
       do_file_name = d_file_name.replace("%FOLDER%", density_folders[i].replace('%ORIENTATION%', density_orientation));
       do9_file_name = injectSuffix(do_file_name, '.9');
