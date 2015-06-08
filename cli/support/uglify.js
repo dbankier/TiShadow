@@ -199,6 +199,10 @@ var convert = new UglifyJS.TreeTransformer(null, function(node){
       node.value = functionCall("__L", [node.value]);
       return node;
     } else if (couldBeAsset(node.key)) {
+      var value = node.value.value;
+      if(value && typeof value === 'string' && node.value.value.toLowerCase().match(".js")){
+        return node;
+      }
       node.value.value = toFullPath(node.value.value);
       node.value = functionCall("__p.file",[node.value]);
       return node;
