@@ -88,7 +88,7 @@ exports.copyCoreProject = function(env) {
          source_tiapp
            .replace("{{GUID}}", 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);})) // GUID one-liner: http://stackoverflow.com/a/2117523
            .replace("{{APPID}}", env.appid)
-           .replace("</modules>", '</modules>\n  <property name="tishadow:version" type="string">'+ package_version + '</property>')
+           .replace("</modules>", '</modules>\n  <property name="tishadow:version" type="string">'+ package_version + '</property>\n  <property name="dataDirectory" type="string">applicationDataDirectory:/{undName}/{family}</property>')
                     );
   }
   return true;
@@ -153,7 +153,7 @@ exports.build = function(env) {
                        .replace('android:launchMode="singleTop"','')
                        .replace("<modules/>","<modules></modules>")
                        .replace("</modules>",injected_xml.join("\n"))
-                       .replace("</modules>", '</modules>\n  <property name="tishadow:version" type="string">'+ package_version + '</property>');
+                       .replace("</modules>", '</modules>\n  <property name="tishadow:version" type="string">'+ package_version + '</property>\n  <property name="dataDirectory" type="string">applicationDataDirectory:/{undName}/{family}</property>');
       if(config.modifyAppId) {
         new_tiapp_xml = new_tiapp_xml.replace("</id>",".appified</id>");
       }
