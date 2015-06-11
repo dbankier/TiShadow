@@ -104,9 +104,11 @@ module.exports = function(env, callback) {
       }
       async.detectSeries(config.platform, function(platform, callback) {
         logger.info("Compiling Alloy for " + platform);
-        var args = ['compile', '-b','-l', '2', '--platform', platform, '--config', 'sourcemap=false'];
+        
+        var isSourcemap = config.skipSourcemapCompile ? "false" : "true";
+        var args = ['compile', '-b','-l', '2', '--platform', platform, '--config', 'sourcemap='+isSourcemap];
         if (config.alloyCompileFile) {
-          args[7] = "sourcemap=false,file="+config.alloyCompileFile;
+          args[7] = "sourcemap="+isSourcemap+",file="+config.alloyCompileFile;
         }
         var alloy_command = spawn('alloy', args, {stdio: "inherit"});
         alloy_command.on("exit", function(code) {
@@ -120,6 +122,13 @@ module.exports = function(env, callback) {
               path.join(config.resources_path,(platform === 'ios' ? 'iphone' : platform),'alloy'),
               {preserve:true,preserveFiles:true}
             );
+            if(!config.skipSourcemapCompile){
+              wrench.copyDirSyncRecursive(
+                path.join(config.sourcemap_path,"Resources"),
+                config.resources_path,
+                {preserve:true,preserveFiles:true}
+              );
+            }
           }
           callback(false);
         });
