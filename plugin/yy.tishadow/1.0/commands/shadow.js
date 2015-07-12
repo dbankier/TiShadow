@@ -8,6 +8,7 @@ var spawn = require('../../../../cli/support/spawn');
 var os = require('os');
 var path = require('path');
 var fs = require('fs');
+var config = require("../../../../cli/support/config");
 
 
 exports.cliVersion = '>=3.2.0';
@@ -40,7 +41,7 @@ exports.startServer = function startServer(logger) {
     logger.error(err);
   });
   children.push(server);
-}
+};
 
 exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address, callback) {
   fs.existsSync(tmp_dir) ||  fs.mkdirSync(tmp_dir);
@@ -63,18 +64,23 @@ exports.startAppify = function startAppify(logger, tmp_dir, platform, ip_address
     }
   });
   children.push(appify);
-}
+};
 
 exports.buildApp = function buildApp(logger, args) {
   logger.info("Building App...");
-  var build = spawn('ti', args, {stdio: "inherit"});
+  var build;
+  if (config.useAppcCLI) {
+    build = spawn("appc", ['ti'].concat(args), {stdio: "inherit"});
+  } else {
+    build = spawn('ti', args, {stdio: "inherit"});
+  }
   build.on('error', function(err) {
     logger.error(err);
     logger.error("Titanium build exited.");
     exit();
-  }); 
+  });
   children.push(build);
-}
+};
 
 exports.startWatch = function startWatch(logger, platform, ip_address) {
   var args = ['@', 'run', '-u', '-P', platform];
@@ -90,7 +96,7 @@ exports.startWatch = function startWatch(logger, platform, ip_address) {
     });
     children.push(watch);
   }, 5000);
-}
+};
 
 exports.run = function(logger, config, cli) {
   var platform = cli.argv.platform || cli.argv.p || 'ios';

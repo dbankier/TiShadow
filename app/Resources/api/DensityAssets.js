@@ -8,12 +8,12 @@ var  os = Ti.Platform.osname;
 // Density image setup for android
 if (os === "android") {
   var density_orientation = (Ti.Gesture.orientation === Ti.UI.LANDSCAPE_LEFT) ? "land" : "port",
-  density_folders = (function () {
+    density_folders = (function () {
 
     var folders = [],
-    ratio = ((Ti.Platform.displayCaps.platformWidth / Ti.Platform.displayCaps.platformHeight) < ((density_orientation === "land") ? (320 / 240) : (240 / 320))) ? "long" : "notlong",
-    logicalDensityFactor = Ti.Platform.displayCaps.logicalDensityFactor,
-    density;
+      ratio = ((Ti.Platform.displayCaps.platformWidth / Ti.Platform.displayCaps.platformHeight) < ((density_orientation === "land") ? (320 / 240) : (240 / 320))) ? "long" : "notlong",
+      logicalDensityFactor = Ti.Platform.displayCaps.logicalDensityFactor,
+      density;
 
     if (logicalDensityFactor <= 0.75) {
       density = "ldpi";
@@ -65,22 +65,24 @@ exports.find = function(file) {
     if (Ti.Filesystem.getFile(file).exists()) {
       return file;
     }
-    if (Ti.Platform.displayCaps.density > 320) {
-      var rethd_file_name = injectSuffix(file, "@3x");  
-      if (Ti.Filesystem.getFile(rethd_file_name).exists() && Ti.Platform.displayCaps.density === "high") {
-        return rethd_file_name;
-      }
+    // if retina only provided - this is needed even for non-retina devices...
+    var ret_file_name = injectSuffix(file, "@2x");
+    if (Ti.Filesystem.getFile(ret_file_name).exists()) {
+      return ret_file_name;
     }
-    if (Ti.Platform.displayCaps.density > 160) {
-      var ret_file_name = injectSuffix(file, "@2x");  
-      if (Ti.Filesystem.getFile(ret_file_name).exists() && Ti.Platform.displayCaps.density === "high") {
-        return ret_file_name;
-      }
+    var rethd_file_name = injectSuffix(file, "@3x");
+    if (Ti.Filesystem.getFile(rethd_file_name).exists()) {
+      return rethd_file_name;
     }
   } else if (os === "android") {
-    var d_file_name = file.replace("android/images/", "android/images/%FOLDER%/"),
-    do_file_name,
-    i;
+    if (typeof file !== "string") {
+      return null;
+    }
+    var file_parts = file.split("/");
+    file_parts.splice(file_parts.length -1, 0, "%FOLDER%");
+    var d_file_name = file_parts.join("/");
+    var do_file_name;
+
     for (i in density_folders) {
       do_file_name = d_file_name.replace("%FOLDER%", density_folders[i].replace('%ORIENTATION%', density_orientation));
       do9_file_name = injectSuffix(do_file_name, '.9');

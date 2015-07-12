@@ -44,6 +44,14 @@ Or if you want to use the master version directly from GitHub:
   npm install -g dbankier/TiShadow
 ```
 
+### Using the Appcelerator CLI
+
+By default TiShadow uses the (free) `titanium` and `alloy` cli's under the hood. If you are using the (paid) `appc` cli then 
+use the following command after installation:
+
+```
+$ ts config --use-appc-CLI
+```
 
 ### _NEW_ DUMMY'S PATH: TiShadow Express
 

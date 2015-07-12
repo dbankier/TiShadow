@@ -39,7 +39,7 @@ function prepare(src, dst, callback) {
           +src_text;
         }
         if (config.isAlloy) {
-          src_text = 
+          src_text =
           "var Alloy = __p.require(\"alloy\"), _ = Alloy._, Backbone = Alloy.Backbone;\n"
           +src_text;
         }
@@ -47,8 +47,8 @@ function prepare(src, dst, callback) {
       else if(config.runCoverage && !src.match("spec/")) { //Instrumenting the application code with istanbul for code coverage
 		var instrumentedCode = require("./coverage").instrumentCode(src_text, src);
 		src_text = instrumentedCode;
-		
-		config.instrumentedfiles[src] = dst;// storing all instrumented file 
+
+		config.instrumentedfiles[src] = dst;// storing all instrumented file
       }
 
       fs.writeFile(dst,src_text, callback);
@@ -108,7 +108,13 @@ module.exports = function(env, callback) {
         if (config.alloyCompileFile) {
           args[7] = "sourcemap=false,file="+config.alloyCompileFile;
         }
-        var alloy_command = spawn('alloy', args, {stdio: "inherit"});
+        var alloy_command;
+        if (config.useAppcCLI) {
+          alloy_command = spawn("appc", ['alloy'].concat(args), {stdio: "inherit"});
+        } else {
+          alloy_command = spawn('alloy', args, {stdio: "inherit"});
+        }
+
         alloy_command.on("exit", function(code) {
           if (code !== 0) {
             logger.error("Alloy Compile Error\n");
@@ -188,7 +194,7 @@ function beginCompile(callback) {
     spec_list.files = spec_list.files.map(function(file) { return "spec/" + file;});
     spec_list.dirs = ["spec"].concat(spec_list.dirs.map(function(dir) {return "spec/" + dir;}));
   }
-  
+
 
   // prepare tasks to process files
   var process_tasks = file_list.files.map(function(file) {
@@ -196,13 +202,13 @@ function beginCompile(callback) {
   }).concat(spec_list.files.map(function(file) {
     return _.bind(prepare, null, path.join(config.base,file), path.join(config.tishadow_src,file));
   }));
- 
-  // if acting on a native module - see https://github.com/dbankier/TiShadow/commit/bec799b3d03660704ce6ab303f5e28110b86f051 
+
+  // if acting on a native module - see https://github.com/dbankier/TiShadow/commit/bec799b3d03660704ce6ab303f5e28110b86f051
   if (config.isModule && assets_list.files.length > 0) {
     // create paths
   	fs.mkdirs([config.module_name], config.tishadow_src);
   	fs.mkdirs(assets_list.dirs, config.module_path);
-    // add files for processing 
+    // add files for processing
     process_tasks = process_tasks.concat(assets_list.files.map(function(file) {
       var fileName = file.slice(0,file.lastIndexOf('.'));
       if(fileName == config.module_name){
@@ -222,7 +228,7 @@ function beginCompile(callback) {
       return filePath;
     });
   }
-  
+
   async.series([
     _.bind(async.eachLimit, null, i18n_list.files, 100, copyI18n), //localisation filed
     _.bind(async.parallelLimit, null, process_tasks, 100), // source, assets, specs

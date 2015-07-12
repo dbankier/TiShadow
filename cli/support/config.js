@@ -21,7 +21,7 @@ function getAppName(callback) {
   tiapp.find(process.cwd(),function(err,result) {
     if (err ) {
       if (!config.globalCmd) {
-      	
+
       	if (fs.existsSync(path.join(process.cwd(), 'timodule.xml')) && fs.existsSync(path.join(process.cwd(), 'manifest'))) {
 	      var data = fs.readFileSync(path.join(process.cwd(),'manifest'));
 	          base = process.cwd();
@@ -34,7 +34,7 @@ function getAppName(callback) {
 	          	callback(timod);
 	          	return;
 	          }
-	      
+
 	    } else {
           logger.error("Script must be run within a Titanium project.");
 	    }
@@ -90,13 +90,13 @@ config.buildPaths = function(env, callback) {
     config.fs_map_path       = path.join(config.tishadow_build, 'fs_map.json');
 
     var app_name = config.app_name = result.name[0] || "bundle";
-    
+
     config.isModule = fs.existsSync(config.assets_path) && result.isModule;
     if (config.isModule) {
       config.module_name = app_name;
       config.module_path = path.join(config.tishadow_src, config.module_name);
     }
-    
+
     config.bundle_name       = config.bundle_name || app_name;
     config.bundle_file       = path.join(config.tishadow_dist, config.bundle_name + ".zip");
     config.jshint_path       = fs.existsSync(config.alloy_path) ? config.alloy_path : config.resources_path;
@@ -119,9 +119,7 @@ config.buildPaths = function(env, callback) {
     }
     config.last_updated_file = path.join(config.tishadow_build, 'last_updated' + (config.platform ? '_' + config.platform.join('_') : ''));
     config.isPatch = env.patch;
-    config.isUpdate = (env.update || env.patch)
-                    && fs.existsSync(config.tishadow_src)
-                    && fs.existsSync(config.last_updated_file);
+    config.isUpdate = (env.update || env.patch) && fs.existsSync(config.tishadow_src) && fs.existsSync(config.last_updated_file);
 
     callback();
   });
@@ -132,7 +130,7 @@ config.init = function(env) {
   config.specType     = env.type || config.type  || "jasmine";
   config.runCoverage  = env.coverage;
   config.instrumentedfiles = {}; //stored instrumented files
-  
+
   // commands that go through buildPath/init but done mandate a being in the project path
   config.globalCmd  = _.contains(['clear','close','screenshot','repl'], env._name);
   config.watchInterval = config.watchInterval || 100;
@@ -179,7 +177,7 @@ config.write = function(env) {
   if (fs.existsSync(config_path)) {
     new_config = require(config_path);
   }
-  ['host','port','room', 'type', 'inspector', 'boost', 'watchInterval', 'watchDelay', 'watchExclude', 'networkInterface'].forEach(function(param) {
+  ['host','port','room', 'type', 'inspector', 'boost', 'watchInterval', 'watchDelay', 'watchExclude', 'networkInterface', 'useAppcCLI'].forEach(function(param) {
     if (env[param] !== undefined) {
       new_config[param] = env[param];
     }

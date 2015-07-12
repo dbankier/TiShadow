@@ -22,9 +22,9 @@ function custom_require(file) {
     var rfile = Ti.Filesystem.getFile(file);
     var contents = rfile.read().text;
     return eval("(function(exports){var __OXP=exports;var module={'exports':exports};" + contents + ";if(module.exports !== __OXP){return module.exports;}return exports;})({})");
-  } catch(e) { 
-    e.file=file; 
-    log.error(utils.extractExceptionData(e)); 
+  } catch(e) {
+    e.file=file;
+    log.error(utils.extractExceptionData(e));
   }
 }
 
@@ -85,7 +85,7 @@ exports.file = function(extension) {
     return extension;
   }
   var base = Ti.Filesystem.applicationDataDirectory + require("/api/TiShadow").currentApp + "/";
-  if (extension.indexOf(base) !== -1) { 
+  if (extension.indexOf(base) !== -1) {
     extension = extension.replace(base,"");
   }
   var path = base + extension.replace(/^\//, ''),
@@ -96,10 +96,15 @@ exports.file = function(extension) {
     if (file.exists()) {
       return platform_path;
     }
-  } else { 
+  } else {
     var platform_dense = densityFile.find(platform_path);
     if (null !== platform_dense) {
       return platform_dense;
+    }
+    // might be a badly organised projects, so need to check no platform paths for density assets as well
+    var image_dense = densityFile.find(path);
+    if (null !== image_dense) {
+      return image_dense;
     }
   }
 
@@ -110,7 +115,7 @@ exports.file = function(extension) {
 };
 
 /*
- * Asset Redirection - ByPass for file method. 
+ * Asset Redirection - ByPass for file method.
  * Parses the whole list of argument and merges them using a safe structure
  */
 exports.getFile = function() {
