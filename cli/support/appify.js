@@ -119,6 +119,7 @@ exports.build = function(env) {
       if(fs.existsSync(config.fonts_path)) {
         wrench.copyDirSyncRecursive(config.fonts_path,dest_fonts);
       }
+      mkdirp.sync(dest_platform);
       //copy splash screen and icons
       ['iphone','android','blackberry','mobileweb','tizen','commonjs'].forEach(function(platform) {
         if(fs.existsSync(path.join(config.resources_path,platform))) {
