@@ -28,16 +28,16 @@ function init(_logger, config, cli) {
   logger = _logger;
 }
 function preValidateHook(build,finished) {
-  if (build.cli.argv.$_.indexOf('--shadow') !== -1 || 
-      build.cli.argv.$_.indexOf('--tishadow') !== -1 || 
+  if (build.cli.argv.$_.indexOf('--shadow') !== -1 ||
+      build.cli.argv.$_.indexOf('--tishadow') !== -1 ||
       build.cli.argv.$_.indexOf('--appify') !== -1) {
     build.cli.config.cli.failOnWrongSDK = true;
   }
   finished();
 }
 function preCompileHook(build, finished) {
-  if (build.cli.argv.$_.indexOf('--shadow') === -1 && 
-      build.cli.argv.$_.indexOf('--tishadow') === -1 && 
+  if (build.cli.argv.$_.indexOf('--shadow') === -1 &&
+      build.cli.argv.$_.indexOf('--tishadow') === -1 &&
       build.cli.argv.$_.indexOf('--appify') === -1) {
     return finished();
   }

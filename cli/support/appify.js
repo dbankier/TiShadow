@@ -27,7 +27,7 @@ _.templateSettings = {
         '<module platform="android" version="2.0.3">ti.compression</module>',
         '<module platform="android">bencoding.android.tools</module>'
  ];
- 
+
  var required_properties = [
     '<property name="ti.android.bug2373.finishfalseroot" type="bool">true</property>',
     '<property name="ti.android.bug2373.skipAlert" type="bool">true</property>'
@@ -84,7 +84,7 @@ exports.copyCoreProject = function(env) {
 
     //inject new GUID
     var source_tiapp = fs.readFileSync(path.join(tishadow_app,"tiapp.xml"),'utf8');
-    fs.writeFileSync(path.join(dest,"tiapp.xml"), 
+    fs.writeFileSync(path.join(dest,"tiapp.xml"),
          source_tiapp
            .replace("{{GUID}}", 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);})) // GUID one-liner: http://stackoverflow.com/a/2117523
            .replace("{{APPID}}", env.appid)
@@ -137,6 +137,11 @@ exports.build = function(env) {
       if(fs.existsSync(config.plugins_path)) {
           wrench.copyDirSyncRecursive(config.plugins_path,dest_plugins);
       }
+      // copy DefaultIcon.png if it exists
+      if (fs.existsSync(path.join(config.base, "DefaultIcon.png"))) {
+        fs.createReadStream(path.join(config.base, "DefaultIcon.png")).pipe(fs.createWriteStream(path.join(dest, "DefaultIcon.png")));
+      }
+
       // copy tiapp.xml and inject modules
       var source_tiapp = fs.readFileSync(path.join(config.base,"tiapp.xml"),'utf8');
 
