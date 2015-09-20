@@ -109,7 +109,7 @@ exports.start = {
     navBarHidden: true,
     keepScreenOn: true,
     title: "TiShadow",
-    theme:"Theme.NoActionBar"
+    theme:"Theme.AppCompat.Translucent.NoTitleBar"
   }
 };
 if (exports.isPost7) {
