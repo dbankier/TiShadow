@@ -3,7 +3,6 @@
  * Please see the LICENSE file included with this distribution for details.
  */
 
-var sys = require('sys');
 var spawn = require('../../../../cli/support/spawn');
 var os = require('os');
 var path = require('path');
