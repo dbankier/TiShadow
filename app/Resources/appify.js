@@ -18,7 +18,7 @@ require("/lib/ti-mocha");
 // If new install clear cache
 if (Ti.App.Properties.getString("tishadow::container_version",0) !== "{{date}}") {
   TiShadow.clearCache(true);
-  Ti.App.Properties.setString("tishadow::container_version","{{date}}"); 
+  Ti.App.Properties.setString("tishadow::container_version","{{date}}");
 }
 
 
@@ -33,7 +33,7 @@ if (!target.exists()) {
 //Call Home
 TiShadow.connect({
   proto: "{{proto}}",
-  host : "{{host}}",
+  host : Ti.Platform.model === "Simulator" ? "127.0.0.1" : "{{host}}",
   port : "{{port}}",
   room : "{{room}}",
   name : Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address
