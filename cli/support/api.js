@@ -108,7 +108,7 @@ exports.startRepl = function(){
     repl.start({
       eval: function(command, context, filename, callback) {
         if (command.trim() !== "(\n)") {
-          socket.emit('snippet',{code: command.substring(1,command.length -2), platform: config.platform}, function(e) {
+          socket.emit('snippet',{code: command, platform: config.platform}, function(e) {
             callback("".blue);
           });
         }
