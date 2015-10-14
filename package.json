@@ -31,7 +31,7 @@
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {
-    "node": "4.x"
+    "node": ">=0.12"
   },
   "author": "David Bankier <david@yydigital.com> (http://www.yydigital.com)",
   "description": "Quick Titanium previews across devices",
