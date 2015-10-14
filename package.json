@@ -4,6 +4,7 @@
   "dependencies": {
     "archiver": "^0.4.8",
     "async": "^0.2.10",
+    "body-parser": "^1.14.1",
     "colors": "^1.1.2",
     "commander": "^1.0.5",
     "express": "^3.3.8",
@@ -17,6 +18,7 @@
     "lazystream": "^0.1.0",
     "mkdirp": "^0.3.5",
     "mocha": "^1.12.1",
+    "multiparty": "^4.1.2",
     "pkginfo": "^0.2.3",
     "socket.io": "^0.9.17",
     "socket.io-client": "^0.9.17",
