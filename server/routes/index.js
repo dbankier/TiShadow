@@ -9,6 +9,7 @@ var fs = require('fs'),
     sockets = require('../support/sockets'),
     rooms = require('../support/rooms'),
     config = require('../../cli/support/config');
+var multiparty = require('multiparty');
 
 
 /*
@@ -47,23 +48,26 @@ exports.getBundle = function(req,res) {
 
 // For remote bundle posting.
 exports.postBundle = function(req, res) {
-  Logger.log("WARN", null, "Remote Bundle Received");
-  var data = JSON.parse(req.body.data),
-      name = req.files.bundle.name.replace(".zip",""),
-      room = data.room;
-  rooms.addBundle(room, name, req.files.bundle.path);
-  var curr = rooms.get(room);
-  Logger.log("INFO", null, "New Bundle: " + curr.bundle + " | " + name);
+  var form = new multiparty.Form();
+  form.parse(req, function(err, fields, files) {
+    Logger.log("WARN", null, "Remote Bundle Received");
+    var data = JSON.parse(fields.data[0]),
+        name = files.bundle[0].originalFilename.replace(".zip",""),
+        room = data.room;
+    rooms.addBundle(room, name, files.bundle[0].path);
+    var curr = rooms.get(room);
+    Logger.log("INFO", null, "New Bundle: " + curr.bundle + " | " + name);
 
-  data.name = name;
-  data.room = data.bundle = null;
-  if (config.isManageVersions) {
-    data.version = curr.version;
-  }
-  if (!data.deployOnly) {
-    sockets.emit(room, "bundle", data);
-  }
-  res.send("OK", 200);
+    data.name = name;
+    data.room = data.bundle = null;
+    if (config.isManageVersions) {
+      data.version = curr.version;
+    }
+    if (!data.deployOnly) {
+      sockets.emit(room, "bundle", data);
+    }
+    res.send("OK", 200);
+  });
 };
 
 
