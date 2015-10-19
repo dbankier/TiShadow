@@ -113,7 +113,7 @@ exports.build = function(env) {
     if (exports.copyCoreProject(env)) {
       // generate app.js
       var template = fs.readFileSync(template_file,'utf8');
-      var new_app_js = _.template(template, {proto: "http" + (config.isTiCaster ? "s" : ""), host:config.host, port: config.port, room: config.room, app_name: config.app_name, date: (new Date()).getTime()});
+      var new_app_js = _.template(template)({proto: "http" + (config.isTiCaster ? "s" : ""), host:config.host, port: config.port, room: config.room, app_name: config.app_name, date: (new Date()).getTime()});
       fs.writeFileSync(path.join(dest_resources,"app.js"),new_app_js);
       //copy fonts
       if(fs.existsSync(config.fonts_path)) {

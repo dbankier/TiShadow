@@ -17,25 +17,17 @@ var routes = require('./routes');
 var sockets = require('./support/sockets');
 var Logger = require('./logger');
 var config = require('../cli/support/config');
+var bodyParser = require('body-parser');
 
 var server = module.exports = http.createServer(app);
 
 // Configuration
-app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-  app.use(express.limit('150mb'));
-});
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
-});
-app.configure('production', function(){
-  app.use(express.errorHandler()); 
-});
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.use(app.router);
+app.use(express.static(__dirname + '/public'));
+app.use(express.limit('150mb'));
+app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
 // if executed from package.json - "main":"app.js"
 if (config.port === undefined) {
