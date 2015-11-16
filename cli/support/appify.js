@@ -24,7 +24,7 @@ _.templateSettings = {
         '<module platform="iphone" version="0.2.0">yy.logcatcher</module>',
         '<module platform="android" version="0.1">yy.logcatcher</module>',
         '<module platform="iphone" version="1.1.1">ti.compression</module>',
-        '<module platform="android" version="2.0.3">ti.compression</module>',
+        '<module platform="android" version="2.0.4">ti.compression</module>',
         '<module platform="android">bencoding.android.tools</module>'
  ];
 
