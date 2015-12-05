@@ -26,9 +26,15 @@ function Activity(message) {
 		borderColor : '#999'
 	});
 
+        var actStyle;
+        if (parseInt(Ti.version.substr(0,1))<5){
+            actStyle = Ti.Platform.osname === "android" ?  Titanium.UI.ActivityIndicatorStyle.BIG : Titanium.UI.iPhone.ActivityIndicatorStyle.BIG;
+        } else {
+            actStyle = Titanium.UI.ActivityIndicatorStyle.BIG;
+        }
 	var activity_indicator = Titanium.UI.createActivityIndicator({
 		color : '#fff',
-		style : Ti.Platform.osname === "android" ?  Titanium.UI.ActivityIndicatorStyle.BIG : Titanium.UI.iPhone.ActivityIndicatorStyle.BIG,
+		style : actStyle,
 		height : 20,
 		width : 20,
 		left : 25
