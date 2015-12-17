@@ -277,6 +277,11 @@ if (Ti.Platform.osname !== "android"){
   var ios_includes = [
     Titanium.App.iOS.BackgroundService,
     Titanium.App.iOS.LocalNotification,
+    Titanium.App.iOS.SearchableIndex,
+    Titanium.App.iOS.SearchableItem,
+    Titanium.App.iOS.SearchableItemAttributeSet,
+    Titanium.App.iOS.UserActivity,
+    Titanium.App.iOS.UserDefaults,
     Titanium.App.iOS.UserNotificationAction,
     Titanium.App.iOS.UserNotificationCategory,
     Titanium.UI.iOS.AdView,
