@@ -34,7 +34,9 @@ var host;
 if(Ti.Platform.model === "Simulator") {
   host = "127.0.0.1";
 }else if(Ti.Platform.manufacturer === "unknown") {
-  host = "10.0.0.2";
+  host = "10.0.2.2";
+}else if(Ti.Platform.manufacturer === "Genymotion") {
+  host = "10.0.3.2";
 }else {
   host = "{{host}}";
 }
