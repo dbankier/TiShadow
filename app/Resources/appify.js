@@ -30,10 +30,21 @@ if (!target.exists()) {
   Compression.unzip(Ti.Filesystem.applicationDataDirectory + "/" + path_name, Ti.Filesystem.resourcesDirectory + "/" + path_name + '.zip',true);
 }
 
+var host;
+if(Ti.Platform.model === "Simulator") {
+  host = "127.0.0.1";
+}else if(Ti.Platform.manufacturer === "unknown") {
+  host = "10.0.2.2";
+}else if(Ti.Platform.manufacturer === "Genymotion") {
+  host = "10.0.3.2";
+}else {
+  host = "{{host}}";
+}
+
 //Call Home
 TiShadow.connect({
   proto: "{{proto}}",
-  host : Ti.Platform.model === "Simulator" ? "127.0.0.1" : "{{host}}",
+  host : host,
   port : "{{port}}",
   room : "{{room}}",
   name : Ti.Platform.osname + ", " + Ti.Platform.version + ", " + Ti.Platform.address
