@@ -292,15 +292,17 @@ function loadRemoteBundle(url) {
 }
 
 function parseArguments() {
-  cmd = Ti.App.getArguments();
-  if ( (typeof cmd == 'object') && cmd.hasOwnProperty('url') ) {
-    if ( cmd.url !== url ) {
-      url = cmd.url;
-      if (url.substring(0, 8) === 'tishadow') {
-        loadRemoteBundle(url.replace("tishadow", "http"));
+  setTimeout(function() {
+    cmd = Ti.App.getArguments();
+    if ( (typeof cmd == 'object') && cmd.hasOwnProperty('url') ) {
+      if ( cmd.url !== url ) {
+        url = cmd.url;
+        if (url.substring(0, 8) === 'tishadow') {
+          loadRemoteBundle(url.replace("tishadow", "http"));
+        }
       }
     }
-  }
+  }, 0);
 }
 
 var url = '';
