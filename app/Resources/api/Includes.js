@@ -300,6 +300,7 @@ if (Ti.Platform.osname !== "android"){
     Titanium.UI.iOS.NavigationWindow.showNavBar,
     Titanium.UI.iOS.PreviewAction,
     Titanium.UI.iOS.PreviewActionGroup,
+    Titanium.UI.iOS.PreviewContext,
     Titanium.UI.iOS.PushBehavior,
     Titanium.UI.iOS.SnapBehavior,
     Titanium.UI.iOS.TabbedBar,
