@@ -223,9 +223,14 @@ function execute(filename) {
 
 if (config.isWatching) {
   config.buildPaths({},function() {
-    var paths = [config.isAlloy ? "app" :"Resources", "i18n", "spec"].map(function(p) {
+    var paths = [config.isAlloy ? "app" :"Resources", "spec"];
+    if(!config.isAlloy1_8_later){
+      paths.push('i18n');
+    }
+    paths = paths.map(function(p) {
       return path.join(p,"**/*");
     });
+    
     if (config.watchExclude) {
       config.watchExclude.split(",").forEach(function(g) {
         paths.push("!" + g.trim());
