@@ -104,7 +104,12 @@ module.exports = function(env, callback) {
       }
       async.detectSeries(config.platform, function(platform, callback) {
         logger.info("Compiling Alloy for " + platform);
-        var args = ['compile', '-b','-l', 'info', '--platform', platform, '--config', 'sourcemap=false'];
+        var args;
+        if (config.useAppcCLI) {
+          args = ['compile', '-b','-l', 'info', '--platform', platform, '--config', 'sourcemap=false'];
+        } else {
+          args = ['compile', '-b','-l', '2', '--platform', platform, '--config', 'sourcemap=false'];
+        }
         if (config.alloyCompileFile) {
           args[7] = "sourcemap=false,file="+config.alloyCompileFile;
         }
