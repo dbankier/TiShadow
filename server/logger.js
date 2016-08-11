@@ -4,6 +4,7 @@
  */
 
 var config = require("../cli/support/config");
+var path = require('path');
 require('colors');
 
 color = {
@@ -18,6 +19,17 @@ color = {
 };
 
 exports.log = function(level, name, msg) {
+  
+  if(level === 'ERROR' || level ==='FAIL'){
+    var notifier = require('node-notifier');
+    notifier.notify({
+      title: level,
+      message: msg,
+      icon: path.join(__dirname, '..','app','Resources','iphone','appicon@2x.png'), 
+      sound: true
+    });
+  }
+  
   var msg =  "[" + level + "] "  
   + (name ? "[" + name + "] ": "")
   + msg;
