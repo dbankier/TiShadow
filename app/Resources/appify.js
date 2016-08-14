@@ -30,8 +30,52 @@ if (!target.exists()) {
   Compression.unzip(Ti.Filesystem.applicationDataDirectory + "/" + path_name, Ti.Filesystem.resourcesDirectory + "/" + path_name + '.zip',true);
 }
 
+if(Ti.App.deployType !== 'production'){
+  Ti.Gesture.addEventListener('shake', function (e) {
+    var win = Ti.UI.createWindow({
+      backgroundColor : 'white',
+      title : 'tishadow setting'
+    });
+    var view = Ti.UI.createView({
+      layout: 'vertical',
+      height : Ti.UI.SIZE
+    });
+    var field = Ti.UI.createTextField({
+      height : 44,
+      borderColor : 'gray',
+      left : 40,
+      right : 40,
+      hintText: 'host for tishadow',
+      value : Ti.App.Properties.getString('tishadow_host','') || host,
+      textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
+      suppressReturn : true
+    });
+    
+    var btn = Ti.UI.createButton({
+      title : 'Save & Close',
+      left : 40,
+      right : 40,
+      height: 44,
+      top : 44
+    });
+    var saveAndClose = function () {
+      Ti.App.Properties.setString('tishadow_host',field.value);
+      win.close();
+    };
+    btn.addEventListener('click', saveAndClose);
+    field.addEventListener('return', saveAndClose);
+    view.add(field);
+    view.add(btn);
+    win.add(view);
+    win.open();  
+  });
+}
+
 var host;
-if(Ti.Platform.model === "Simulator") {
+
+if(Ti.App.deployType !== 'production' && Ti.App.Properties.getString('tishadow_host',null)){
+  host = Ti.App.Properties.getString('tishadow_host');
+} else if(Ti.Platform.model === "Simulator") {
   host = "127.0.0.1";
 }else if(Ti.Platform.manufacturer === "unknown") {
   host = "10.0.2.2";
@@ -63,4 +107,3 @@ Logger.addEventListener("error", function(e) {
 
 //Launch the app
 TiShadow.launchApp(path_name);
-
