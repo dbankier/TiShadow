@@ -15,7 +15,7 @@ var api            = require('./support/api'),
     path           = require('path'),
     spawn          = require('./support/spawn'),
     updateNotifier = require('update-notifier'),
-    gaze           = require('gaze');
+    chokidar       = require('chokidar');
 
 // check if watch enabled
 var at_index = process.argv.indexOf("@");
@@ -230,21 +230,28 @@ if (config.isWatching) {
     paths = paths.map(function(p) {
       return path.join(p,"**/*");
     });
-    
+
     if (config.watchExclude) {
       config.watchExclude.split(",").forEach(function(g) {
         paths.push("!" + g.trim());
       });
     }
     var responder;
-    gaze(paths, {cwd:config.base, interval: config.watchInterval}, function(err, watcher){
-      this.on('all', function watcher(event, filepath) {
-        logger.debug(event + ": " + filepath);
-        if (!responder) responder = setTimeout(function() {
-          execute(config.boost ? filepath.replace(config.base,"").substring(1) : undefined);
-          responder = undefined;
-        }, config.watchDelay);
-      });
+    var ready = false;
+    var watcher = chokidar.watch(paths, {
+      interval: config.watchInterval
+    })
+    .on('all', function watcher(event, filepath) {
+      if (!ready) {return};
+      logger.debug(event + ": " + filepath);
+      if (!responder) responder = setTimeout(function() {
+        execute(config.boost ? filepath.replace(config.base,"").substring(1) : undefined);
+        responder = undefined;
+      }, config.watchDelay);
+    })
+    .on('ready', ()=> {
+      logger.debug("watcher ready")
+      ready=true
     });
   });
   api.startRepl();
