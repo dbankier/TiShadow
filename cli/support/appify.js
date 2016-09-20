@@ -142,6 +142,10 @@ exports.build = function(env) {
       if (fs.existsSync(path.join(config.base, "DefaultIcon.png"))) {
         fs.createReadStream(path.join(config.base, "DefaultIcon.png")).pipe(fs.createWriteStream(path.join(dest, "DefaultIcon.png")));
       }
+      if (fs.existsSync(path.join(config.base, "Entitlements.plist"))) {
+        fs.createReadStream(path.join(config.base, "Entitlements.plist")).pipe(fs.createWriteStream(path.join(dest, "Entitlements.plist")));
+      }
+
 
       // copy tiapp.xml and inject modules
       var source_tiapp = fs.readFileSync(path.join(config.base,"tiapp.xml"),'utf8');
