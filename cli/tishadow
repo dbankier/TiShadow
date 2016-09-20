@@ -223,14 +223,16 @@ function execute(filename) {
 
 if (config.isWatching) {
   config.buildPaths({},function() {
-    var paths = [config.isAlloy ? "app" :"Resources", "spec"];
+    var paths = [config.isAlloy ? "app" :"Resources"];
     if(!config.isAlloy1_8_later){
       paths.push('i18n');
+    }
+    if (config.isSpec) {
+      paths.push('spec');
     }
     paths = paths.map(function(p) {
       return path.join(p,"**/*");
     });
-
     if (config.watchExclude) {
       config.watchExclude.split(",").forEach(function(g) {
         paths.push("!" + g.trim());
@@ -238,8 +240,10 @@ if (config.isWatching) {
     }
     var responder;
     var ready = false;
+
     var watcher = chokidar.watch(paths, {
-      interval: config.watchInterval
+      interval: config.watchInterval,
+      cwd: config.base
     })
     .on('all', function watcher(event, filepath) {
       if (!ready) {return};
