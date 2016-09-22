@@ -121,7 +121,7 @@ exports.build = function(env) {
       }
       mkdirp.sync(dest_platform);
       //copy splash screen and icons
-      ['iphone','android','blackberry','mobileweb','tizen','commonjs'].forEach(function(platform) {
+      ['iphone','ios','android','blackberry','mobileweb','tizen','commonjs'].forEach(function(platform) {
         if(fs.existsSync(path.join(config.resources_path,platform))) {
           wrench.copyDirSyncRecursive(path.join(config.resources_path,platform),path.join(dest_resources,platform),{
             filter: new RegExp("(\.png|images|res-.*|fonts|\.otf|\.ttf|\.bundle)$","i"),
