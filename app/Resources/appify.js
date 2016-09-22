@@ -30,11 +30,32 @@ if (!target.exists()) {
   Compression.unzip(Ti.Filesystem.applicationDataDirectory + "/" + path_name, Ti.Filesystem.resourcesDirectory + "/" + path_name + '.zip',true);
 }
 
-if(Ti.App.deployType !== 'production'){
-  Ti.Gesture.addEventListener('shake', function (e) {
+var host;
+
+if(Ti.App.deployType !== 'production' && Ti.App.Properties.getString('tishadow_host',null)){
+  host = Ti.App.Properties.getString('tishadow_host');
+} else if(Ti.Platform.model === "Simulator") {
+  host = "127.0.0.1";
+}else if(Ti.Platform.manufacturer === "unknown") {
+  host = "10.0.2.2";
+}else if(Ti.Platform.manufacturer === "Genymotion") {
+  host = "10.0.3.2";
+}else {
+  host = "{{host}}";
+}
+
+(function(){
+  if(Ti.App.deployType !== 'production'){
+    var isShakeWinOpened = false;
     var win = Ti.UI.createWindow({
       backgroundColor : 'white',
       title : 'tishadow setting'
+    });
+    win.addEventListener('open', function (e) {
+      isShakeWinOpened = true;
+    });
+    win.addEventListener('close', function (e) {
+      isShakeWinOpened = false;
     });
     var view = Ti.UI.createView({
       layout: 'vertical',
@@ -46,9 +67,9 @@ if(Ti.App.deployType !== 'production'){
       left : 40,
       right : 40,
       hintText: 'host for tishadow',
-      value : Ti.App.Properties.getString('tishadow_host','') || host,
       textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
-      suppressReturn : true
+      suppressReturn : true,
+      color : 'black'
     });
     
     var btn = Ti.UI.createButton({
@@ -67,23 +88,15 @@ if(Ti.App.deployType !== 'production'){
     view.add(field);
     view.add(btn);
     win.add(view);
-    win.open();  
-  });
-}
-
-var host;
-
-if(Ti.App.deployType !== 'production' && Ti.App.Properties.getString('tishadow_host',null)){
-  host = Ti.App.Properties.getString('tishadow_host');
-} else if(Ti.Platform.model === "Simulator") {
-  host = "127.0.0.1";
-}else if(Ti.Platform.manufacturer === "unknown") {
-  host = "10.0.2.2";
-}else if(Ti.Platform.manufacturer === "Genymotion") {
-  host = "10.0.3.2";
-}else {
-  host = "{{host}}";
-}
+    
+    Ti.Gesture.addEventListener('shake', function (e) {
+      if(isShakeWinOpened == false){
+        field.value = Ti.App.Properties.getString('tishadow_host','') || host;
+        win.open();
+      }
+    });
+  }
+})();
 
 //Call Home
 TiShadow.connect({
