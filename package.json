@@ -25,7 +25,7 @@
     "socket.io-client": "^0.9.17",
     "tiapp": "0.0.3",
     "uglify-js": "^2.4.24",
-    "underscore": "^1.4.4",
+    "underscore": "^1.8.3",
     "update-notifier": "^0.1.10",
     "wrench": "~1.4.4"
   },
