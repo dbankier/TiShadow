@@ -249,7 +249,7 @@ if (config.isWatching) {
       if (!ready) {return};
       logger.debug(event + ": " + filepath);
       if (!responder) responder = setTimeout(function() {
-        execute(config.boost ? filepath.replace(config.base,"").substring(1) : undefined);
+        execute(config.boost ? filepath : undefined);
         responder = undefined;
       }, config.watchDelay);
     })
