@@ -484,43 +484,56 @@ Contributors
 ------------
 
 ```
-project  : TiShadow
- repo age : 2 years, 8 months
- active   : 305 days
- commits  : 735
- files    : 249
- authors  :
-   549  David Bankier           74.7%
-    72  Fokke Zandbergen        9.8%
-    42  dbankier                5.7%
-    15  Jong Eun Lee            2.0%
-    12  Guillermo Zunino        1.6%
-     8  Javen Wang              1.1%
-     7  Ismael Viamontes Marrero 1.0%
-     3  Joshua Ogle             0.4%
-     3  Eric Boehs              0.4%
-     2  noughts                 0.3%
-     2  Jordan                  0.3%
-     1  Ivan Skugor             0.1%
-     1  Hugh Cannon             0.1%
-     1  Jongeun Lee             0.1%
-     1  Clément Blanco         0.1%
-     1  Gilberto Avalos         0.1%
-     1  Lee, Jong Eun           0.1%
-     1  Lee, JongEun            0.1%
-     1  Luis Cruz               0.1%
-     1  Matt Apperson           0.1%
-     1  Pedro Palmero           0.1%
-     1  Terry Morgan            0.1%
-     1  Timan Rebel             0.1%
-     1  astronaughts            0.1%
-     1  clairecoloma            0.1%
-     1  Donggu Lee              0.1%
-     1  falkolab                0.1%
-     1  iskugor                 0.1%
-     1  jsjant                  0.1%
-     1  katangagonzalez         0.1%
-     1  Jeff Bonnes             0.1%
+ project  : TiShadow
+ repo age : 4 years, 8 months
+ active   : 376 days
+ commits  : 873
+ files    : 240
+ authors  : 
+   643	David Bankier           73.7%
+    72	Fokke Zandbergen        8.2%
+    42	dbankier                4.8%
+    28	Jong Eun Lee            3.2%
+    12	Guillermo Zunino        1.4%
+     8	Javen Wang              0.9%
+     8	InGrowth                0.9%
+     7	Ismael Viamontes Marrero 0.8%
+     4	Denny Biasiolli         0.5%
+     3	Joshua Ogle             0.3%
+     3	Eric Boehs              0.3%
+     3	m1ga                    0.3%
+     3	Michael                 0.3%
+     2	Jordan                  0.2%
+     2	kopiro                  0.2%
+     2	noughts                 0.2%
+     2	Matt Apperson           0.2%
+     2	Chris Barber            0.2%
+     2	Flavio De Stefano       0.2%
+     1	clairecoloma            0.1%
+     1	danghy                  0.1%
+     1	falkolab                0.1%
+     1	Carlos Henrique Zinato  0.1%
+     1	jsjant                  0.1%
+     1	katangagonzalez         0.1%
+     1	iskugor                 0.1%
+     1	Clément Blanco         0.1%
+     1	Dan Kronholm, Bitfabrikken 0.1%
+     1	Donggu Lee              0.1%
+     1	Erlan                   0.1%
+     1	Gilberto Avalos         0.1%
+     1	Hazem Khaled            0.1%
+     1	Hugh Cannon             0.1%
+     1	Hy Dang                 0.1%
+     1	Ivan Skugor             0.1%
+     1	Jeff Bonnes             0.1%
+     1	Jongeun Lee             0.1%
+     1	Lee, Jong Eun           0.1%
+     1	Lee, JongEun            0.1%
+     1	Luis Cruz               0.1%
+     1	Pedro Palmero           0.1%
+     1	Terry Morgan            0.1%
+     1	Timan Rebel             0.1%
+     1	astronaughts            0.1%
 ```
 
 Feedback appreciated.

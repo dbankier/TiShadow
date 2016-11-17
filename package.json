@@ -1,6 +1,6 @@
 {
   "name": "tishadow",
-  "version": "2.8.9",
+  "version": "2.9.0",
   "dependencies": {
     "archiver": "^0.4.8",
     "async": "^0.2.10",
