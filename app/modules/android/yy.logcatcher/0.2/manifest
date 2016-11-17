@@ -1,0 +1,19 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 0.2
+apiversion: 3
+architectures: armeabi-v7a x86
+description: My module
+author: Your Name
+license: Specify your license
+copyright: Copyright (c) 2014 by Your Company
+
+
+# these should not be edited
+name: tilogcatcher
+moduleid: yy.logcatcher
+guid: 9bb1715d-1afd-46c0-8241-0ad6a08bea36
+platform: android
+minsdk: 6.0.0.GA
