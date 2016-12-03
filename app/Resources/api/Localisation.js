@@ -23,7 +23,7 @@ function loadFile() {
   var strings = doc.getElementsByTagName("string");
   for(var i = 0; i< strings.length; i++) {
     var node = strings.item(i);
-    var value = node.text;
+    var value = node.textContent;
     if(node.hasAttributes()) {
       for(var att_index = 0; att_index < node.attributes.length; att_index++) {
         var att = node.attributes.item(att_index);
