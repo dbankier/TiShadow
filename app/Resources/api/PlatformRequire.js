@@ -33,14 +33,35 @@ exports.require = function(extension) {
     // Full Path
     var path = exports.file(extension + ".js");
     // Assuming that it is a native module if the path does not exist
-    if (!Ti.Filesystem.getFile(path).exists()) {
-      log.debug("Native module:" + extension);
-      return require(extension);
-    }
+      
     // Is the CommonJS module in the cache
     if (cache[path]) {
       return cache[path];
     }
+      
+    if (Ti.Filesystem.getFile(path).exists()) {
+      try{
+        var mod = require(extension);
+        log.debug("Custom module: " + extension);
+        cache[path] = mod;
+        return mod;
+      }catch(e){
+      	if(typeof e === "object"){
+      	  var msg = e.message;
+      	}else if(typeof e === "string"){
+      	  var msg = e;
+      	}
+      	if(msg && (msg.match("Requested module not found: "+extension) || msg.match("Couldn't find module: "+extension))){
+      	  // if old version titanium
+      	}else{
+      	  log.error(utils.extractExceptionData(e));
+      	}
+      }
+    }else{
+      log.debug("Native module: " + extension);
+      return require(extension);
+    }
+    
     var mod = custom_require(path);
     cache[path] = mod;
     return mod;
