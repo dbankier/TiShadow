@@ -111,7 +111,7 @@ module.exports = function(env, callback) {
           args = ['compile', '-b','-l', '2', '--platform', platform, '--config', 'sourcemap=false'];
         }
         if (config.alloyCompileFile) {
-          args[7] = "sourcemap=false,file="+config.alloyCompileFile;
+          args[7] = "file="+config.alloyCompileFile.split(',').join(',file=');
         }
         var alloy_command;
         if (config.useAppcCLI) {
