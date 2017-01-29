@@ -23,13 +23,13 @@ var values = jsca.types.map(function(a) { return {name: a.name, functions:a.func
         name.indexOf("iPhone") !== -1 ||
         name.indexOf("iPad") !== -1) {
       acc.ios.push(name);
-      types.functions.forEach(function(func){ if( func.name.match(/^(create|register|show.+)/)) acc.ios.push(name+'.'+func.name) });
+      types.functions.forEach(function(func){ if( func.name.match(/^(create|register|open|show.+)/)) acc.ios.push(name+'.'+func.name) });
     } else if (name.indexOf("Android") !== -1) {
       acc.android.push(name);
-      types.functions.forEach(function(func){ if( func.name.match(/^(create|register|show.+)/)) acc.android.push(name+'.'+func.name) });
+      types.functions.forEach(function(func){ if( func.name.match(/^(create|register|open|show.+)/)) acc.android.push(name+'.'+func.name) });
     } else {
       acc.common.push(name);
-      types.functions.forEach(function(func){ if( func.name.match(/^(create|register|show.+)/)) acc.common.push(name+'.'+func.name) });
+      types.functions.forEach(function(func){ if( func.name.match(/^(create|register|open|show.+)/)) acc.common.push(name+'.'+func.name) });
     }
   }
   return acc;
