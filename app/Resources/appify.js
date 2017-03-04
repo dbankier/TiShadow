@@ -7,6 +7,7 @@
  * This is a template used when TiShadow "appifying" a titanium project.
  * See the README.
  */
+var _ = require("/lib/underscore");
 
 Titanium.App.idleTimerDisabled = true;
 
@@ -49,17 +50,14 @@ if(Ti.App.deployType !== 'production' && Ti.App.Properties.getString('tishadow_h
     var isShakeWinOpened = false;
     var win = Ti.UI.createWindow({
       backgroundColor : 'white',
-      title : 'tishadow setting'
+      title : 'tishadow setting',
+      layout: 'vertical'
     });
     win.addEventListener('open', function (e) {
       isShakeWinOpened = true;
     });
     win.addEventListener('close', function (e) {
       isShakeWinOpened = false;
-    });
-    var view = Ti.UI.createView({
-      layout: 'vertical',
-      height : Ti.UI.SIZE
     });
     var field = Ti.UI.createTextField({
       height : 44,
@@ -69,25 +67,64 @@ if(Ti.App.deployType !== 'production' && Ti.App.Properties.getString('tishadow_h
       hintText: 'host for tishadow',
       textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
       suppressReturn : true,
-      color : 'black'
+      color : 'black',
+      top : 10
     });
-    
     var btn = Ti.UI.createButton({
       title : 'Save & Close',
       left : 40,
       right : 40,
       height: 44,
-      top : 44
+      top : 10
     });
     var saveAndClose = function () {
       Ti.App.Properties.setString('tishadow_host',field.value);
+      var history = Ti.App.Properties.getList('tishaodw_host_history',[]);
+      history.unshift(field.value);
+      history = _.uniq(history);
+      Ti.App.Properties.setList('tishaodw_host_history',history);
       win.close();
     };
     btn.addEventListener('click', saveAndClose);
     field.addEventListener('return', saveAndClose);
-    view.add(field);
-    view.add(btn);
-    win.add(view);
+
+    win.add(Ti.UI.createLabel({
+      font:{
+        fontSize : 15,
+        fontWeight : 'bold'
+      },
+      text: 'TiShadow Server IP',
+      top : 30
+    }))
+    win.add(field);
+    win.add(btn);
+
+    var listView = Ti.UI.createListView({
+      defaultItemTemplate : Titanium.UI.LIST_ITEM_TEMPLATE_SUBTITLE
+    });
+    var section = Ti.UI.createListSection();
+    listView.sections = [section];
+    var items = _.map(Ti.App.Properties.getList('tishaodw_host_history',[]),function (ip) {
+      return {
+        properties:{
+          itemId : ip,
+          title : ip
+        }
+      }
+    });
+    var currentIp = Ti.Platform.address;
+    items.unshift({
+      properties: {
+        itemId : currentIp,
+        title : currentIp,
+        subtitle : 'Current IP'
+      }
+    })
+    section.items = items;
+    listView.addEventListener('itemclick', function (e) {
+      field.value = e.itemId;
+    });
+    win.add(listView);
     
     Ti.Gesture.addEventListener('shake', function (e) {
       if(isShakeWinOpened == false){
