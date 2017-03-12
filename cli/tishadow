@@ -225,7 +225,7 @@ function execute(filenames) {
 if (config.isWatching) {
   config.buildPaths({},function() {
     var paths = [config.isAlloy ? "app" :"Resources"];
-    if(!config.isAlloy1_8_later){
+    if(!config.isAlloy1_8_later && fs.existsSync(path.join(config.base, 'i18n'))){
       paths.push('i18n');
     }
     if (config.isSpec) {
@@ -240,13 +240,13 @@ if (config.isWatching) {
       });
     }
     var ready = false;
-    
+
     var changedFiles = [];
     var debouncedExcute = _.debounce(function () {
       execute(changedFiles);
       changedFiles = [];
     },config.watchDelay);
-    
+
     var watcher = chokidar.watch(paths, {
       interval: config.watchInterval,
       cwd: config.base
