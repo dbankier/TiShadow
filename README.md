@@ -320,7 +320,7 @@ inside the TiShadow app.
 **note**: you can now also pipe to the tishadow repl using the `--pipe` flag. have a look 
 at this [screencast](http://www.youtube.com/watch?v=f9ZLAtzJdGY)
 
-###Spies
+### Spies
 
 You can add **spies** on objects so that you can modify them from
 the repl at run time. In your code add the following command:
@@ -343,7 +343,7 @@ You can capture screenshots of all connected devices using the following command
 The screenshots will be saved in `png` format in the `/tmp` directory or the path
 configured using the `--screenshot-path` flag when starting the server.
 
-###Screencast mode
+### Screencast mode
 
 Instead of saving the screenshots you can stream them to the browser. Use the following command:
 
@@ -468,14 +468,14 @@ Third Party Modules
 -------------------
 
 ### Websockets/Socket.IO
-####iPhone/Android
+#### iPhone/Android
 Copyright 2012 jordi domenech jordi@iamyellow.net Apache License, Version 2.0
 
 [Github Repo](https://github.com/iamyellow/tiws)
 
 
 ### ZIP Modules
-####iPhone/Android
+#### iPhone/Android
 
 Now using ti.compression:
 [titanium_modules](https://github.com/appcelerator/titanium_modules)
