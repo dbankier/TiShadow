@@ -31,7 +31,7 @@ TiShadow can be installed via npm using the following command:
 $  npm install -g tishadow
 ```
 
-**PLEASE NOTE:** The package installs titanium hooks in the post install. 
+**PLEASE NOTE:** The package installs titanium hooks in the post install.
 If you install with `sudo` and get the error `Unable to write config file...` use the following command:
 
 ```
@@ -46,7 +46,7 @@ Or if you want to use the master version directly from GitHub:
 
 ### Using the Appcelerator CLI
 
-By default TiShadow uses the (free) `titanium` and `alloy` cli's under the hood. If you are using the (paid) `appc` cli then 
+By default TiShadow uses the (free) `titanium` and `alloy` cli's under the hood. If you are using the (paid) `appc` cli then
 use the following command after installation:
 
 ```
@@ -62,7 +62,7 @@ live reload you can do the following.
 During install a titanium cli plugin/hook was installed for you. From your project you can just use the following command:
 
 ```
-  titanium build -p android -T device --shadow 
+  titanium build -p android -T device --shadow
 ```
 
 This will launch your app in the simulator and reload with any code/style/localisation changes.
@@ -124,7 +124,7 @@ devices.
 
 The TiShadow Server supports remote hosting with configurable http
 ports. It also allow for private "rooms" (much like chat rooms) so that
-the TiShadow server can be shared. 
+the TiShadow server can be shared.
 
 The `tishadow log` command is
 available to tail remote server logs (in the default or selected room).
@@ -199,7 +199,7 @@ __Some notes and limitations__
 
  * Only files in the Resources directory will be sent to the device
    using TiShadow. That said, localisation files **are** supported. (see
-   options above). 
+   options above).
  * Native modules _can_ be supported if built into the TiShadow app
    first. (I.e., add them to the tiapp.xml of the TiShadow app.)
  * Custom fonts will be loaded if placed in the `Resources/fonts`
@@ -213,7 +213,7 @@ __Some notes and limitations__
 Testing / Assertions
 --------------------
 
-TiShadow supports [Jasmine](http://pivotal.github.com/jasmine/) BDD tests. 
+TiShadow supports [Jasmine](http://pivotal.github.com/jasmine/) BDD tests.
 (Insipration taken from these two projects: [titanium-jasmine](https://github.com/guilhermechapiewski/titanium-jasmine/) and [jasmine-titanium](https://github.com/akahigeg/jasmine-titanium))
 
 Include your specs in the `spec` path of your project. Ensure
@@ -246,7 +246,7 @@ Here are a full list of options:
     -c, --coverage <report_types>        runs code coverage, for available report_types see https://github.com/gotwarlost/istanbul#the-report-command```
 ```
 
-**NEW**: You can now select the testing library to use `jasmine`, `mocha-should` or `mocha-chai`. 
+**NEW**: You can now select the testing library to use `jasmine`, `mocha-should` or `mocha-chai`.
 The default library is `jasmine` to change that use, e.g. `tishadow config -t mocha-should`.
 
 **NEW**: test coverage reports using instanbul is also available using the `--coverage <report_types>` flag.
@@ -261,7 +261,7 @@ _Alternatively (yet not preferred/depcrecated)_
 
 TiShadow also supports the use of assertions and the results are
 returned either to the browser or server logs.
- 
+
 For example:
 
 ```javascript
@@ -277,11 +277,11 @@ The following assertion are supported:
 
 Also the equivalent not assertions are available as well, e.g.
 'notEqual', 'isNotString', 'isNotNumber', etc.
- 
+
 
 Configurable Localisation
 -------------------------
-TiShadow supports dynamic localisation. You can also chose the locale 
+TiShadow supports dynamic localisation. You can also chose the locale
 you wish to use when launching your app/tests. Simply add the
 two-letter language code to your command. For example:
 
@@ -294,14 +294,14 @@ TiShadow REPL
 -------------
 
 The TiShadow REPL is available and evaluates commands in a
-persistent sand-boxed context. 
+persistent sand-boxed context.
 
 To Launch the REPL enter the following command:
 
 ```bash
   tishadow repl
 ```
-With the following options: 
+With the following options:
 
 ```
     -h, --help         output usage information
@@ -317,7 +317,7 @@ to interact with apps cached in the TiShadow app.
 `require()`, `Ti.include()` and assets are relative the running app
 inside the TiShadow app.
 
-**note**: you can now also pipe to the tishadow repl using the `--pipe` flag. have a look 
+**note**: you can now also pipe to the tishadow repl using the `--pipe` flag. have a look
 at this [screencast](http://www.youtube.com/watch?v=f9ZLAtzJdGY)
 
 ### Spies
@@ -329,12 +329,12 @@ the repl at run time. In your code add the following command:
 To get the object, simply use, e.g. `getSpy("mywindow")` from the repl.
 
 If you want to use the web-browser based inspector and/or automatic spy insertion,
-then use the `--inspector` flag with `run` or `config`. 
+then use the `--inspector` flag with `run` or `config`.
 
 Screenshots
 -----------
 
-You can capture screenshots of all connected devices using the following command: 
+You can capture screenshots of all connected devices using the following command:
 
 ```
   $ tishadow screenshot
@@ -357,7 +357,7 @@ Go to: `http://localhost:3000/screencast` to view the screencast.
 
 Code Snippets Via Webpage
 -------------------------
- 
+
 Enter the following address in a browser window:
 
 ```
@@ -446,7 +446,7 @@ tishadow deploy:
     :map <F6> <Esc>:w<CR>:!tishadow run --update<CR>a
     :imap <F6> <Esc>:w<CR>:!tishadow run --update<CR>a
     :map <S-F6> <Esc>:w<CR>:!tishadow run<CR>a
-    :imap <S-F6> <Esc>:w<CR>:!tishadow run<CR>a 
+    :imap <S-F6> <Esc>:w<CR>:!tishadow run<CR>a
 ```
 
 
@@ -480,8 +480,10 @@ Copyright 2012 jordi domenech jordi@iamyellow.net Apache License, Version 2.0
 Now using ti.compression:
 [titanium_modules](https://github.com/appcelerator/titanium_modules)
 
-Contributors
-------------
+Contributing && Contributors
+----------------------------
+
+Going forward, please use [Prettier](https://github.com/prettier/prettier) for code formatting with the `--single-quote` option
 
 ```
  project  : TiShadow
@@ -489,7 +491,7 @@ Contributors
  active   : 376 days
  commits  : 873
  files    : 240
- authors  : 
+ authors  :
    643	David Bankier           73.7%
     72	Fokke Zandbergen        8.2%
     42	dbankier                4.8%
