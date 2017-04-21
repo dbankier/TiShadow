@@ -420,6 +420,7 @@ The following are some of the options you can set:
     -i, --watch-interval <millis>        time to wait between checking files for changes (default: 100)
     -x, --watch-exclude <glob>           files to exclude from watch
     -n, --network-interface <interface>  set default network interface (used in express mode)
+    -e, --error-notification             enable error notification on macOS, Windows, Linux
 ~~~
 
 

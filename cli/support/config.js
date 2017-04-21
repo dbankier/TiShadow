@@ -172,6 +172,7 @@ config.init = function(env) {
   config.bundle_name = env.target;
   config.platform = (env.platform && env.platform !== 'all') ? env.platform.split(',') : undefined;
   config.package_version   = require("../../package.json").version;
+  config.errorNotification = env.errorNotification !== undefined ? env.errorNotification : config.errorNotification || false;
 };
 
 config.write = function(env) {
@@ -179,7 +180,7 @@ config.write = function(env) {
   if (fs.existsSync(config_path)) {
     new_config = require(config_path);
   }
-  ['host','port','room', 'type', 'inspector', 'boost', 'watchInterval', 'watchDelay', 'watchExclude', 'networkInterface', 'useAppcCLI'].forEach(function(param) {
+  ['host','port','room', 'type', 'inspector', 'boost', 'watchInterval', 'watchDelay', 'watchExclude', 'networkInterface', 'useAppcCLI','errorNotification'].forEach(function(param) {
     if (env[param] !== undefined) {
       new_config[param] = env[param];
     }

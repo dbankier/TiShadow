@@ -3,7 +3,6 @@
  * Please see the LICENSE file included with this distribution for details.
  */
 
-var config = require("../cli/support/config");
 var path = require('path');
 require('colors');
 
@@ -19,14 +18,17 @@ color = {
 };
 
 exports.log = function(level, name, msg) {
-  
-  if(level === 'ERROR' || level ==='FAIL'){
+  var config = require("../cli/support/config");
+  if(config.errorNotification && (level === 'ERROR' || level ==='FAIL')){
     var notifier = require('node-notifier');
     notifier.notify({
       title: level,
       message: msg,
       icon: path.join(__dirname, '..','app','Resources','iphone','appicon@2x.png'), 
-      sound: true
+      sound: true,
+      wait: true,
+      timeout: 5
+    },function (err, response) {
     });
   }
   
