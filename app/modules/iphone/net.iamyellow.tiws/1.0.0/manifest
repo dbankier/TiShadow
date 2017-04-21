@@ -2,17 +2,18 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.1.0
-apiversion: 3
+version: 1.0.0
+apiversion: 2
 description: TiWS is a very simple Titanium module (iOS / Android) for creating native websockets.
 author: jordi domenech
 license: Apache License, Version 2.0
 copyright: Copyright (c) 2012 by jordi domenech <jordi@iamyellow.net>
-architectures: armeabi-v7a x86
+
 
 # these should not be edited
 name: tiws
 moduleid: net.iamyellow.tiws
-guid: bdcab75e-de6f-44b6-8b01-00a1c80d04e7
-platform: android
-minsdk: 6.0.0.GA
+guid: 1a88f1c1-43de-45da-b57d-04551924f734
+platform: iphone
+minsdk: 3.3.0
+architectures: armv7 arm64 i386 x86_64
