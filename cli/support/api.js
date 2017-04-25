@@ -3,57 +3,65 @@
  * Please see the LICENSE file included with this distribution for details.
  */
 
-var config = require("./config"),
-    logger = require("../../server/logger"),
-    colors = require('colors'),
-    repl = require('repl'),
-    http = require('http'),
-    path = require('path'),
-    fs = require('fs'),
-    FormData =require('form-data'),
-    connected_socket;
-
+var config = require('./config'),
+  logger = require('../../server/logger'),
+  colors = require('colors'),
+  repl = require('repl'),
+  http = require('http'),
+  path = require('path'),
+  fs = require('fs'),
+  FormData = require('form-data'),
+  connected_socket;
 
 // Used to be an http request - now over sockets.
 function postToServer(path, data) {
   if (connected_socket) {
-    connected_socket.socket.reconnect();
-    connected_socket.emit(path,data);
-    logger.info(path.toUpperCase() + " sent.");
+    connected_socket.emit(path, data);
+    logger.info(path.toUpperCase() + ' sent.');
   } else {
-    require("./socket").connect(function(socket) {
+    require('./socket').connect(function(socket) {
       connected_socket = socket;
-      socket.emit(path,data);
-      if (!config.isTailing){
+      socket.emit(path, data);
+      if (!config.isTailing) {
         socket.disconnect();
       }
-      logger.info(path.toUpperCase() + " sent.");
+      logger.info(path.toUpperCase() + ' sent.');
     });
   }
 }
 
 // For posting the zip file to a remote TiShadow server (http POST)
-function postZipToServer (_path, data) {
+function postZipToServer(_path, data) {
   data.room = config.room;
   var form = new FormData();
   form.append('data', JSON.stringify(data));
   form.append('bundle', fs.createReadStream(config.bundle_file));
   logger.info('Uploading...');
-  form.submit("http" + (config.isTiCaster ? "s" : "") + "://" + config.host + ":" + config.port + "/" + _path, function(err, response) {
-    if (err) return logger.error(err);
-    response.pipe(process.stdout);
-  });
+  form.submit(
+    'http' +
+      (config.isTiCaster ? 's' : '') +
+      '://' +
+      config.host +
+      ':' +
+      config.port +
+      '/' +
+      _path,
+    function(err, response) {
+      if (err) return logger.error(err);
+      response.pipe(process.stdout);
+    }
+  );
 }
 
 exports.clearCache = function(env) {
   config.buildPaths(env, function() {
-    postToServer("clear", {platform: config.platform});
+    postToServer('clear', { platform: config.platform });
   });
 };
 
 exports.closeApp = function(env) {
   config.buildPaths(env, function() {
-    postToServer("close", {platform: config.platform});
+    postToServer('close', { platform: config.platform });
   });
 };
 
@@ -62,55 +70,76 @@ exports.screenshot = function(env) {
     var scale = env.scale ? env.scale * 1 : undefined;
     if (env.screencast) {
       setInterval(function() {
-        postToServer("screenshot", {platform: config.platform, screencast: true, scale: scale});
-      },env.screencast);
+        postToServer('screenshot', {
+          platform: config.platform,
+          screencast: true,
+          scale: scale
+        });
+      }, env.screencast);
     } else {
-      postToServer("screenshot", {platform: config.platform, screencast: false, scale: scale});
+      postToServer('screenshot', {
+        platform: config.platform,
+        screencast: false,
+        scale: scale
+      });
     }
   });
 };
 
 exports.newBundle = function(file_list) {
   var fn;
-  if (config.host === "localhost") {
+  if (config.host === 'localhost') {
     fn = postToServer;
   } else {
     fn = postZipToServer;
   }
-  fn("bundle", {
-    bundle:config.bundle_file,
+  fn('bundle', {
+    bundle: config.bundle_file,
     deployOnly: config.isDeploy || undefined,
-    spec: {run: config.isSpec, junitxml: config.isJUnit, type: config.specType, clearSpecFiles: config.clearSpecFiles, runCoverage: config.runCoverage},
+    spec: {
+      run: config.isSpec,
+      junitxml: config.isJUnit,
+      type: config.specType,
+      clearSpecFiles: config.clearSpecFiles,
+      runCoverage: config.runCoverage
+    },
     locale: config.locale,
     platform: config.platform,
     inspector: config.inspector,
-    patch : {run: config.isPatch, files: file_list}
+    patch: { run: config.isPatch, files: file_list }
   });
 };
 
 exports.sendSnippet = function(env) {
   config.buildPaths(env, exports.startRepl);
 };
-exports.startRepl = function(){
+exports.startRepl = function() {
   if (config.isPipe) {
     var stdin = process.openStdin();
-    var data = "";
+    var data = '';
     stdin.on('data', function(chunk) {
       data += chunk;
     });
     stdin.on('end', function() {
-      postToServer("snippet",{code: data, platform: config.platform});
+      postToServer('snippet', { code: data, platform: config.platform });
     });
   } else {
-    var socket = connected_socket || require("./socket").connect();
+    var socket = connected_socket || require('./socket').connect();
     connected_socket = socket;
-    console.log("TiShadow REPL\n\nlaunchApp(appName), closeApp(), runSpec() and clearCache() methods available.\nrequire(), Ti.include() and assests are relative the running app.\n\n".grey);
+    console.log(
+      'TiShadow REPL\n\nlaunchApp(appName), closeApp(), runSpec() and clearCache() methods available.\nrequire(), Ti.include() and assests are relative the running app.\n\n'
+        .grey
+    );
     repl.start({
       eval: function(command, context, filename, callback) {
-        if (command.trim() !== "(\n)") {
-          socket.emit('snippet',{code: command, platform: config.platform}, function(e) {
-            callback("".blue);
-          });
+        if (command.trim() !== '(\n)') {
+          socket.emit(
+            'snippet',
+            { code: command, platform: config.platform },
+            function(e) {
+              callback(''.blue);
+            }
+          );
         }
       }
     });
