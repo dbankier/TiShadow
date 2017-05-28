@@ -207,6 +207,12 @@ exports.build = function(env) {
           .createReadStream(path.join(config.base, 'DefaultIcon.png'))
           .pipe(fs.createWriteStream(path.join(dest, 'DefaultIcon.png')));
       }
+      if (fs.existsSync(path.join(config.base, 'Podfile'))) {
+        fs
+          .createReadStream(path.join(config.base, 'Podfile'))
+          .pipe(fs.createWriteStream(path.join(dest, 'Podfile')));
+      }
+
       if (fs.existsSync(path.join(config.base, 'Entitlements.plist'))) {
         fs
           .createReadStream(path.join(config.base, 'Entitlements.plist'))
