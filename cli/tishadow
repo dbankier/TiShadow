@@ -226,7 +226,10 @@ function execute(filenames) {
 if (config.isWatching) {
   config.buildPaths({},function() {
     var paths = [config.isAlloy ? "app" :"Resources"];
-    if(!config.isAlloy1_8_later && fs.existsSync(path.join(config.base, 'i18n'))){
+    if (
+      fs.existsSync(path.join(config.base, 'i18n')) && 
+      !fs.existsSync(path.join(config.base, 'i18n', 'alloy_generated'))
+      ){
       paths.push('i18n');
     }
     if (config.isSpec) {
