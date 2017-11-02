@@ -64,6 +64,9 @@ function toFullPath(p) {
       p.match(/^\.{1,2}\//) &&
       current_file)   {
     var full = path.join(path.dirname(current_file), p);
+    if(path.sep == "\\"){
+        full = full.replace(/\\/g, "/");
+    }
     return full.substring(full.indexOf("Resources/") + 10);
   }
  return p;
