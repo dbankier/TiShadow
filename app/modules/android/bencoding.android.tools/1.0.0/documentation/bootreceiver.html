@@ -1,0 +1,192 @@
+<p>benCoding.Android.Tools</p>
+
+<p>A collection of utilities designed to make working with Titanium on Android alittle easier.</p>
+
+<p>&lt;h1&gt;BootReceiver&lt;/h1&gt;
+The BootReceiver proxy allows you to subscribe to the BOOT_COMPLETED broadcast and perform specific events upon receipt.</p>
+
+<p>&lt;h2&gt;Features&lt;/h2&gt;</p>
+
+<ul><li>On BOOT_COMPLETED restart your application in the foreground or background</li><li>On BOOT_COMPLETED create a notification with information defined in your project&#39;s tiapp.xml</li><li>Use Titanium Properties to configure a BOOT_COMPLETED action you wish to be taken.</li></ul>
+
+<p>&lt;h2&gt;Module Setup&lt;/h2&gt;</p>
+
+<ul><li>Download the latest release from the releases folder ( or you can build it yourself )</li><li>Install the bencoding.sms module. If you need help here is a &quot;How To&quot; <a href="https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules">guide</a>. </li><li>You can now use the module via the commonJS require method, example shown below.</li></ul>
+
+<p>&lt;h2&gt;How does it work?&lt;/h2&gt;
+The BootReceiver is configured to work similar to how a native app would when it receives the BOOT_COMPLETED broadcast.  Since Titanium might not yet be loaded, the module will help bootstrap your app based on the configuration elements in your tiapp.xml.</p>
+
+<p>&lt;u&gt;&lt;strong&gt;Warning:&lt;/strong&gt;&lt;/u&gt; This functionality requires you update your tiapp.xml file with a few specific elements. I’ve included samples for each scenario, but please plan on spending alittle time exploring in order to get the configurations for your app working properly.</p>
+
+<p>&lt;h2&gt;Finding the correct tiapp.xml entries&lt;/h2&gt;
+The below steps cover how to create the tiapp.xml entries needed for this module to work.</p>
+
+<ul><li>Before installing the module, you will want to build your project for the simulator.  It doesn’t matter if the app is empty or event runs. The goal is to simply have Titanium generate a AndroidManifest.xml file.  You can find this file in your Project/build/android folder.</li><li>To avoid the 2373 restart bug, you will need to add the following properties into your tiapp.xml file. </li></ul>
+
+<p><code>xml
+    &lt;property name=&quot;ti.ui.defaultunit&quot; type=&quot;string&quot;&gt;system&lt;/property&gt;
+    &lt;property name=&quot;ti.android.bug2373.finishfalseroot&quot; type=&quot;bool&quot;&gt;true&lt;/property&gt;
+    &lt;property name=&quot;ti.android.bug2373.disableDetection&quot; type=&quot;bool&quot;&gt;true&lt;/property&gt;
+    &lt;property name=&quot;ti.android.bug2373.restartDelay&quot; type=&quot;int&quot;&gt;500&lt;/property&gt;
+    &lt;property name=&quot;ti.android.bug2373.finishDelay&quot; type=&quot;int&quot;&gt;0&lt;/property&gt;
+    &lt;property name=&quot;ti.android.bug2373.skipAlert&quot; type=&quot;bool&quot;&gt;true&lt;/property&gt;
+    &lt;property name=&quot;ti.android.bug2373.message&quot;&gt;Initializing&lt;/property&gt;
+    &lt;property name=&quot;ti.android.bug2373.title&quot;&gt;Restart Required&lt;/property&gt;
+    &lt;property name=&quot;ti.android.bug2373.buttonText&quot;&gt;Continue&lt;/property&gt;
+</code></p>
+
+<p>Using the information from step #1’s AndroidManifest.xml add an android configuration node to your tiapp.xml.  The below snippet show the tiapp.xml configuration node for a sample app, make sure you update this template with the correct variables from your project.</p>
+
+<p><code>xml
+    &lt;android
+        android:permission=&quot;android.permission.RECEIVE_BOOT_COMPLETED&quot; xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+        &lt;manifest&gt;
+            &lt;supports-screens android:anyDensity=&quot;false&quot;/&gt;
+            &lt;application&gt;
+                &lt;activity android:alwaysRetainTaskState=&quot;true&quot;
+                    android:configChanges=&quot;keyboardHidden|orientation&quot;
+                    android:label=&quot;RandomTest&quot;
+                    android:launchMode=&quot;singleTop&quot;
+                    android:name=&quot;.RandomtestActivity&quot;
+                    android:persistent=&quot;true&quot; android:theme=&quot;@style/Theme.Titanium&quot;&gt;
+                    &lt;intent-filter&gt;
+                        &lt;action android:name=&quot;android.intent.action.MAIN&quot;/&gt;
+                        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot;/&gt;
+                    &lt;/intent-filter&gt;
+                &lt;/activity&gt;
+            &lt;/application&gt;
+            &lt;uses-permission android:name=&quot;android.permission.RECEIVE_BOOT_COMPLETED&quot;/&gt;
+        &lt;/manifest&gt;
+    &lt;/android&gt;
+</code></p>
+
+<p>(!) Make sure to add the two permission lines show above.</p>
+
+<p>&lt;h3&gt;Scenario 1: Restart&lt;/h3&gt;
+The first scenario supported by the module is to restart your Titanium app upon receipt of the BOOT_COMPLETED broadcast.</p>
+
+<p>The following shows how to add a receiver entry in your tiapp.xml to use the BootReceiver module.</p>
+
+<p><code></code>`xml
+&lt;android 
+    android:permission=&quot;android.permission.RECEIVE<em>BOOT</em>COMPLETED&quot; 
+    ...
+            &lt;application&gt;
+                &lt;activity android:alwaysRetainTaskState=&quot;true&quot;
+                ...
+                &lt;/activity&gt;
+  		     ...
+                &lt;receiver android:exported=&quot;true&quot; android:name=&quot;bencoding.android.receivers.BootReceiver&quot;&gt;
+                    &lt;intent-filter&gt;
+                        &lt;action android:name=&quot;android.intent.action.BOOT<em>COMPLETED&quot;/&gt;
+                        &lt;action android:name=&quot;android.intent.action.QUICKBOOT</em>POWERON&quot;/&gt;
+                    &lt;/intent-filter&gt;</p>
+
+<pre><code>                &lt;meta-data android:name=&quot;bootType&quot; android:value=&quot;restart&quot;/&gt;
+                &lt;meta-data android:name=&quot;sendToBack&quot; android:value=&quot;true&quot;/&gt;
+            &lt;/receiver&gt;
+
+        &lt;/application&gt;
+        &lt;uses-permission android:name=&quot;android.permission.RECEIVE_BOOT_COMPLETED&quot;/&gt;
+    &lt;/manifest&gt;</code></pre>
+
+<p>&lt;/android&gt;
+<code></code>`
+&lt;h4&gt;Meta-Data Elements&lt;/h4&gt;
+* bootType – This meta-data element is required and tells the module which action to take. By using the restart option, the module will restart your application upon receipt of the BOOT<em>COMPLETED broadcast.
+* sendToBack - This meta-data element is required if using the bootType of restart.  If true, your app will be restarted in the background upon receipt of the BOOT</em>COMPLETED broadcast. If false, your app will be restarted in the foreground and the user will be presented with the first window of your app.</p>
+
+<p>Please see the sample <a href="https://github.com/benbahrenburg/benCoding.Android.Tools/blob/master/example/BootReceiver/Restart/tiapp.xml">tiapp.xml</a> and <a href="https://github.com/benbahrenburg/benCoding.Android.Tools/blob/master/example/BootReceiver/Restart/app.js">app.js</a> for the full example files.</p>
+
+<p>&lt;h3&gt;Scenario 2: Notification&lt;/h3&gt;
+The second scenario supported by the module is publish a notification upon receipt of the BOOT_COMPLETED broadcast.</p>
+
+<p>The following shows how to add a receiver entry in your tiapp.xml to use the BootReceiver module.
+<code></code>`xml
+&lt;android 
+    android:permission=&quot;android.permission.RECEIVE<em>BOOT</em>COMPLETED&quot; 
+    ...
+            &lt;application&gt;
+                &lt;activity android:alwaysRetainTaskState=&quot;true&quot;
+                ...
+                &lt;/activity&gt;
+    	     ...
+                &lt;receiver android:exported=&quot;true&quot; android:name=&quot;bencoding.android.receivers.BootReceiver&quot;&gt;
+                    &lt;intent-filter&gt;
+                        &lt;action android:name=&quot;android.intent.action.BOOT<em>COMPLETED&quot;/&gt;
+                        &lt;action android:name=&quot;android.intent.action.QUICKBOOT</em>POWERON&quot;/&gt;
+                    &lt;/intent-filter&gt;</p>
+
+<pre><code>                &lt;meta-data android:name=&quot;bootType&quot; android:value=&quot;notify&quot;/&gt;
+                &lt;meta-data android:name=&quot;title&quot; android:value=&quot;Title Sample from tiapp.xml&quot;/&gt;
+                &lt;meta-data android:name=&quot;message&quot; android:value=&quot;Message Sample from tiapp.xml&quot;/&gt;
+            &lt;/receiver&gt;
+
+        &lt;/application&gt;
+        &lt;uses-permission android:name=&quot;android.permission.RECEIVE_BOOT_COMPLETED&quot;/&gt;
+    &lt;/manifest&gt;</code></pre>
+
+<p>&lt;/android&gt;
+<code></code>`</p>
+
+<p>&lt;h4&gt;Meta-Data Elements&lt;/h4&gt;
+* bootType – This meta-data element is required and tells the module which action to take. By using the notify option, the module will publish a notification using the title and message properties defined in the tiapp.xml receipt of the BOOT<em>COMPLETED broadcast.
+* title - This meta-data element is required if using the bootType of notify.  The title is used to create the title for the notification that will be published after receipt of the BOOT</em>COMPLETED broadcast.
+* message - This meta-data element is required if using the bootType of notify.  The message is used to create the message body for the notification that will be published after receipt of the BOOT_COMPLETED broadcast.</p>
+
+<p>Please see the sample <a href="https://github.com/benbahrenburg/benCoding.Android.Tools/blob/master/example/BootReceiver/Notify/tiapp.xml">tiapp.xml</a> and <a href="https://github.com/benbahrenburg/benCoding.Android.Tools/blob/master/example/BootReceiver/Notify/app.js">app.js</a> for the full example files.</p>
+
+<p>&lt;h3&gt;Scenario 3: Using Properties&lt;/h3&gt;
+Allowing for the app at runtime to how to handle the BOOT<em>COMPLETED broadcast allows for handling more complex use cases but requires additional setup.  Titanium Properties are mapped to configuration elements in your tiapp.xml.  The value from these specific Titanium properties are then to determine the correct action to be taken upon receiving the BOOT</em>COMPLETED broadcast.</p>
+
+<p>The following shows how to add a receiver entry in your tiapp.xml to enable the BootReceiver module to use Titanium Properties to direct the action after receipt of a BOOT_COMPLETED broadcast.</p>
+
+<p><code></code>`xml
+&lt;android 
+    android:permission=&quot;android.permission.RECEIVE<em>BOOT</em>COMPLETED&quot; 
+    ...
+            &lt;application&gt;
+                &lt;activity android:alwaysRetainTaskState=&quot;true&quot;
+                ...
+                &lt;/activity&gt;
+           ...
+                &lt;receiver android:exported=&quot;true&quot; android:name=&quot;bencoding.android.receivers.BootReceiver&quot;&gt;
+                    &lt;intent-filter&gt;
+                        &lt;action android:name=&quot;android.intent.action.BOOT<em>COMPLETED&quot;/&gt;
+                        &lt;action android:name=&quot;android.intent.action.QUICKBOOT</em>POWERON&quot;/&gt;
+                    &lt;/intent-filter&gt;</p>
+
+<pre><code>                &lt;meta-data android:name=&quot;bootType&quot; android:value=&quot;propertyBased&quot;/&gt;
+                &lt;meta-data
+                    android:name=&quot;enabled_property_to_reference&quot; android:value=&quot;my_enabled&quot;/&gt;
+               &lt;meta-data
+                    android:name=&quot;bootType_property_to_reference&quot; android:value=&quot;my_bootType&quot;/&gt;
+               &lt;meta-data
+                    android:name=&quot;sendToBack_property_to_reference&quot; android:value=&quot;my_sendtoback&quot;/&gt;
+               &lt;meta-data android:name=&quot;icon_property_to_reference&quot; android:value=&quot;my_notify_icon&quot;/&gt;
+               &lt;meta-data
+                    android:name=&quot;title_property_to_reference&quot; android:value=&quot;my_notify_title&quot;/&gt;
+               &lt;meta-data
+                    android:name=&quot;message_property_to_reference&quot; android:value=&quot;my_notify_message&quot;/&gt;
+            &lt;/receiver&gt;
+
+        &lt;/application&gt;
+        &lt;uses-permission android:name=&quot;android.permission.RECEIVE_BOOT_COMPLETED&quot;/&gt;
+    &lt;/manifest&gt;</code></pre>
+
+<p>&lt;/android&gt;
+<code></code>`</p>
+
+<p>&lt;h4&gt;Meta-Data Elements&lt;/h4&gt;
+<em> bootType – This meta-data element is required and tells the module which action to take. By using the propertyBased option, the module will look at the following properties to determine which action to take.
+</em> enabled<em>property</em>to<em>reference – This android:value element contains a reference to the Titanium Property the module will reference to see if this feature has been enabled. This property must contain a Boolean value and is false by default. 
+* bootType</em>property<em>to</em>reference – This android:value element contains a reference to the Titanium Property the module will reference to see what action to perform. Just like the primary bootType element, you can use restart or notify to perform the desired actions. Please note all configuration elements such as title, message, sendToBack will be read from the Titanium Properties mapped in your tiapp.xml file. 
+* sendToBack<em>property</em>to<em>reference – This android:value element contains a reference to the Titanium Property the module will reference to see if the app should be restarted in the foreground or background.. This property must contain a Boolean value and is true by default. Please note: This property is only used if the Titanium Property define in bootType</em>property<em>to</em>reference is set to restart. 
+* icon<em>property</em>to<em>reference – This android:value element contains a reference to the Titanium Property the module will reference to determine which Android Resource Id to use when creating the icon for the notification created on receipt of the BOOT</em>COMPLETED broadcast.  Please note: This property is only used if the Titanium Property define in bootType<em>property</em>to<em>reference is set to notify. 
+* title</em>property<em>to</em>reference – This android:value element contains a reference to the Titanium Property the module will reference to determine which Android Resource Id to use when creating the title for the notification created on receipt of the BOOT<em>COMPLETED broadcast.  Please note: This property is only used if the Titanium Property define in bootType</em>property<em>to</em>reference is set to notify. 
+* message<em>property</em>to<em>reference – This android:value element contains a reference to the Titanium Property the module will reference to determine which Android Resource Id to use when creating the message for the notification created on receipt of the BOOT</em>COMPLETED broadcast.  Please note: This property is only used if the Titanium Property define in bootType<em>property</em>to_reference is set to notify. </p>
+
+<p>Please see the sample <a href="https://github.com/benbahrenburg/benCoding.Android.Tools/blob/master/example/BootReceiver/Properties/tiapp.xml">tiapp.xml</a> and <a href="https://github.com/benbahrenburg/benCoding.Android.Tools/blob/master/example/BootReceiver/Properties/app.js">app.js</a> for the full example files.</p>
+
+<p>&lt;h2&gt;Any examples?&lt;/h2&gt;
+Usage examples are available on Github at <a href="https://github.com/benbahrenburg/benCoding.Android.Tools/tree/master/example">here</a>.</p>
