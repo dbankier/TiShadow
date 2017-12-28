@@ -18,10 +18,10 @@ _.templateSettings = {
 };
 
 var required_modules = [
-  '<module platform="android" version="2.0.0">net.iamyellow.tiws</module>',
-  '<module platform="android" version="3.0.0">ti.compression</module>',
-  '<module platform="android" version="0.2">yy.logcatcher</module>',
-  '<module platform="android" version="0.50">bencoding.android.tools</module>',
+  '<module platform="android" version="3.0.0">net.iamyellow.tiws</module>',
+  '<module platform="android" version="4.0.0">ti.compression</module>',
+  '<module platform="android" version="1.0.1">yy.logcatcher</module>',
+  '<module platform="android" version="1.0.0">bencoding.android.tools</module>',
   '<module platform="iphone" version="1.0.0">net.iamyellow.tiws</module>',
   '<module platform="iphone" version="1.1.1">ti.compression</module>',
   '<module platform="iphone" version="0.2.0">yy.logcatcher</module>',

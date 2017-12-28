@@ -1,0 +1,107 @@
+<p>benCoding.Android.Tools</p>
+
+<p>A collection of utilities designed to make working with Titanium on Android alittle easier.</p>
+
+<p>&lt;h1&gt;Platform&lt;/h1&gt;
+The Platform proxy provides access to several helpful Android APIs that are currently not available in the Titanium SDK.</p>
+
+<p>&lt;h2&gt;Setup&lt;/h2&gt;</p>
+
+<ul><li>Download the latest release from the releases folder ( or you can build it yourself )</li><li>Install the bencoding.sms module. If you need help here is a &quot;How To&quot; <a href="https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules">guide</a>. </li><li>You can now use the module via the commonJS require method, example shown below.</li></ul>
+
+<p>&lt;pre&gt;&lt;code&gt;
+var tools = require(&#39;bencoding.android.tools&#39;);
+&lt;/code&gt;&lt;/pre&gt;</p>
+
+<p>&lt;h2&gt;Methods&lt;/h2&gt;</p>
+
+<p>&lt;b&gt;intentAvailable&lt;/b&gt;( Ti.Android.Intent )
+This method checks if there is an app on your device that can handle a specific intent.</p>
+
+<p>&lt;b&gt;Parameters&lt;/b&gt;
+intent : Ti.Android.Intent
+Ti.Android.Intent to be used in checking for availability.</p>
+
+<p>&lt;b&gt;Returns&lt;/b&gt;
+Boolean</p>
+
+<p>&lt;b&gt;Example&lt;/b&gt;
+&lt;pre&gt;&lt;code&gt;
+	var platformTools = tools.createPlatform();
+	var intent = Ti.Android.createIntent({
+		action: Ti.Android.ACTION_VIEW,
+		type: &quot;application/pdf&quot;,
+		data: session.tempFile.nativePath
+	});</p>
+
+<pre><code>if(platformTools.intentAvailable(intent)){
+	try {
+		Ti.Android.currentActivity.startActivity(intent);
+	} catch(e) {
+		Ti.API.debug(e);
+		alert(&#39;Something went wrong&#39;);
+	}
+}else{
+	alert(&quot;Please go to the Google Play Store and download a PDF reader&quot;);			
+}</code></pre>
+
+<p>&lt;/code&gt;&lt;/pre&gt;</p>
+
+<hr/>
+
+<p>&lt;b&gt;restartApp&lt;/b&gt;
+This method restarts your Titanium app</p>
+
+<p>&lt;b&gt;Parameters&lt;/b&gt;
+None</p>
+
+<p>&lt;b&gt;Returns&lt;/b&gt;
+None</p>
+
+<p>&lt;b&gt;Example&lt;/b&gt;
+&lt;pre&gt;&lt;code&gt;
+	var platformTools = tools.createPlatform();
+	//Restarts your Titanium App
+	platformTools.restartApp();</p>
+
+<p>&lt;/code&gt;&lt;/pre&gt;</p>
+
+<hr/>
+
+<p>&lt;b&gt;exitApp&lt;/b&gt;
+This method closes your Titanium app</p>
+
+<p>&lt;b&gt;Parameters&lt;/b&gt;
+None</p>
+
+<p>&lt;b&gt;Returns&lt;/b&gt;
+None</p>
+
+<p>&lt;b&gt;Example&lt;/b&gt;
+&lt;pre&gt;&lt;code&gt;
+	var platformTools = tools.createPlatform();
+	//Restarts your Titanium App
+	platformTools.exitApp();</p>
+
+<p>&lt;/code&gt;&lt;/pre&gt;</p>
+
+<hr/>
+
+<p>&lt;b&gt;isAirplaneModeOn&lt;/b&gt;
+This method returns a boolean if the device is in airplane mode</p>
+
+<p>&lt;b&gt;Parameters&lt;/b&gt;
+None</p>
+
+<p>&lt;b&gt;Returns&lt;/b&gt;
+Boolean (true/false)</p>
+
+<p>&lt;b&gt;Example&lt;/b&gt;
+&lt;pre&gt;&lt;code&gt;
+	var platformTools = tools.createPlatform();
+	var onPlane = platformTools.isAirplaneModeOn();
+	alert(&#39;Your device is in airplane mode: &#39; + (onPlane ? &#39;Yes&#39; :&#39;No&#39;));</p>
+
+<p>&lt;/code&gt;&lt;/pre&gt;</p>
+
+<hr/>
