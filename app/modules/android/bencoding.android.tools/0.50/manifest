@@ -1,0 +1,19 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 0.50
+apiversion: 3
+architectures: armeabi-v7a x86
+description: A collection of utilities designed to make working with Titanium on Android alittle easier.
+author: Benjamin Bahrenburg
+license: Apache 2 see attached licensing file
+copyright: Copyright (c) 2013 by Benjamin Bahrenburg
+
+
+# these should not be edited
+name: androidtools
+moduleid: bencoding.android.tools
+guid: c8a9f567-5923-4534-a567-cefcc17a0a7d
+platform: android
+minsdk: 6.0.0.GA
