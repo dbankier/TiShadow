@@ -39,9 +39,6 @@ var includes = [
   Titanium.Database.DB,
   Titanium.Database.ResultSet,
   Titanium.Event,
-  Titanium.Facebook,
-  Titanium.Facebook.createLoginButton,
-  Titanium.Facebook.LoginButton,
   Titanium.Filesystem,
   Titanium.Filesystem.openStream,
   Titanium.Filesystem.createTempDirectory,
@@ -69,12 +66,18 @@ var includes = [
   Titanium.Media.createAudioPlayer,
   Titanium.Media.createAudioRecorder,
   Titanium.Media.createSound,
+  Titanium.Media.createSystemAlert,
   Titanium.Media.createVideoPlayer,
+  Titanium.Media.hasAudioPermissions,
+  Titanium.Media.requestAudioPermissions,
+  Titanium.Media.hasCameraPermissions,
+  Titanium.Media.requestCameraPermissions,
   Titanium.Media.AudioPlayer,
   Titanium.Media.AudioRecorder,
   Titanium.Media.Item,
   Titanium.Media.MusicPlayer,
   Titanium.Media.Sound,
+  Titanium.Media.SystemAlert,
   Titanium.Media.VideoPlayer,
   Titanium.Module,
   Titanium.Network,
@@ -92,6 +95,7 @@ var includes = [
   Titanium.Network.Socket,
   Titanium.Network.Socket.createTCP,
   Titanium.Network.Socket.TCP,
+  Titanium.Network.Socket.UDP,
   Titanium.Network.TCPSocket,
   Titanium.Platform,
   Titanium.Platform.createUUID,
@@ -191,6 +195,7 @@ var includes = [
   Titanium.UI.TextArea,
   Titanium.UI.TextField,
   Titanium.UI.Toolbar,
+  Titanium.UI.Toolbar.showOverflowMenu,
   Titanium.UI.View,
   Titanium.UI.WebView,
   Titanium.UI.Window,
@@ -234,7 +239,7 @@ var includes = [
   Titanium.Yahoo
 ];
 
-if (Ti.Platform.osname !== "android"){
+if (Ti.Platform.osname !== 'android') {
   var ios_includes = [
     Titanium.App.iOS.BackgroundService,
     Titanium.App.iOS.LocalNotification,
@@ -351,6 +356,9 @@ if (Ti.Platform.osname !== "android"){
     Titanium.Geolocation.Android.LocationProvider,
     Titanium.Geolocation.Android.LocationRule,
     Titanium.UI.Android.CardView,
+    Titanium.UI.Android.DrawerLayout,
+    Titanium.UI.Android.DrawerLayout.openLeft,
+    Titanium.UI.Android.DrawerLayout.openRight,
     Titanium.UI.Android.ProgressIndicator,
     Titanium.UI.Android.SearchView
   ];
