@@ -203,7 +203,7 @@ program.command('express')
     var hooks = spawn('ti', ['config','paths.hooks','-a',path.join( __dirname ,'..', 'plugin','yy.tishadow','1.0','hooks')]);
     hooks.stderr.pipe(process.stderr);
     hooks.on("exit", function(code) {
-      code === 0 && logger.info("Titanium CLI hook installed. Now use the `--shadow` flag when buliding your project for express tishadow development");
+      code === 0 && logger.info("Titanium CLI hook installed. Now use the `--shadow` flag when building your project for express tishadow development");
     });
   });
 
@@ -227,7 +227,7 @@ if (config.isWatching) {
   config.buildPaths({},function() {
     var paths = [config.isAlloy ? "app" :"Resources"];
     if (
-      fs.existsSync(path.join(config.base, 'i18n')) && 
+      fs.existsSync(path.join(config.base, 'i18n')) &&
       !fs.existsSync(path.join(config.base, 'i18n', 'alloy_generated'))
       ){
       paths.push('i18n');
