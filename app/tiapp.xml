@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>7.0.0.GA</sdk-version>
+    <sdk-version>7.3.0.GA</sdk-version>
     <id>{{APPID}}</id>
     <name>TiShadow</name>
     <version>1.0</version>
@@ -25,7 +25,7 @@
     <analytics>false</analytics>
     <guid>{{GUID}}</guid>
     <property name="ti.ui.defaultunit" type="string">dp</property>
-    <iphone>
+    <ios>
         <orientations device="iphone">
             <orientation>Ti.UI.PORTRAIT</orientation>
             <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
@@ -36,7 +36,7 @@
             <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
             <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
         </orientations>
-    </iphone>
+    </ios>
     <property name="ti.android.bug2373.finishfalseroot" type="bool">true</property>
     <property name="ti.android.bug2373.skipAlert" type="bool">true</property>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
