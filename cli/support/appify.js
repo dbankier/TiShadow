@@ -177,7 +177,7 @@ exports.build = function(env) {
             path.join(dest_resources, platform),
             {
               filter: new RegExp(
-                '(\.png|images|res-.*|fonts|\.otf|\.ttf|\.bundle)$',
+                '(\.png|images|res-.*|fonts|\.otf|\.ttf|\.bundle|\.json|\.plist)$',
                 'i'
               ),
               whitelist: true
@@ -203,20 +203,20 @@ exports.build = function(env) {
       }
       // copy DefaultIcon.png if it exists
       if (fs.existsSync(path.join(config.base, 'DefaultIcon.png'))) {
-        fs
-          .createReadStream(path.join(config.base, 'DefaultIcon.png'))
-          .pipe(fs.createWriteStream(path.join(dest, 'DefaultIcon.png')));
+        fs.createReadStream(path.join(config.base, 'DefaultIcon.png')).pipe(
+          fs.createWriteStream(path.join(dest, 'DefaultIcon.png'))
+        );
       }
       if (fs.existsSync(path.join(config.base, 'Podfile'))) {
-        fs
-          .createReadStream(path.join(config.base, 'Podfile'))
-          .pipe(fs.createWriteStream(path.join(dest, 'Podfile')));
+        fs.createReadStream(path.join(config.base, 'Podfile')).pipe(
+          fs.createWriteStream(path.join(dest, 'Podfile'))
+        );
       }
 
       if (fs.existsSync(path.join(config.base, 'Entitlements.plist'))) {
-        fs
-          .createReadStream(path.join(config.base, 'Entitlements.plist'))
-          .pipe(fs.createWriteStream(path.join(dest, 'Entitlements.plist')));
+        fs.createReadStream(path.join(config.base, 'Entitlements.plist')).pipe(
+          fs.createWriteStream(path.join(dest, 'Entitlements.plist'))
+        );
       }
 
       // copy tiapp.xml and inject modules
