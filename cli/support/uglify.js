@@ -3,14 +3,16 @@
  * Please see the LICENSE file included with this distribution for details.
  */
 
-var UglifyJS = require("uglify-js"),
-    _ = require("underscore"),
-    config = require("./config"),
-    path = require("path");
+var UglifyJS = require('uglify-js'),
+  _ = require('underscore'),
+  config = require('./config'),
+  path = require('path'),
+  babel = require('babel-core'),
+  env = require('babel-preset-env');
 
 function functionCall(name, args) {
-  return  new UglifyJS.AST_Call({
-    expression: new UglifyJS.AST_SymbolRef({name:name}),
+  return new UglifyJS.AST_Call({
+    expression: new UglifyJS.AST_SymbolRef({ name: name }),
     args: args
   });
 }
@@ -25,12 +27,12 @@ function functionCallByNode(node, args) {
 function binaryAdd(left, right) {
   return new UglifyJS.AST_Binary({
     left: left,
-    operator: "+",
-    right: right 
+    operator: '+',
+    right: right
   });
 }
 function symbol(s) {
-	return new UglifyJS.AST_Symbol({name:s});
+  return new UglifyJS.AST_Symbol({ name: s });
 }
 
 function addAppName(node) {
@@ -38,185 +40,244 @@ function addAppName(node) {
 }
 
 function argsToPath(args) {
-    var path = args[0];
-    if (args.length > 1) {
-        for (var i = 1; i < args.length - 1; ++i) {
-            path = binaryAdd(path, binaryAdd(args[i], symbol('"/"')));
-        }
-        path = binaryAdd(path, _.last(args));
+  var path = args[0];
+  if (args.length > 1) {
+    for (var i = 1; i < args.length - 1; ++i) {
+      path = binaryAdd(path, binaryAdd(args[i], symbol('"/"')));
     }
-    return path;
+    path = binaryAdd(path, _.last(args));
+  }
+  return path;
 }
 function couldBeAsset(name) {
-  return typeof name === 'string' && 
-		(name.toLowerCase().match("image$")  ||
-		name.toLowerCase().match("icon$")  ||
-    ["file", "sound", "icon", "url", "leftButton", "rightButton", "images"].indexOf(name) !== -1);
+  return (
+    typeof name === 'string' &&
+    (name.toLowerCase().match('image$') ||
+      name.toLowerCase().match('icon$') ||
+      [
+        'file',
+        'sound',
+        'icon',
+        'url',
+        'leftButton',
+        'rightButton',
+        'images'
+      ].indexOf(name) !== -1)
+  );
 }
 
 function doNotTouch(node) {
-  return node instanceof UglifyJS.AST_Atom || //Booleans, Nulls, Undefined, etc 
-         node instanceof UglifyJS.AST_Lambda; //Functions, etc
+  return (
+    node instanceof UglifyJS.AST_Atom || node instanceof UglifyJS.AST_Lambda //Booleans, Nulls, Undefined, etc
+  ); //Functions, etc
 }
 
 function toFullPath(p) {
- if (typeof p === 'string' &&
-      p.match(/^\.{1,2}\//) &&
-      current_file)   {
+  if (typeof p === 'string' && p.match(/^\.{1,2}\//) && current_file) {
     var full = path.join(path.dirname(current_file), p);
-    if(path.sep == "\\"){
-        full = full.replace(/\\/g, "/");
+    if (path.sep == '\\') {
+      full = full.replace(/\\/g, '/');
     }
-    return full.substring(full.indexOf("Resources/") + 10);
+    return full.substring(full.indexOf('Resources/') + 10);
   }
- return p;
+  return p;
 }
 var is_titaniumified = false;
-var convert = new UglifyJS.TreeTransformer(null, function(node){
+var convert = new UglifyJS.TreeTransformer(null, function(node) {
   //function call replacement
   if (node instanceof UglifyJS.AST_SymbolFunarg) {
-    if (node.name === "require") {
-       is_titaniumified = true; 
+    if (node.name === 'require') {
+      is_titaniumified = true;
     }
   }
   if (node instanceof UglifyJS.AST_Call) {
     // redirect require function
-    if ( !is_titaniumified && 
-         (
-           (!config.isTicommonjs && node.expression.name === "require" ) ||
-           (config.isTicommonjs && (node.expression.name === "tirequire" || node.expression.name === "_require") )
-        )
-       ) {
-      node.expression.name = "__p.require";
+    if (
+      !is_titaniumified &&
+      ((!config.isTicommonjs && node.expression.name === 'require') ||
+        (config.isTicommonjs &&
+          (node.expression.name === 'tirequire' ||
+            node.expression.name === '_require')))
+    ) {
+      node.expression.name = '__p.require';
       node.args[0].value = toFullPath(node.args[0].value);
       return node;
     }
-    if (node.expression.start.value === "console") {
+    if (node.expression.start.value === 'console') {
       if (typeof node.expression.property === 'string') {
         // console.log(...) => __log.log('info', ...)
         if (node.expression.property === 'log') {
-          node.args.unshift(new UglifyJS.AST_String({value: 'info'}));
+          node.args.unshift(new UglifyJS.AST_String({ value: 'info' }));
         }
-        return functionCall("__log."+node.expression.end.value, node.args);
+        return functionCall('__log.' + node.expression.end.value, node.args);
       } else {
-        return functionCallByNode(new UglifyJS.AST_Sub({
-          expression: new UglifyJS.AST_SymbolRef({name:"__log"}),
-          property: node.expression.property
-        }) ,node.args);
+        return functionCallByNode(
+          new UglifyJS.AST_Sub({
+            expression: new UglifyJS.AST_SymbolRef({ name: '__log' }),
+            property: node.expression.property
+          }),
+          node.args
+        );
       }
     }
-    if (node.expression.start.value === "L") {
-      node.expression.name="__L";
-      node.name="__L";
+    if (node.expression.start.value === 'L') {
+      node.expression.name = '__L';
+      node.name = '__L';
       return node;
     }
-    if (node.expression.start.value.match && node.expression.start.value.match("^Ti(tanium)?$")){
+    if (
+      node.expression.start.value.match &&
+      node.expression.start.value.match('^Ti(tanium)?$')
+    ) {
       // redirect include
-      if (node.expression.end.value === "include" && 
-          node.expression.expression.property === undefined ) {
-        return functionCall("eval", [functionCall("__p.fileContent", node.args)]);
+      if (
+        node.expression.end.value === 'include' &&
+        node.expression.expression.property === undefined
+      ) {
+        return functionCall('eval', [
+          functionCall('__p.fileContent', node.args)
+        ]);
       }
       //reroute resources directory -- FILESYSTEM
-      if (node.expression.end.value === "getResourcesDirectory" &&
-          node.expression.expression.property === "Filesystem") {
-        node.expression.property = "getApplicationDataDirectory";
-      return addAppName(node);
+      if (
+        node.expression.end.value === 'getResourcesDirectory' &&
+        node.expression.expression.property === 'Filesystem'
+      ) {
+        node.expression.property = 'getApplicationDataDirectory';
+        return addAppName(node);
       }
-      if (node.expression.end.value === "getFile" &&
-          node.expression.expression.property === "Filesystem") {
-				node.args = [functionCall("__p.getFile", node.args)];
-				return node;
+      if (
+        node.expression.end.value === 'getFile' &&
+        node.expression.expression.property === 'Filesystem'
+      ) {
+        node.args = [functionCall('__p.getFile', node.args)];
+        return node;
       }
 
       //control localisation -- LOCALE
-      if (node.expression.end.value === "getString" &&
-          node.expression.expression.property === "Locale") {
-        return functionCall("__L", node.args);
+      if (
+        node.expression.end.value === 'getString' &&
+        node.expression.expression.property === 'Locale'
+      ) {
+        return functionCall('__L', node.args);
       }
 
       //control localisation -- UI
-      if (node.expression.end.value.match("^(createWindow|createTabGroup|createAlertDialog|createOptionDialog)$") &&
-          node.expression.expression.property === "UI") {
-        return functionCall("__ui."+node.expression.end.value, node.args);
+      if (
+        node.expression.end.value.match(
+          '^(createWindow|createTabGroup|createAlertDialog|createOptionDialog)$'
+        ) &&
+        node.expression.expression.property === 'UI'
+      ) {
+        return functionCall('__ui.' + node.expression.end.value, node.args);
       }
-      if (node.expression.end.value === "createNavigationWindow" &&
-          node.expression.expression.property === "iOS") {
-        return functionCall("__ui.createNavigationWindow", node.args);
+      if (
+        node.expression.end.value === 'createNavigationWindow' &&
+        node.expression.expression.property === 'iOS'
+      ) {
+        return functionCall('__ui.createNavigationWindow', node.args);
       }
       /*if (node.expression.end.value.match("^(createSplitWindow|createPopover)$") &&
           node.expression.expression.property === "iPad") {
         return functionCall("__ui."+node.expression.end.value, node.args);
       }*/
       //control global listener -- App
-      if (node.expression.end.value.match("^(addEventListener|removeEventListener|fireEvent)$") &&
-          ["App","Gesture","Geolocation"].indexOf(node.expression.expression.property) > -1) {
-        return functionCall("__app."+node.expression.end.value, 
-                            [new UglifyJS.AST_String({
-                              value: node.expression.expression.property
-                            })].concat(node.args));
+      if (
+        node.expression.end.value.match(
+          '^(addEventListener|removeEventListener|fireEvent)$'
+        ) &&
+        ['App', 'Gesture', 'Geolocation'].indexOf(
+          node.expression.expression.property
+        ) > -1
+      ) {
+        return functionCall(
+          '__app.' + node.expression.end.value,
+          [
+            new UglifyJS.AST_String({
+              value: node.expression.expression.property
+            })
+          ].concat(node.args)
+        );
       }
       //control localisation -- API
-      if (node.expression.expression.property === "API") {
+      if (node.expression.expression.property === 'API') {
         if (typeof node.expression.property === 'string') {
-          return functionCall("__log."+node.expression.end.value, node.args);
+          return functionCall('__log.' + node.expression.end.value, node.args);
         } else {
-          return functionCallByNode(new UglifyJS.AST_Sub({
-            expression: new UglifyJS.AST_SymbolRef({name:"__log"}),
-            property: node.expression.property
-          }) ,node.args);
+          return functionCallByNode(
+            new UglifyJS.AST_Sub({
+              expression: new UglifyJS.AST_SymbolRef({ name: '__log' }),
+              property: node.expression.property
+            }),
+            node.args
+          );
         }
       }
-      
+
       //control database source - Database
-      if (node.expression.end.value === "install" &&
-          node.expression.expression.property === "Database") {
-        node.args[0] = functionCall("__p.file", [node.args[0]]);
+      if (
+        node.expression.end.value === 'install' &&
+        node.expression.expression.property === 'Database'
+      ) {
+        node.args[0] = functionCall('__p.file', [node.args[0]]);
         return node;
       }
     }
     //assets
-    if (node.expression.end.value.match("^set") &&
-        !doNotTouch(node.args) &&
-        node.args[0] !== undefined &&
-        couldBeAsset(node.expression.end.value.replace("set","").toLowerCase())) {
+    if (
+      node.expression.end.value.match('^set') &&
+      !doNotTouch(node.args) &&
+      node.args[0] !== undefined &&
+      couldBeAsset(node.expression.end.value.replace('set', '').toLowerCase())
+    ) {
       node.args[0].value = toFullPath(node.args[0].value);
-      node.args = [functionCall("__p.file",node.args)];
+      node.args = [functionCall('__p.file', node.args)];
       return node;
     }
-  } else if (node instanceof UglifyJS.AST_Assign && !doNotTouch(node.right)){
-    if (node.left.property && node.left.property.match && node.left.property.match("^(title|text)id$")) {
-      node.left.property = node.left.property.replace("id","");
-      node.right = functionCall("__L", [node.right]);
+  } else if (node instanceof UglifyJS.AST_Assign && !doNotTouch(node.right)) {
+    if (
+      node.left.property &&
+      node.left.property.match &&
+      node.left.property.match('^(title|text)id$')
+    ) {
+      node.left.property = node.left.property.replace('id', '');
+      node.right = functionCall('__L', [node.right]);
       return node;
     } else if (couldBeAsset(node.left.property)) {
-      if (node.left.property === "url" && node.operator === "+=") { //issue #377
+      if (node.left.property === 'url' && node.operator === '+=') {
+        //issue #377
         return node;
       }
       node.right.value = toFullPath(node.right.value);
-      node.right = functionCall("__p.file",[node.right]);
+      node.right = functionCall('__p.file', [node.right]);
       return node;
     }
-  } else if (node instanceof UglifyJS.AST_ObjectKeyVal && !doNotTouch(node.value)) {
-    if (typeof node.key === 'string' && node.key.match("^(title|text)id$")) {
-      node.key = node.key.replace("id","");
-      node.value = functionCall("__L", [node.value]);
+  } else if (
+    node instanceof UglifyJS.AST_ObjectKeyVal &&
+    !doNotTouch(node.value)
+  ) {
+    if (typeof node.key === 'string' && node.key.match('^(title|text)id$')) {
+      node.key = node.key.replace('id', '');
+      node.value = functionCall('__L', [node.value]);
       return node;
     } else if (couldBeAsset(node.key)) {
       node.value.value = toFullPath(node.value.value);
-      node.value = functionCall("__p.file",[node.value]);
+      node.value = functionCall('__p.file', [node.value]);
       return node;
     }
   } else if (node instanceof UglifyJS.AST_PropAccess) {
-    if (node.property === "resourcesDirectory" &&
-         node.start.value.match("^Ti(tanium)?$") &&
-         node.expression.property === "Filesystem") {
-      node.property = "applicationDataDirectory";
+    if (
+      node.property === 'resourcesDirectory' &&
+      node.start.value.match('^Ti(tanium)?$') &&
+      node.expression.property === 'Filesystem'
+    ) {
+      node.property = 'applicationDataDirectory';
       return addAppName(node);
     }
   }
 });
 var current_file;
-exports.toAST = function(input,file) {
+exports.toAST = function(input, file) {
   current_file = file;
   is_titaniumified = false;
   var ast = UglifyJS.parse(input);
@@ -224,7 +285,9 @@ exports.toAST = function(input,file) {
 };
 
 exports.toString = function(input, file) {
-  return exports.toAST(input, file).print_to_string({beautify: true});
+  if (config.transpile) {
+    var presets = [env];
+    input = babel.transform(input, { presets }).code;
+  }
+  return exports.toAST(input, file).print_to_string({ beautify: true });
 };
-
-
