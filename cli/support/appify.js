@@ -219,6 +219,20 @@ exports.build = function(env) {
         );
       }
 
+      if (fs.existsSync(path.join(config.base, 'extensions'))) {
+        var extensionsPath = path.join(dest, 'extensions');
+
+        mkdirp.sync(extensionsPath);
+        wrench.copyDirSyncRecursive(path.join(config.base, 'extensions'), extensionsPath);
+      }
+
+      if (fs.existsSync(path.join(config.base, 'scripts'))) {
+        var scriptsPath = path.join(dest, 'scripts');
+
+        mkdirp.sync(scriptsPath);
+        wrench.copyDirSyncRecursive(path.join(config.base, 'scripts'), scriptsPath);
+      }
+
       // copy tiapp.xml and inject modules
       var source_tiapp = fs.readFileSync(
         path.join(config.base, 'tiapp.xml'),
