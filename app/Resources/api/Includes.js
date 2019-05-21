@@ -68,7 +68,8 @@ var includes = [
   Titanium.Map.Annotation,
   Titanium.Map.View,
   Titanium.Media,
-  Titanium.Media.openMusicLibrary,
+  //  Ti Bug: https://jira.appcelerator.org/browse/AC-6261
+  //  Titanium.Media.openMusicLibrary,
   Titanium.Media.openPhotoGallery,
   Titanium.Media.showCamera,
   Titanium.Media.createAudioPlayer,
@@ -265,7 +266,7 @@ var includes = [
   Titanium.Yahoo
 ];
 
-if (Ti.Platform.osname !== "android"){
+if (Ti.Platform.osname !== 'android') {
   var ios_includes = [
     Titanium.App.iOS.BackgroundService,
     Titanium.App.iOS.LocalNotification,
