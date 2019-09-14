@@ -70,6 +70,7 @@ var includes = [
   Titanium.Media,
   //  Ti Bug: https://jira.appcelerator.org/browse/AC-6261
   //  Titanium.Media.openMusicLibrary,
+  Titanium.Media.hideCamera,
   Titanium.Media.openPhotoGallery,
   Titanium.Media.showCamera,
   Titanium.Media.createAudioPlayer,
@@ -77,6 +78,7 @@ var includes = [
   Titanium.Media.createSound,
   Titanium.Media.createSystemAlert,
   Titanium.Media.createVideoPlayer,
+  Titanium.Media.takePicture,
   Titanium.Media.AudioPlayer,
   Titanium.Media.AudioRecorder,
   Titanium.Media.Item,
