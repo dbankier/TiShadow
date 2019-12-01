@@ -79,6 +79,7 @@ exports.fileContent = function(context) {
  * Asset Redirection
  */
 exports.file = function(extension) {
+  console.warn(extension);
   if (_.isArray(extension)) {
     return extension.map(exports.file);
   } else if (typeof extension !== "string") {
@@ -87,6 +88,9 @@ exports.file = function(extension) {
   var base = Ti.Filesystem.applicationDataDirectory + require("/api/TiShadow").currentApp + "/";
   if (extension.indexOf(base) !== -1) {
     extension = extension.replace(base,"");
+  }
+  if (extension.indexOf("://") !== -1) {
+    return extension;
   }
   var path = base + extension.replace(/^\//, ''),
   platform_path =  base + (os === "android" ? "android" : "iphone") + "/" + extension.replace(/^\//, '');
