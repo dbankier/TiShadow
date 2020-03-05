@@ -99,7 +99,7 @@ exports.copyCoreProject = function(env) {
   } else {
     logger.info('Creating new app...');
 
-    wrench.copyDirSyncRecursive(tishadow_app, dest);
+    wrench.copyDirSyncRecursive(tishadow_app, dest, { force: true });
 
     //inject new GUID
     var source_tiapp = fs.readFileSync(
@@ -177,7 +177,7 @@ exports.build = function(env) {
             path.join(dest_resources, platform),
             {
               filter: new RegExp(
-                '(\.png|images|res-.*|fonts|\.otf|\.ttf|\.bundle|\.json|\.plist)$',
+                '(.png|images|res-.*|fonts|.otf|.ttf|.bundle|.json|.plist)$',
                 'i'
               ),
               whitelist: true
@@ -223,14 +223,20 @@ exports.build = function(env) {
         var extensionsPath = path.join(dest, 'extensions');
 
         mkdirp.sync(extensionsPath);
-        wrench.copyDirSyncRecursive(path.join(config.base, 'extensions'), extensionsPath);
+        wrench.copyDirSyncRecursive(
+          path.join(config.base, 'extensions'),
+          extensionsPath
+        );
       }
 
       if (fs.existsSync(path.join(config.base, 'scripts'))) {
         var scriptsPath = path.join(dest, 'scripts');
 
         mkdirp.sync(scriptsPath);
-        wrench.copyDirSyncRecursive(path.join(config.base, 'scripts'), scriptsPath);
+        wrench.copyDirSyncRecursive(
+          path.join(config.base, 'scripts'),
+          scriptsPath
+        );
       }
 
       // copy tiapp.xml and inject modules

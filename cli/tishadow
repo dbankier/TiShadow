@@ -43,9 +43,9 @@ program.command('server')
   .option('-z, --manage-versions', 'manage and automatically update bundles')
   .action(function(env) {
     // run package notifier but only on server command.
+    let pkg = require("../package.json")
     var notifier = updateNotifier({
-      packagePath: "../package.json",
-//      updateCheckInterval: 1000 * 60 * 60 * 24 * 7 // 1 week
+      pkg
     });
 
     if (notifier.update) {
@@ -218,7 +218,9 @@ function execute(filenames) {
   }
   program.parse(argv);
   // Display help on an invalid command
-  if (program.args.length === 0 || typeof program.args[program.args.length -1] === 'string'){
+  if (typeof program.args[program.args.length -1] === 'string'){
+    console.log("INVALID")
+    console.log(program)
     program.help();
   }
 }
