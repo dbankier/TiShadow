@@ -7,7 +7,7 @@ var log = require('/api/Log');
 var utils = require('/api/Utils');
 var Compression = require('ti.compression');
 var assert = require('/api/Assert');
-var io = require('/lib/socket.io');
+var io = require('ti.socketio');
 var osname = Ti.Platform.osname;
 var platform = osname === 'ipad' || osname === 'iphone' ? 'ios' : osname;
 var socket, room;
@@ -154,9 +154,7 @@ function restart() {
   Ti.App.fireEvent('tishadow:close');
   exports.disconnect();
   if (Ti.Android) {
-    var tools = require('bencoding.android.tools').createPlatform();
-    //tools.restartApp(200);
-    tools.exitApp();
+    Ti.App._restart();
   } else {
     require('/api/UI').closeAll();
     require('/api/App').clearAll();
@@ -304,9 +302,10 @@ function loadRemoteZip(name, url, data, version_property) {
     }
   };
   xhr.onerror = function(e) {
-    Ti.UI
-      .createAlertDialog({ title: 'XHR', message: 'Error: ' + e.error })
-      .show();
+    Ti.UI.createAlertDialog({
+      title: 'XHR',
+      message: 'Error: ' + e.error
+    }).show();
   };
   xhr.open(
     'GET',

@@ -176,11 +176,10 @@
     	</manifest>
     </android>
     	<modules>
-    <module platform="android">net.iamyellow.tiws</module>
+    <module platform="android">ti.socketio</module>
     <module platform="android">ti.compression</module>
     <module platform="android">yy.logcatcher</module>
-    <module platform="android">bencoding.android.tools</module>
-    <module platform="iphone">net.iamyellow.tiws</module>
+    <module platform="iphone">ti.socketio</module>
     <module platform="iphone">ti.compression</module>
     <module platform="iphone">yy.logcatcher</module>
     <module platform="iphone">yy.tidynamicfont</module>
