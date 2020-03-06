@@ -171,7 +171,7 @@ module.exports = function(env, callback) {
               callback(true);
             }
             if (fs.existsSync(config.res_alloy_path)) {
-              fs.copy(
+              fs.copySync(
                 config.res_alloy_path,
                 path.join(
                   config.resources_path,
@@ -181,7 +181,7 @@ module.exports = function(env, callback) {
                 { overwrite: false }
               );
             }
-            callback(false);
+            callback();
           });
           alloy_command.on('error', function() {
             logger.error('Alloy Compile Error\n');
@@ -313,7 +313,6 @@ function beginCompile(callback) {
         }
       })
     );
-    console.log(process_tasks);
     // modify for bundling
     assets_list.files = assets_list.files.map(function(file) {
       var filePath = config.module_name + '/' + file;
