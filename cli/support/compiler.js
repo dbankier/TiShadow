@@ -171,7 +171,7 @@ module.exports = function(env, callback) {
               callback(true);
             }
             if (fs.existsSync(config.res_alloy_path)) {
-              wrench.copy(
+              fs.copy(
                 config.res_alloy_path,
                 path.join(
                   config.resources_path,
