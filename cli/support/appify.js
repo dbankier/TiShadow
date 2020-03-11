@@ -178,8 +178,6 @@ exports.build = function(env) {
                   '(.png|images|res-.*|fonts|.otf|.ttf|.bundle|.json|.plist)$',
                   'i'
                 );
-                console.log(src);
-                console.log(regex.text(src));
                 return regex.test(src);
               }
             }

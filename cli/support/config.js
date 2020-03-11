@@ -13,7 +13,6 @@ var path = require('path'),
   home = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'],
   platforms = ['iphone', 'android', 'blackberry', 'mobileweb', 'tizen'],
   tiapp = require('tiapp'),
-  glob = require('glob'),
   config = {},
   spawnSync = require('child_process').spawnSync;
 

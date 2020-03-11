@@ -16,7 +16,6 @@ var routes = require('./routes');
 var sockets = require('./support/sockets');
 var Logger = require('./logger');
 var config = require('../cli/support/config');
-var bodyParser = require('body-parser');
 
 var server = (module.exports = http.createServer(app));
 
@@ -24,7 +23,6 @@ var server = (module.exports = http.createServer(app));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser({ limit: '150mb' }));
 
 // if executed from package.json - "main":"app.js"
 if (config.port === undefined) {
