@@ -21,7 +21,7 @@ var server = (module.exports = http.createServer(app));
 
 // Configuration
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
 
 // if executed from package.json - "main":"app.js"

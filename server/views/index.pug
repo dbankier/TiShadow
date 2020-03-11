@@ -48,8 +48,8 @@ block content
             a.btn.btn-default.pull-right(ng-if="currentSpy" ng-click="inspectReset()") Reload 
             div.form-horizontal
               .control-group(ng-repeat="(key, value) in inspect.values" ng-if="key.indexOf('_') !==0" ng-init="stack=[]; hideshow = {visible: true}")
-                 span(ng-include="'json.html'")
-               a.btn.btn-default(ng-click="inspectChildren(key,value,[])") Inspect Children     
+                span(ng-include="'json.html'")
+                a.btn.btn-default(ng-click="inspectChildren(key,value,[])") Inspect Children     
 
   script(id="json.html",type="text/ng-template").
     <label class="control-label" ng-if=!_.isObject(value)> {{key}}</label>
