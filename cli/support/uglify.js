@@ -7,8 +7,8 @@ var UglifyJS = require('uglify-js'),
   _ = require('underscore'),
   config = require('./config'),
   path = require('path'),
-  babel = require('babel-core'),
-  env = require('babel-preset-env');
+  babel = require('@babel/core'),
+  env = require('@babel/preset-env');
 
 function functionCall(name, args) {
   return new UglifyJS.AST_Call({
