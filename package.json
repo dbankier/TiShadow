@@ -23,7 +23,7 @@
     "multiparty": "^4.1.2",
     "node-notifier": "^5.1.2",
     "pkginfo": "^0.2.3",
-    "socket.io": "^1.7.3",
+    "socket.io": "^2.4.0",
     "socket.io-client": "^1.7.3",
     "tiapp": "0.0.3",
     "uglify-js": "^2.7.5",
