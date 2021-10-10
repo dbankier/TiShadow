@@ -71,6 +71,6 @@ exports.postBundle = function(req, res) {
     if (!data.deployOnly) {
       sockets.emit(room, 'bundle', data);
     }
-    res.send('OK', 200);
+    res.status(200).send('OK');
   });
 };

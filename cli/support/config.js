@@ -13,7 +13,6 @@ var path = require('path'),
   home = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'],
   platforms = ['iphone', 'android', 'blackberry', 'mobileweb', 'tizen'],
   tiapp = require('tiapp'),
-  glob = require('glob'),
   config = {},
   spawnSync = require('child_process').spawnSync;
 
@@ -92,9 +91,7 @@ config.buildPaths = function(env, callback) {
     config.tishadow_dist = path.join(config.tishadow_build, 'dist');
     config.fs_map_path = path.join(config.tishadow_build, 'fs_map.json');
 
-    config.transpile = result.transpile
-      ? result.transpile[0] === 'true'
-      : false;
+    config.transpile = result.transpile ? result.transpile[0] === 'true' : true;
 
     var app_name = (config.app_name = result.name[0] || 'bundle');
 

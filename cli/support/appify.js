@@ -4,9 +4,7 @@
  */
 
 var logger = require('../../server/logger.js'),
-  fs = require('fs'),
-  mkdirp = require('mkdirp'),
-  wrench = require('wrench'),
+  fs = require('fs-extra'),
   path = require('path'),
   tishadow_app = path.join(__dirname, '../..', 'app'),
   config = require('./config'),
@@ -18,11 +16,10 @@ _.templateSettings = {
 };
 
 var required_modules = [
-  '<module platform="android">net.iamyellow.tiws</module>',
+  '<module platform="android">ti.socketio</module>',
   '<module platform="android">ti.compression</module>',
   '<module platform="android">yy.logcatcher</module>',
-  '<module platform="android">bencoding.android.tools</module>',
-  '<module platform="iphone">net.iamyellow.tiws</module>',
+  '<module platform="iphone">ti.socketio</module>',
   '<module platform="iphone">ti.compression</module>',
   '<module platform="iphone">yy.logcatcher</module>',
   '<module platform="iphone">yy.tidynamicfont</module>'
@@ -35,7 +32,7 @@ var required_properties = [
 
 exports.copyCoreProject = function(env) {
   var dest = env.destination || '.';
-  mkdirp.sync(dest);
+  fs.mkdirpSync(dest);
   if (!fs.existsSync(dest) || !fs.lstatSync(dest).isDirectory()) {
     logger.error('Could not create destination directory.');
     return false;
@@ -87,19 +84,19 @@ exports.copyCoreProject = function(env) {
     );
 
     fs.writeFileSync(path.join(dest, 'tiapp.xml'), write_tiapp);
-    wrench.copyDirSyncRecursive(
+    fs.copySync(
       path.join(tishadow_app, 'Resources'),
       path.join(dest, 'Resources')
     );
-    wrench.copyDirSyncRecursive(
+    fs.copySync(
       path.join(tishadow_app, 'modules'),
       path.join(dest, 'modules'),
-      { preserve: true, preserveFiles: true }
+      { overwrite: false }
     );
   } else {
     logger.info('Creating new app...');
 
-    wrench.copyDirSyncRecursive(tishadow_app, dest);
+    fs.copySync(tishadow_app, dest);
 
     //inject new GUID
     var source_tiapp = fs.readFileSync(
@@ -158,9 +155,9 @@ exports.build = function(env) {
       fs.writeFileSync(path.join(dest_resources, 'app.js'), new_app_js);
       //copy fonts
       if (fs.existsSync(config.fonts_path)) {
-        wrench.copyDirSyncRecursive(config.fonts_path, dest_fonts);
+        fs.copySync(config.fonts_path, dest_fonts);
       }
-      mkdirp.sync(dest_platform);
+      fs.mkdirpSync(dest_platform);
       //copy splash screen and icons
       [
         'iphone',
@@ -172,34 +169,36 @@ exports.build = function(env) {
         'commonjs'
       ].forEach(function(platform) {
         if (fs.existsSync(path.join(config.resources_path, platform))) {
-          wrench.copyDirSyncRecursive(
+          fs.copySync(
             path.join(config.resources_path, platform),
             path.join(dest_resources, platform),
             {
-              filter: new RegExp(
-                '(\.png|images|res-.*|fonts|\.otf|\.ttf|\.bundle|\.json|\.plist)$',
-                'i'
-              ),
-              whitelist: true
+              filter(src) {
+                let regex = new RegExp(
+                  '(.png|images|res-.*|fonts|.otf|.ttf|.bundle|.json|.plist)$',
+                  'i'
+                );
+                return regex.test(src);
+              }
             }
           );
         }
         if (fs.existsSync(path.join(config.modules_path, platform))) {
-          wrench.copyDirSyncRecursive(
+          fs.copySync(
             path.join(config.modules_path, platform),
             path.join(dest_modules, platform),
             { preserve: true }
           );
         }
         if (fs.existsSync(path.join(config.platform_path, platform))) {
-          wrench.copyDirSyncRecursive(
+          fs.copySync(
             path.join(config.platform_path, platform),
             path.join(dest_platform, platform)
           );
         }
       });
       if (fs.existsSync(config.plugins_path)) {
-        wrench.copyDirSyncRecursive(config.plugins_path, dest_plugins);
+        fs.copySync(config.plugins_path, dest_plugins);
       }
       // copy DefaultIcon.png if it exists
       if (fs.existsSync(path.join(config.base, 'DefaultIcon.png'))) {
@@ -219,18 +218,30 @@ exports.build = function(env) {
         );
       }
 
+      ['semantic.colors.json', 'GoogleService-Info.plist'].forEach(file => {
+        if (
+          fs.existsSync(path.join(config.base, 'Resources', 'iphone', file))
+        ) {
+          fs.createReadStream(
+            path.join(config.base, 'Resources', 'iphone', file)
+          ).pipe(
+            fs.createWriteStream(path.join(dest, 'Resources', 'iphone', file))
+          );
+        }
+      });
+
       if (fs.existsSync(path.join(config.base, 'extensions'))) {
         var extensionsPath = path.join(dest, 'extensions');
 
-        mkdirp.sync(extensionsPath);
-        wrench.copyDirSyncRecursive(path.join(config.base, 'extensions'), extensionsPath);
+        fs.mkdirpSync(extensionsPath);
+        fs.copySync(path.join(config.base, 'extensions'), extensionsPath);
       }
 
       if (fs.existsSync(path.join(config.base, 'scripts'))) {
         var scriptsPath = path.join(dest, 'scripts');
 
-        mkdirp.sync(scriptsPath);
-        wrench.copyDirSyncRecursive(path.join(config.base, 'scripts'), scriptsPath);
+        fs.mkdirpSync(scriptsPath);
+        fs.copySync(path.join(config.base, 'scripts'), scriptsPath);
       }
 
       // copy tiapp.xml and inject modules
