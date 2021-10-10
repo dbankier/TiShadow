@@ -19,7 +19,7 @@ if (!Ti.App.Properties.hasProperty('tishadow:uuid')) {
 
 exports.currentApp;
 exports.inspector;
-exports.connect = function(o) {
+exports.connect = function (o) {
   room = o.room;
   var version_property = 'tishadow:' + room + ':version';
   if (socket) {
@@ -32,7 +32,7 @@ exports.connect = function(o) {
     'force new connection': true
   });
 
-  socket.on('connect', function() {
+  socket.on('connect', function () {
     socket.emit('join', {
       name: o.name,
       uuid: Ti.App.Properties.getString('tishadow:uuid'),
@@ -44,7 +44,7 @@ exports.connect = function(o) {
     });
 
     logs &&
-      logs.forEach(function(log) {
+      logs.forEach(function (log) {
         socket.emit('log', log);
       });
     logs = false;
@@ -53,7 +53,7 @@ exports.connect = function(o) {
       o.callback();
     }
   });
-  socket.on('error', function(e) {
+  socket.on('error', function (e) {
     console.log('ERROR');
     console.log(e);
     logs = false; // not sure if needed here
@@ -61,7 +61,7 @@ exports.connect = function(o) {
       o.onerror(e);
     }
   });
-  socket.on('connect_failed', function(e) {
+  socket.on('connect_failed', function (e) {
     logs = false;
     if (o.onerror) {
       o.onerror(e);
@@ -69,14 +69,14 @@ exports.connect = function(o) {
   });
 
   // REPL messages
-  socket.on('message', function(data) {
+  socket.on('message', function (data) {
     if (!isTarget(data)) {
       return;
     }
     require('/api/PlatformRequire').eval(data);
   });
 
-  socket.on('bundle', function(data) {
+  socket.on('bundle', function (data) {
     if (!isTarget(data)) {
       return;
     }
@@ -97,25 +97,25 @@ exports.connect = function(o) {
     );
   });
 
-  socket.on('clear', function(data) {
+  socket.on('clear', function (data) {
     if (!isTarget(data)) {
       return;
     }
     exports.clearCache();
   });
 
-  socket.on('close', function(data) {
+  socket.on('close', function (data) {
     if (!isTarget(data)) {
       return;
     }
     exports.closeApp();
   });
 
-  socket.on('screenshot', function(data) {
+  socket.on('screenshot', function (data) {
     if (!isTarget(data)) {
       return;
     }
-    Ti.Media.takeScreenshot(function(o) {
+    Ti.Media.takeScreenshot(function (o) {
       var image = o.media;
       if (data.scale) {
         var height = Ti.Platform.displayCaps.platformHeight * data.scale;
@@ -127,14 +127,14 @@ exports.connect = function(o) {
     });
   });
 
-  socket.on('disconnect', function() {
+  socket.on('disconnect', function () {
     if (o.disconnected) {
       o.disconnected();
     }
   });
 };
 
-exports.emitLog = function(e) {
+exports.emitLog = function (e) {
   if (socket && !logs) {
     socket.emit('log', e);
   } else {
@@ -142,7 +142,7 @@ exports.emitLog = function(e) {
   }
 };
 
-exports.disconnect = function() {
+exports.disconnect = function () {
   if (socket) {
     socket.disconnect();
   }
@@ -161,18 +161,18 @@ function restart() {
     Ti.App._restart();
   }
 }
-exports.closeApp = function() {
+exports.closeApp = function () {
   Ti.App.Properties.setString('tishadow::currentApp', '');
   restart();
 };
-exports.nextApp = function(name) {
+exports.nextApp = function (name) {
   Ti.App.Properties.setString(
     'tishadow::currentApp',
     name ? name.replace(/ /g, '_') : exports.currentApp
   );
   restart();
 };
-exports.launchApp = function(name) {
+exports.launchApp = function (name) {
   try {
     var p = require('/api/PlatformRequire');
     // Custom Fonts
@@ -202,8 +202,8 @@ exports.launchApp = function(name) {
   }
 };
 
-exports.clearCache = function(no_restart) {
-  Ti.App.Properties.listProperties().forEach(function(property) {
+exports.clearCache = function (no_restart) {
+  Ti.App.Properties.listProperties().forEach(function (property) {
     if (!property.match('^tishadow:') || property === 'tishadow::locale') {
       Ti.App.Properties.removeProperty(property);
     }
@@ -220,10 +220,10 @@ exports.clearCache = function(no_restart) {
   }
 
   try {
-    dirty_directories.forEach(function(targetDirectory) {
+    dirty_directories.forEach(function (targetDirectory) {
       // Clear Applications
       var files = Ti.Filesystem.getFile(targetDirectory).getDirectoryListing();
-      files.forEach(function(file_name) {
+      files.forEach(function (file_name) {
         var file = Ti.Filesystem.getFile(targetDirectory, file_name);
         if (Ti.Platform.osname === 'android') {
           if (file.isFile()) {
@@ -248,8 +248,8 @@ exports.clearCache = function(no_restart) {
 
 function loadRemoteZip(name, url, data, version_property) {
   var xhr = Ti.Network.createHTTPClient();
-  xhr.setTimeout(10000);
-  xhr.onload = function(e) {
+  xhr.timeout = 10000;
+  xhr.onload = function (e) {
     try {
       log.info('Unpacking new bundle: ' + name);
 
@@ -301,7 +301,7 @@ function loadRemoteZip(name, url, data, version_property) {
       log.error(utils.extractExceptionData(e));
     }
   };
-  xhr.onerror = function(e) {
+  xhr.onerror = function (e) {
     Ti.UI.createAlertDialog({
       title: 'XHR',
       message: 'Error: ' + e.error
@@ -334,7 +334,7 @@ function loadRemoteBundle(url) {
 }
 
 function parseArguments() {
-  setTimeout(function() {
+  setTimeout(function () {
     cmd = Ti.App.getArguments();
     if (typeof cmd == 'object' && cmd.hasOwnProperty('url')) {
       if (cmd.url !== url) {
