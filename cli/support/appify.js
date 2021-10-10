@@ -218,6 +218,18 @@ exports.build = function(env) {
         );
       }
 
+      ['semantic.colors.json', 'GoogleService-Info.plist'].forEach(file => {
+        if (
+          fs.existsSync(path.join(config.base, 'Resources', 'iphone', file))
+        ) {
+          fs.createReadStream(
+            path.join(config.base, 'Resources', 'iphone', file)
+          ).pipe(
+            fs.createWriteStream(path.join(dest, 'Resources', 'iphone', file))
+          );
+        }
+      });
+
       if (fs.existsSync(path.join(config.base, 'extensions'))) {
         var extensionsPath = path.join(dest, 'extensions');
 

@@ -116,12 +116,10 @@ exports.listen = function(app) {
                 .in(room)
                 .emit(command === 'snippet' ? 'message' : command, data);
             } catch (e) {
-              sio.sockets
-                .in(room)
-                .emit('device_log', {
-                  level: 'ERROR',
-                  message: e.message + ' (' + e.line + ':' + e.col + ')'
-                });
+              sio.sockets.in(room).emit('device_log', {
+                level: 'ERROR',
+                message: e.message + ' (' + e.line + ':' + e.col + ')'
+              });
             }
           }
           if (fn) {
@@ -142,8 +140,14 @@ exports.listen = function(app) {
               data.level = data.level || '';
               data.name = curr.name;
               data.message = data.message || '';
-              Logger.log(data.level, data.name, data.message);
-              sio.sockets.in(room).emit('device_log', data);
+              if (
+                data.message.indexOf(
+                  "run is not a function. (In 'run(id)', 'run' is undefined)"
+                ) === -1
+              ) {
+                Logger.log(data.level, data.name, data.message);
+                sio.sockets.in(room).emit('device_log', data);
+              }
             } else {
               if (config.screencast) {
                 data.name = curr.name;
