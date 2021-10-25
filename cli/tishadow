@@ -11,6 +11,7 @@ var api            = require('./support/api'),
     logger         = require("../server/logger.js"),
     pkginfo        = require('pkginfo'),
     program        = require('commander'),
+    prompt        = require('prompt'),
     fs             = require('fs'),
     path           = require('path'),
     spawn          = require('./support/spawn'),
@@ -179,9 +180,20 @@ program.command('app')
     if (env.upgrade) {
       require('./support/appify').copyCoreProject(env);
     } else {
-      program.prompt("Enter app id [com.yydigital.tishadowapp]: ", function(appid) {
-        env.appid = appid.trim() || "com.yydigital.tishadowapp";
-        require('./support/appify').copyCoreProject(env);
+      prompt.start();
+      var schema = {
+        properties: {
+          bundleId: {
+            description: 'Enter app id',
+            default: 'com.yydigital.tishadowapp',
+          }
+        }
+      };
+      prompt.get(schema, function (err, result) {
+        if (result){
+          env.appid = result.bundleId.trim() || "com.yydigital.tishadowapp";
+          require('./support/appify').copyCoreProject(env);
+        }
         process.stdin.destroy();
       });
     }

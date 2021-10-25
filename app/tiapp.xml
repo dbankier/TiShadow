@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
     <deployment-targets>
-        <target device="mobileweb">false</target>
         <target device="iphone">true</target>
         <target device="ipad">true</target>
         <target device="android">true</target>
-        <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>7.3.0.GA</sdk-version>
+    <sdk-version>10.1.0.GA</sdk-version>
     <id>{{APPID}}</id>
     <name>TiShadow</name>
     <version>1.0</version>
@@ -169,10 +167,11 @@
         <uses-feature android:name='android.hardware.wifi' android:required="false" />
         <uses-feature android:name='android.hardware.touchscreen' android:required="false" />
         <uses-feature android:name='android.hardware.telephony' android:required="false" />
-        <uses-library android:required="false" android:name="com.sec.android.app.multiwindow"/>
+        <!-- samsung multi-window support-->
+        <!-- <uses-library android:required="false" android:name="com.sec.android.app.multiwindow"/>
         <application>
           <meta-data android:name="com.sec.android.support.multiwindow" android:value="true"/>
-        </application>
+        </application> -->
     	</manifest>
     </android>
     	<modules>
