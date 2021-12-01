@@ -1,0 +1,19 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 3.0.0
+apiversion: 2
+architectures: armv7 arm64 i386 x86_64
+description: Socket.io client for Titanium
+author: Axway Appcelerator
+license: Apache-2.0
+copyright: Copyright (c) 2018-Present by Axway Appcelerator
+
+# these should not be edited
+name: ti.socketio
+moduleid: ti.socketio
+guid: 65fbdc59-432f-40d8-8ea9-02799887db3c
+platform: iphone
+minsdk: 9.2.0
+mac: false

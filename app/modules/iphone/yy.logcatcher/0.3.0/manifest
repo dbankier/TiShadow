@@ -1,0 +1,20 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 0.3.0
+apiversion: 2
+architectures: x86_64 arm64
+description: My module
+author: Your Name
+license: Specify your license
+copyright: Copyright (c) 2014 by Your Company
+mac: true
+
+
+# these should not be edited
+name: TiLogCatcher
+moduleid: yy.logcatcher
+guid: 802968fa-9b2a-4df1-b324-1cea1dd209c8
+platform: iphone
+minsdk: 10.1.0.GA
