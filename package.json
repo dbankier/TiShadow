@@ -21,7 +21,7 @@
     "node-notifier": "^6.0.0",
     "pkginfo": "^0.4.1",
     "prompt": "^1.2.0",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "socket.io": "^2.4.1",
     "socket.io-client": "^2.3.0",
     "tiapp": "0.0.3",
